@@ -1,0 +1,369 @@
+/* ==========================================
+   BLUESTIFT - PDF VIEWER STYLES
+   ========================================== */
+
+/* ==========================================
+   MODAL VIEWER PDF (Lecture seule)
+   ========================================== */
+
+.pdf-viewer-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 10005;
+  animation: fadeIn 0.3s ease;
+}
+
+.pdf-viewer-content {
+  width: 90%;
+  max-width: 1200px;
+  height: 90vh;
+  margin: 5vh auto;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+}
+
+/* Header du viewer */
+.pdf-viewer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.pdf-title-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pdf-title-wrapper i {
+  font-size: 1.8rem;
+}
+
+.pdf-title-wrapper h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.close-pdf-viewer {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.close-pdf-viewer:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* Body du viewer */
+.pdf-viewer-body {
+  flex: 1;
+  position: relative;
+  background: #f5f5f5;
+}
+
+.pdf-viewer-body iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* Watermark (protection visuelle) */
+.pdf-watermark {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+/* Footer du viewer */
+.pdf-viewer-footer {
+  padding: 15px 25px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  text-align: center;
+}
+
+.pdf-viewer-footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.pdf-viewer-footer i {
+  color: #2563eb;
+  margin-right: 5px;
+}
+
+/* ==========================================
+   MODAL DOWNLOAD CHOICE (Read ou Download)
+   ========================================== */
+
+.pdf-download-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 10004;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.pdf-download-content {
+  background: white;
+  padding: 40px;
+  border-radius: 16px;
+  max-width: 500px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.4s ease;
+}
+
+.close-download-modal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 28px;
+  color: #999;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.close-download-modal:hover {
+  color: #333;
+}
+
+.pdf-icon-large {
+  font-size: 4rem;
+  color: #ef4444;
+  margin-bottom: 20px;
+}
+
+.pdf-download-content h3 {
+  margin: 15px 0;
+  color: #1a1a1a;
+  font-size: 1.5rem;
+}
+
+.pdf-download-content p {
+  color: #666;
+  margin-bottom: 30px;
+  font-size: 1rem;
+}
+
+/* Boutons d'action */
+.pdf-action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.pdf-action-buttons button {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s ease;
+}
+
+.btn-read {
+  background: #2563eb;
+  color: white;
+}
+
+.btn-read:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.btn-download {
+  background: #10b981;
+  color: white;
+}
+
+.btn-download:hover {
+  background: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+/* ==========================================
+   DARK THEME SUPPORT
+   ========================================== */
+
+body.dark-theme .pdf-viewer-content {
+  background: #1a1a1a;
+}
+
+body.dark-theme .pdf-viewer-footer {
+  background: #222;
+  border-top-color: #333;
+}
+
+body.dark-theme .pdf-viewer-footer p {
+  color: #b0b0b0;
+}
+
+body.dark-theme .pdf-download-content {
+  background: #1a1a1a;
+  color: #f0f0f0;
+}
+
+body.dark-theme .pdf-download-content h3 {
+  color: #f0f0f0;
+}
+
+body.dark-theme .pdf-download-content p {
+  color: #b0b0b0;
+}
+
+body.dark-theme .close-download-modal {
+  color: #666;
+}
+
+body.dark-theme .close-download-modal:hover {
+  color: #f0f0f0;
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .pdf-viewer-content {
+    width: 95%;
+    height: 95vh;
+    margin: 2.5vh auto;
+  }
+  
+  .pdf-viewer-header {
+    padding: 15px 20px;
+  }
+  
+  .pdf-title-wrapper h3 {
+    font-size: 1.1rem;
+  }
+  
+  .pdf-download-content {
+    padding: 30px 20px;
+    max-width: 90%;
+  }
+  
+  .pdf-action-buttons {
+    flex-direction: column;
+  }
+  
+  .pdf-action-buttons button {
+    width: 100%;
+  }
+  
+  .pdf-watermark {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pdf-viewer-header {
+    padding: 12px 15px;
+  }
+  
+  .pdf-title-wrapper i {
+    font-size: 1.5rem;
+  }
+  
+  .pdf-title-wrapper h3 {
+    font-size: 1rem;
+  }
+  
+  .close-pdf-viewer {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .pdf-icon-large {
+    font-size: 3rem;
+  }
+  
+  .pdf-download-content h3 {
+    font-size: 1.2rem;
+  }
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================
+   PRINT PROTECTION (Optionnel)
+   ========================================== */
+
+@media print {
+  .pdf-viewer-modal,
+  .pdf-download-modal {
+    display: none !important;
+  }
+}

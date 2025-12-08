@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  
+  <!-- Homepage -->
+  <url>
+    <loc>https://bluestift.app/</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Main Pages (à ajouter quand vous les créerez) -->
+  
+  <!-- Future: Learn to Earn Page -->
+  <!--
+  <url>
+    <loc>https://bluestift.app/learn-to-earn</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  -->
+  
+  <!-- Future: RAYA AI Assistant Page -->
+  <!--
+  <url>
+    <loc>https://bluestift.app/raya-ai-assistant</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  -->
+  
+  <!-- Future: Free Courses Page -->
+  <!--
+  <url>
+    <loc>https://bluestift.app/free-courses</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  -->
+  
+  <!-- Future: Blog -->
+  <!--
+  <url>
+    <loc>https://bluestift.app/blog</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  -->
+  
+  <!-- Static Documents (optional, si vous voulez les indexer) -->
+  <!--
+  <url>
+    <loc>https://bluestift.app/docs/getting-started</loc>
+    <lastmod>2025-01-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  -->
+
+</urlset>
