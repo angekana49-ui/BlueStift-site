@@ -1,0 +1,347 @@
+/* ==========================================
+   BLUESTIFT - DESIGN TOKENS v5.0
+   Mode Hybride: Glassmorphism + Bento Grid
+   Single source of truth pour TOUS les styles
+   ========================================== */
+
+:root {
+  /* ===================================
+     COLORS - PALETTE PRINCIPALE
+     =================================== */
+  
+  /* Primary Gradient (Bleu → Violet) */
+  --color-primary-start: #667eea;
+  --color-primary-mid: #764ba2;
+  --color-primary-end: #8b5cf6;
+  
+  /* Secondary Gradient (Bleu clair → Cyan) */
+  --color-secondary-start: #4facfe;
+  --color-secondary-end: #00f2fe;
+  
+  /* Accent Gradient (Rose → Violet) */
+  --color-accent-start: #f5576c;
+  --color-accent-mid: #f093fb;
+  --color-accent-end: #a855f7;
+  
+  /* Neutrals - Light Mode */
+  --color-bg-light: #001f3f;
+  --color-surface-light: #ffffff;
+  --color-text-light: #1a1a1a;
+  --color-text-secondary-light: #666666;
+  --color-text-tertiary-light: #999999;
+  --color-border-light: #e5e7eb;
+  
+  /* Neutrals - Dark Mode */
+  --color-bg-dark: #0a0a0f;
+  --color-surface-dark: #1a1a1a;
+  --color-surface-elevated-dark: #2a2a2f;
+  --color-text-dark: #f0f0f0;
+  --color-text-secondary-dark: #b0b0b0;
+  --color-text-tertiary-dark: #666666;
+  --color-border-dark: #333333;
+  
+  /* Semantic Colors */
+  --color-success: #10b981;
+  --color-success-light: #d1fae5;
+  --color-error: #ef4444;
+  --color-error-light: #fee2e2;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
+  
+  /* ===================================
+     GRADIENTS - EFFETS MODERNES
+     =================================== */
+  
+  --gradient-primary: linear-gradient(135deg, var(--color-primary-start) 0%, var(--color-primary-mid) 50%, var(--color-primary-end) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--color-secondary-start) 0%, var(--color-secondary-end) 100%);
+  --gradient-accent: linear-gradient(135deg, var(--color-accent-start) 0%, var(--color-accent-mid) 50%, var(--color-accent-end) 100%);
+  
+  /* Gradient animé (background) */
+  --gradient-animated: linear-gradient(45deg, #667eea, #764ba2, #f093fb, #4facfe);
+  
+  /* Gradient text (pour titres) */
+  --gradient-text: linear-gradient(135deg, var(--color-primary-start), var(--color-accent-mid));
+  
+  /* ===================================
+     GLASSMORPHISM - EFFETS VERRE
+     =================================== */
+  
+  /* Light Mode Glass */
+  --glass-bg-light: rgba(255, 255, 255, 0.1);
+  --glass-bg-light-hover: rgba(255, 255, 255, 0.15);
+  --glass-border-light: rgba(255, 255, 255, 0.18);
+  --glass-shadow-light: 0 8px 32px rgba(31, 38, 135, 0.15);
+  
+  /* Dark Mode Glass */
+  --glass-bg-dark: rgba(255, 255, 255, 0.05);
+  --glass-bg-dark-hover: rgba(255, 255, 255, 0.08);
+  --glass-border-dark: rgba(255, 255, 255, 0.1);
+  --glass-shadow-dark: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* Blur levels */
+  --glass-blur-sm: 10px;
+  --glass-blur-md: 16px;
+  --glass-blur-lg: 24px;
+  --glass-blur-xl: 32px;
+  
+  /* ===================================
+     SPACING - SYSTÈME 8PT
+     =================================== */
+  
+  --space-0: 0;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+  --space-40: 160px;
+  
+  /* Aliases sémantiques */
+  --space-xs: var(--space-2);   /* 8px */
+  --space-sm: var(--space-4);   /* 16px */
+  --space-md: var(--space-6);   /* 24px */
+  --space-lg: var(--space-10);  /* 40px */
+  --space-xl: var(--space-16);  /* 64px */
+  --space-2xl: var(--space-24); /* 96px */
+  --space-3xl: var(--space-32); /* 128px */
+  
+  /* ===================================
+     TYPOGRAPHY - SYSTÈME DE TAILLES
+     =================================== */
+  
+  /* Font Families */
+  --font-family-base: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-family-display: 'Inter', sans-serif;
+  --font-family-mono: 'SF Mono', 'Monaco', 'Courier New', monospace;
+  
+  /* Font Sizes (Mobile First) */
+  --font-size-xs: 0.75rem;     /* 12px */
+  --font-size-sm: 0.875rem;    /* 14px */
+  --font-size-base: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;    /* 18px */
+  --font-size-xl: 1.25rem;     /* 20px */
+  --font-size-2xl: 1.5rem;     /* 24px */
+  --font-size-3xl: 1.875rem;   /* 30px */
+  --font-size-4xl: 2.25rem;    /* 36px */
+  --font-size-5xl: 3rem;       /* 48px */
+  --font-size-6xl: 3.75rem;    /* 60px */
+  --font-size-7xl: 4.5rem;     /* 72px */
+  
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+  
+  /* Line Heights */
+  --line-height-none: 1;
+  --line-height-tight: 1.25;
+  --line-height-snug: 1.375;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.625;
+  --line-height-loose: 2;
+  
+  /* Letter Spacing */
+  --letter-spacing-tighter: -0.05em;
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+  --letter-spacing-wide: 0.025em;
+  --letter-spacing-wider: 0.05em;
+  --letter-spacing-widest: 0.1em;
+  
+  /* ===================================
+     BORDER RADIUS - ARRONDIS
+     =================================== */
+  
+  --radius-none: 0;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 24px;
+  --radius-3xl: 32px;
+  --radius-full: 9999px;
+  
+  /* ===================================
+     SHADOWS - OMBRES
+     =================================== */
+  
+  /* Standard Shadows */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.15);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 24px 64px rgba(0, 0, 0, 0.25);
+  
+  /* Glow Effects (pour hover) */
+  --shadow-glow-primary: 0 0 40px rgba(102, 126, 234, 0.4);
+  --shadow-glow-secondary: 0 0 40px rgba(79, 172, 254, 0.4);
+  --shadow-glow-accent: 0 0 40px rgba(245, 87, 108, 0.4);
+  
+  /* Inner Shadow (pour inputs) */
+  --shadow-inner: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  
+  /* ===================================
+     TRANSITIONS - ANIMATIONS
+     =================================== */
+  
+  /* Durations */
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 350ms;
+  --duration-slower: 500ms;
+  
+  /* Easing Functions */
+  --ease-linear: linear;
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  
+  /* Transitions complètes */
+  --transition-fast: var(--duration-fast) var(--ease-smooth);
+  --transition-base: var(--duration-base) var(--ease-smooth);
+  --transition-slow: var(--duration-slow) var(--ease-smooth);
+  --transition-bounce: var(--duration-slower) var(--ease-bounce);
+  
+  /* ===================================
+     Z-INDEX - LAYERS
+     =================================== */
+  
+  --z-base: 0;
+  --z-dropdown: 1000;
+  --z-sticky: 1100;
+  --z-fixed: 1200;
+  --z-modal-backdrop: 10000;
+  --z-modal: 10001;
+  --z-notification: 10002;
+  --z-tooltip: 10003;
+  
+  /* ===================================
+     BREAKPOINTS (pour référence JS)
+     =================================== */
+  
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  
+  /* ===================================
+     BENTO GRID - CONFIGURATION
+     =================================== */
+  
+  --grid-columns: 12;
+  --grid-gap: var(--space-6);
+  --grid-gap-mobile: var(--space-4);
+  
+  /* ===================================
+     CONTAINER - LARGEURS MAX
+     =================================== */
+  
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1536px;
+}
+
+/* ==========================================
+   DARK MODE - OVERRIDES
+   ========================================== */
+
+body.dark-theme {
+  /* Colors */
+  --color-bg: var(--color-bg-dark);
+  --color-surface: var(--color-surface-dark);
+  --color-text: var(--color-text-dark);
+  --color-text-secondary: var(--color-text-secondary-dark);
+  --color-text-tertiary: var(--color-text-tertiary-dark);
+  --color-border: var(--color-border-dark);
+  
+  /* Glassmorphism */
+  --glass-bg: var(--glass-bg-dark);
+  --glass-bg-hover: var(--glass-bg-dark-hover);
+  --glass-border: var(--glass-border-dark);
+  --glass-shadow: var(--glass-shadow-dark);
+  
+  /* Gradients plus saturés en dark mode */
+  --gradient-primary: linear-gradient(135deg, #7c8ff7 0%, #8b5cf6 50%, #a855f7 100%);
+}
+
+/* ==========================================
+   LIGHT MODE - DEFAULTS
+   ========================================== */
+
+body {
+  /* Colors */
+  --color-bg: var(--color-bg-light);
+  --color-surface: var(--color-surface-light);
+  --color-text: var(--color-text-light);
+  --color-text-secondary: var(--color-text-secondary-light);
+  --color-text-tertiary: var(--color-text-tertiary-light);
+  --color-border: var(--color-border-light);
+  
+  /* Glassmorphism */
+  --glass-bg: var(--glass-bg-light);
+  --glass-bg-hover: var(--glass-bg-light-hover);
+  --glass-border: var(--glass-border-light);
+  --glass-shadow: var(--glass-shadow-light);
+  
+  /* Application globale */
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: background var(--transition-base), color var(--transition-base);
+}
+
+/* ==========================================
+   NOTES D'UTILISATION
+   ========================================== */
+
+/*
+  COMMENT UTILISER CES VARIABLES :
+  
+  1. Dans vos CSS :
+     .my-button {
+       background: var(--gradient-primary);
+       border-radius: var(--radius-lg);
+       padding: var(--space-4) var(--space-6);
+       transition: all var(--transition-base);
+     }
+  
+  2. Pourquoi des variables CSS (pas SASS) ?
+     - Changement dynamique possible (dark mode)
+     - Accessible en JavaScript
+     - Support natif navigateurs modernes
+     - Pas de compilation nécessaire
+  
+  3. Convention de nommage :
+     --[category]-[property]-[variant]
+     Ex: --color-text-secondary
+         --space-lg
+         --shadow-glow-primary
+  
+  4. Ajout de nouvelles variables :
+     - Suivez la convention
+     - Documentez avec commentaire
+     - Groupez par catégorie
+     - Pensez light + dark mode
+*/

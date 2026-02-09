@@ -1,0 +1,203 @@
+/* ==================================================================
+   BLUESTIFT - DARK THEME v5.0
+   Dark mode overrides (activated with body.dark-theme)
+   ================================================================== */
+
+body.dark-theme {
+  /* Background */
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-dark);
+}
+
+/* DARK MODE COLOR OVERRIDES */
+body.dark-theme {
+  --color-bg: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-text: #f0f0f0;
+  --color-text-secondary: #b0b0b0;
+  --color-border: #333333;
+  
+  /* Glass effects */
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-bg-hover: rgba(255, 255, 255, 0.08);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.8);
+}
+
+/* ENHANCED CONTRAST FOR DARK MODE */
+body.dark-theme .text-high-contrast {
+  color: #ffffff;
+}
+
+/* DARK MODE SPECIFIC SHADOWS */
+body.dark-theme .shadow-dark {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* DARK MODE BORDERS */
+body.dark-theme .border-dark {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* DARK MODE GLASS ENHANCED */
+body.dark-theme .glass-dark {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* DARK MODE GRADIENT OVERLAYS */
+body.dark-theme .gradient-overlay-dark {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 0%,
+    rgba(0, 0, 0, 0.8) 100%
+  );
+}
+
+/* DARK MODE CODE BLOCKS */
+body.dark-theme pre,
+body.dark-theme code {
+  background: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #333333;
+}
+
+/* DARK MODE SELECTION */
+body.dark-theme ::selection {
+  background: rgba(102, 126, 234, 0.4);
+  color: #ffffff;
+}
+
+/* DARK MODE SCROLLBAR */
+body.dark-theme ::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb {
+  background: #444444;
+}
+
+body.dark-theme ::-webkit-scrollbar-thumb:hover {
+  background: #555555;
+}
+
+/* DARK MODE FOCUS RINGS */
+body.dark-theme *:focus-visible {
+  outline: 2px solid var(--color-primary-mid);
+  outline-offset: 2px;
+}
+
+/* DARK MODE PLACEHOLDER */
+body.dark-theme ::placeholder {
+  color: #666666;
+  opacity: 1;
+}
+
+/* DARK MODE INPUTS */
+body.dark-theme input,
+body.dark-theme textarea,
+body.dark-theme select {
+  background: #1e1e1e;
+  color: #f0f0f0;
+  border-color: #333333;
+}
+
+body.dark-theme input:focus,
+body.dark-theme textarea:focus,
+body.dark-theme select:focus {
+  border-color: var(--color-primary-start);
+  background: #252525;
+}
+
+/* DARK MODE BUTTONS */
+body.dark-theme .btn-secondary {
+  background: #2a2a2a;
+  color: #f0f0f0;
+}
+
+body.dark-theme .btn-secondary:hover {
+  background: #333333;
+}
+
+/* DARK MODE CARDS */
+body.dark-theme .card {
+  background: var(--glass-bg-dark);
+  border-color: var(--glass-border-dark);
+}
+
+/* DARK MODE MODALS */
+body.dark-theme .modal {
+  background: rgba(0, 0, 0, 0.85);
+}
+
+body.dark-theme .modal-content {
+  background: #1a1a1a;
+  color: #f0f0f0;
+}
+
+/* DARK MODE HEADERS */
+body.dark-theme header {
+  background: var(--glass-bg-dark);
+  border-bottom-color: var(--glass-border-dark);
+}
+
+/* DARK MODE FOOTER */
+body.dark-theme footer {
+  background: #1a1a1a;
+  border-top-color: #333333;
+}
+
+/* DARK MODE DROPDOWNS - Styles définis dans navigation.css */
+/* Ces règles sont commentées pour éviter les conflits avec navigation.css */
+/* Les styles du menu-content sont maintenant dans css/components/navigation.css */
+
+/* DARK MODE HOVER STATES */
+body.dark-theme .hover-bg-shift:hover::before {
+  opacity: 0.15;
+}
+
+/* DARK MODE LINKS */
+body.dark-theme a {
+  color: var(--color-primary-mid);
+}
+
+body.dark-theme a:hover {
+  color: var(--color-primary-end);
+}
+
+/* DARK MODE DISABLED STATES */
+body.dark-theme [disabled],
+body.dark-theme .disabled {
+  opacity: 0.4;
+}
+
+/* DARK MODE SKELETON LOADERS */
+body.dark-theme .skeleton {
+  background: linear-gradient(
+    90deg,
+    #1a1a1a 0%,
+    #2a2a2a 50%,
+    #1a1a1a 100%
+  );
+}
+
+/* DARK MODE SPECIFIC ADJUSTMENTS */
+body.dark-theme .hero h1 {
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+}
+
+body.dark-theme .section-title h2 {
+  color: #f0f0f0;
+}
+
+/* DARK MODE INCREASED GRADIENT SATURATION */
+body.dark-theme .gradient-primary,
+body.dark-theme .gradient-animated {
+  filter: saturate(1.2);
+}

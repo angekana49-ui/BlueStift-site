@@ -1,0 +1,320 @@
+/* ==================================================================
+   BLUESTIFT - OVERRIDES & FIXES v5.0
+   Specific overrides and third-party fixes
+   ================================================================== */
+
+/* GOOGLE TRANSLATE FIX */
+.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame,
+#goog-gt-tt,
+.goog-te-balloon-frame {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  pointer-events: none !important;
+}
+
+body.translated-ltr,
+body.translated-rtl {
+  top: 0 !important;
+  position: static !important;
+  margin-top: 0 !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+body > *:first-child {
+  margin-top: 0 !important;
+}
+
+/* GOOGLE TRANSLATE WIDGET STYLING */
+/* Force all Google Translate elements to use dark text */
+#google_translate_element,
+#google_translate_element *,
+.goog-te-gadget,
+.goog-te-gadget *,
+.goog-te-combo,
+.goog-te-combo * {
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+.goog-te-gadget {
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.85rem !important;
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+.goog-te-gadget > span {
+  display: inline !important;
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+.goog-te-gadget > span > span {
+  color: #333 !important;
+  text-shadow: none !important;
+}
+
+.goog-te-combo {
+  background: #f3f4f6 !important;
+  border: 2px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  padding: 6px 12px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 0.85rem !important;
+  color: #333 !important;
+  cursor: pointer !important;
+  transition: all 0.3s ease !important;
+  outline: none !important;
+  margin: 0 !important;
+  text-shadow: none !important;
+}
+
+.goog-te-combo:hover {
+  background: #e5e7eb !important;
+  border-color: #2563eb !important;
+  transform: translateY(-1px);
+}
+
+.goog-te-combo:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+}
+
+.goog-te-combo option {
+  padding: 10px !important;
+  font-size: 0.95rem !important;
+  background: #fff !important;
+  color: #333 !important;
+}
+
+.goog-logo-link {
+  font-size: 0.85rem !important;
+  color: #666 !important;
+  text-decoration: none !important;
+  padding-left: 5px !important;
+}
+
+.goog-logo-link:hover {
+  color: #2563eb !important;
+}
+
+#google_translate_element {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Dark mode overrides */
+body.dark-theme #google_translate_element,
+body.dark-theme #google_translate_element *,
+body.dark-theme .goog-te-gadget,
+body.dark-theme .goog-te-gadget *,
+body.dark-theme .goog-te-combo,
+body.dark-theme .goog-te-combo * {
+  color: #f0f0f0 !important;
+}
+
+body.dark-theme .goog-te-gadget {
+  color: #f0f0f0 !important;
+}
+
+body.dark-theme .goog-te-combo {
+  background: #1a1a1a !important;
+  border-color: #333 !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-theme .goog-te-combo:hover {
+  background: #2a2a2a !important;
+  border-color: #60a5fa !important;
+}
+
+body.dark-theme .goog-te-combo option {
+  background: #1a1a1a !important;
+  color: #f0f0f0 !important;
+}
+
+body.dark-theme .goog-logo-link {
+  color: #b0b0b0 !important;
+}
+
+body.dark-theme .goog-logo-link:hover {
+  color: #60a5fa !important;
+}
+
+/* PRINT STYLES */
+@media print {
+  .no-print,
+  header,
+  footer,
+  .cta-section,
+  .modal,
+  .early-bird-banner {
+    display: none !important;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+}
+
+/* FONT SMOOTHING */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* PREVENT ZOOM ON DOUBLE TAP (iOS) */
+* {
+  touch-action: manipulation;
+}
+
+/* PREVENT FLICKER ON ANIMATIONS */
+.animate,
+.hover-lift,
+.hover-scale {
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* FOCUS VISIBLE POLYFILL */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
+}
+
+/* FIREFOX SPECIFIC */
+@-moz-document url-prefix() {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-start) transparent;
+  }
+}
+
+/* SAFARI SPECIFIC */
+@supports (-webkit-backdrop-filter: none) or (backdrop-filter: none) {
+  .glass,
+  .glass-card,
+  .modal-content {
+    -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  }
+}
+
+/* EDGE/IE FALLBACK (no backdrop-filter support) */
+@supports not (backdrop-filter: blur(10px)) {
+  .glass,
+  .glass-card {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+  }
+  
+  body.dark-theme .glass,
+  body.dark-theme .glass-card {
+    background: var(--color-surface-dark);
+  }
+}
+
+/* WEBKIT AUTOFILL OVERRIDE */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--color-text);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-surface) inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+body.dark-theme input:-webkit-autofill,
+body.dark-theme textarea:-webkit-autofill,
+body.dark-theme select:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-text-dark);
+  -webkit-box-shadow: 0 0 0px 1000px var(--color-surface-dark) inset;
+}
+
+/* FORCE HARDWARE ACCELERATION */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* PREVENT LAYOUT SHIFT */
+.prevent-layout-shift {
+  contain: layout;
+}
+
+/* IMAGE LOADING OPTIMIZATION */
+img {
+  content-visibility: auto;
+}
+
+/* REDUCE MOTION FOR ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* HIGH CONTRAST MODE */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  .glass,
+  .glass-card {
+    border-width: 2px;
+  }
+}
+
+/* IMPORTANT OVERRIDES (use sparingly) */
+.important-hidden {
+  display: none !important;
+}
+
+.important-visible {
+  display: block !important;
+}
+
+.important-no-scroll {
+  overflow: hidden !important;
+}
+
+/* Z-INDEX OVERRIDES */
+.z-max {
+  z-index: 9999 !important;
+}
+
+/* NOTRANSLATE CLASS */
+.notranslate {
+  translate: no;
+}
+
+/* PREVENT TEXT SELECTION ON UI ELEMENTS */
+button,
+.btn,
+[role="button"] {
+  user-select: none;
+}

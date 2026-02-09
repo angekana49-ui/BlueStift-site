@@ -1,0 +1,253 @@
+/* ==========================================
+   BLUESTIFT - RESET CSS
+   Normalisation cross-browser moderne
+   Basé sur : Modern CSS Reset + Custom additions
+   ========================================== */
+
+/* ==========================================
+   1. BOX SIZING
+   ========================================== */
+
+/* Utiliser border-box partout (CRUCIAL) */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   2. MARGINS & PADDINGS
+   ========================================== */
+
+/* Retirer tous les margins/paddings par défaut */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================================
+   3. BODY
+   ========================================== */
+
+body {
+  min-height: 100vh;
+  line-height: 1.5;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ==========================================
+   4. TYPOGRAPHIE
+   ========================================== */
+
+/* Hériter les fontes partout */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Améliorer la lisibilité */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.2;
+  font-weight: inherit;
+}
+
+p, li {
+  max-width: 65ch; /* Limite de lisibilité */
+}
+
+/* ==========================================
+   5. MEDIA
+   ========================================== */
+
+/* Images et media responsive par défaut */
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+/* ==========================================
+   6. FORMS
+   ========================================== */
+
+/* Retirer apparence par défaut des inputs */
+input,
+button,
+textarea,
+select {
+  background: none;
+  border: none;
+  outline: none;
+}
+
+/* Curseur pointer sur les boutons */
+button,
+[type="button"],
+[type="submit"],
+[role="button"] {
+  cursor: pointer;
+}
+
+/* Désactiver resize pour textarea (on contrôle) */
+textarea {
+  resize: vertical;
+}
+
+/* ==========================================
+   7. LIENS
+   ========================================== */
+
+/* Retirer soulignement par défaut */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ==========================================
+   8. LISTES
+   ========================================== */
+
+/* Retirer bullets/numbers par défaut */
+ul,
+ol {
+  list-style: none;
+}
+
+/* ==========================================
+   9. SCROLL
+   ========================================== */
+
+/* Smooth scroll (si supporté) */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Respecter les préférences d'accessibilité */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================
+   10. SÉLECTION DE TEXTE
+   ========================================== */
+
+/* Style personnalisé pour la sélection */
+::selection {
+  background: rgba(102, 126, 234, 0.3);
+  color: inherit;
+}
+
+::-moz-selection {
+  background: rgba(102, 126, 234, 0.3);
+  color: inherit;
+}
+
+/* ==========================================
+   11. FOCUS VISIBLE
+   ========================================== */
+
+/* Focus visible uniquement au clavier (pas à la souris) */
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-primary-start, #667eea);
+  outline-offset: 2px;
+}
+
+/* ==========================================
+   12. GOOGLE TRANSLATE (FIX)
+   ========================================== */
+
+/* Empêcher Google Translate de déplacer le body */
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+body > .skiptranslate:first-child {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  top: -9999px !important;
+}
+
+/* ==========================================
+   13. PRINT
+   ========================================== */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: transparent !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  img {
+    page-break-inside: avoid;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}
+
+/* ==========================================
+   NOTES
+   ========================================== */
+
+/*
+  Ce reset est MODERNE et MINIMAL.
+  
+  Il ne fait QUE :
+  - Normaliser les comportements cross-browser
+  - Retirer les styles non-désirés
+  - Améliorer l'accessibilité
+  
+  Il NE fait PAS :
+  - Appliquer des styles visuels (c'est le job des autres fichiers)
+  - Surcharger inutilement
+  
+  Pourquoi ce reset plutôt que Normalize.css ?
+  - Plus léger (moins de code inutile)
+  - Plus moderne (box-sizing, focus-visible, etc.)
+  - Plus adapté à notre architecture
+*/

@@ -1,0 +1,738 @@
+/* ==================================================================
+   BLUESTIFT - NAVIGATION SYSTEM v6.2
+   APPROCHE SIMPLE ET FLUIDE - Inspiré de l'ancien style.css
+   Pas de calculs complexes, juste du responsive propre
+   Date: 12 janvier 2025
+   ================================================================== */
+
+/* ==========================================
+   RESET & FIXES GOOGLE TRANSLATE
+   ========================================== */
+
+/* Fix Google Translate qui pousse le body */
+.goog-te-banner-frame,
+iframe.goog-te-banner-frame {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
+  position: absolute !important;
+  top: -9999px !important;
+  left: -9999px !important;
+  z-index: -9999 !important;
+  pointer-events: none !important;
+}
+
+/* S'assurer que le widget Google Translate est visible */
+#google_translate_element {
+  display: inline-flex !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+.goog-te-gadget {
+  display: inline !important;
+  visibility: visible !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+body.translated-ltr,
+body.translated-rtl {
+  top: 0 !important;
+  position: static !important;
+  margin-top: 0 !important;
+}
+
+/* Forcer le body à ne jamais bouger */
+body > *:first-child {
+  margin-top: 0 !important;
+}
+
+/* ==========================================
+   HEADER - STRUCTURE PRINCIPALE
+   ========================================== 
+   
+   APPROCHE SIMPLE :
+   - Padding fixe qui change selon breakpoints
+   - Pas de calc() compliqué
+   - Juste du bon vieux CSS responsive
+*/
+
+header {
+  /* POSITIONNEMENT */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  
+  /* LAYOUT FLEX */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* ESPACEMENT - Réduit pour header compact */
+  padding: 6px 25px;
+  
+  /* STYLE - Glassmorphism subtil */
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  
+  /* BORDURE + OMBRE */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  
+  /* TRANSITIONS */
+  transition: box-shadow 0.3s ease, background 0.3s;
+}
+
+/* État scrollé */
+header.scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+/* ==========================================
+   LOGO
+   ========================================== */
+
+.logo {
+  font-size: 1.2rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0; /* Ne se compresse jamais */
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.logo-img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  
+  /* BORDURES VISIBLES */
+  border: 3px solid #2563eb; /* Bleu Bluestift épais */
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2); /* Halo subtil */
+}
+
+.logo:hover .logo-img {
+  transform: rotate(360deg);
+}
+
+.notranslate {
+  translate: no;
+}
+
+/* ==========================================
+   NAV LINKS
+   ========================================== */
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+}
+
+#google_translate_element {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ==========================================
+   SUB-HEADER - MENU + FAQ
+   ========================================== */
+
+.sub-header {
+  /* STICKY POSITIONING - COLLÉ SOUS LE HEADER */
+  position: sticky;
+  top: 72px; /* Default, will be set dynamically by JS */
+  z-index: 999;
+  
+  /* GLASSMORPHISM STYLING */
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  /* LAYOUT */
+  padding: 12px 25px;
+  margin-top: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  /* BORDERS & SHADOWS */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  
+  /* TRANSITION */
+  transition: all 0.3s ease;
+}
+
+.sub-header a {
+  font-weight: 700;
+  color: #2563eb;
+  font-size: 0.95rem;
+  text-decoration: none; /* NO UNDERLINE */
+  transition: all 0.3s ease;
+  
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sub-header a:hover {
+  color: #1e40af;
+}
+
+/* MENU BUTTON WITH HAMBURGER ICON */
+#menu-btn {
+  position: relative;
+  padding-left: 32px; /* Space for hamburger icon */
+}
+
+#menu-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 2px;
+  background: #2563eb;
+  box-shadow: 
+    0 -6px 0 #2563eb,
+    0 6px 0 #2563eb;
+  transition: all 0.3s ease;
+}
+
+#menu-btn:hover::before {
+  background: #1e40af;
+  box-shadow: 
+    0 -6px 0 #1e40af,
+    0 6px 0 #1e40af;
+}
+
+/* ==========================================
+   MENU DROPDOWN
+   ========================================== */
+
+.menu-content {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 5px;
+  max-width: 250px;
+
+  /* LIGHT MODE - Fond blanc opaque pour meilleure lisibilité */
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  padding: 15px 20px;
+
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 998;
+
+  animation: slideDown 0.25s ease;
+}
+
+.menu-content.active {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-content a {
+  display: block;
+  padding: 8px 0;
+  color: #1a1a1a; /* Texte noir pour light mode */
+  font-weight: 500;
+  text-decoration: none;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  transition: all 0.2s ease;
+}
+
+.menu-content a:hover {
+  color: #2563eb;
+  padding-left: 5px;
+}
+
+.menu-content a i {
+  font-size: 1.1rem;
+  width: 20px;
+  color: inherit; /* Hérite la couleur du texte */
+}
+
+/* ==========================================
+   THEME SUBMENU
+   ========================================== */
+
+.theme-submenu {
+  display: none;
+  padding-left: 30px;
+  margin-top: 6px;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.theme-submenu.active {
+  display: flex;
+}
+
+.theme-submenu a {
+  font-size: 0.9rem;
+  padding: 6px 0;
+  color: #1a1a1a; /* Texte noir pour light mode */
+}
+
+body.dark-theme .theme-submenu a {
+  color: rgba(255, 255, 255, 0.85); /* Texte blanc légèrement transparent */
+}
+
+/* ==========================================
+   FAQ SECTION - GLASSMORPHISM REDESIGN
+   ========================================== */
+
+/* CONTAINER SECTION */
+.faq-section {
+  width: 100%;
+  padding: 80px 20px 100px;
+  background: transparent; /* Utilise le fond du wrapper */
+  margin: 0;
+  position: relative;
+  z-index: 1; /* Assure que FAQ est au-dessus du background */
+}
+
+.faq-container {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* TITRE CENTRÉ - FAQ */
+.faq-container h2,
+.faq-section h2 {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white; /* BLANC */
+  margin: 0 0 40px 0;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* FAQ DROPDOWN - GLASSMORPHISM */
+.faq-dropdown {
+  display: block !important;
+  position: relative;
+
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto; /* Centrage horizontal */
+
+  /* GLASSMORPHISM */
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 24px;
+  padding: 32px;
+
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.15);
+
+  animation: fadeInUp 0.6s ease-out;
+}
+
+/* FAQ ITEM */
+.faq-item {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 20px 0;
+  transition: all 0.3s ease;
+}
+
+.faq-item:first-child {
+  padding-top: 0;
+}
+
+.faq-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* FAQ QUESTION - Structure: Texte à gauche + icône à droite */
+.faq-question {
+  width: 100%;
+  background: none;
+  border: none;
+  
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: white; /* BLANC */
+  text-align: left;
+  
+  cursor: pointer;
+  padding: 0;
+  
+  transition: color 0.2s ease;
+}
+
+.faq-question:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ICÔNE + / × À DROITE */
+.faq-question::after {
+  content: "+";
+  font-size: 1.8rem;
+  font-weight: 300;
+  color: white;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: all 0.3s ease; /* Smooth transition */
+  transform: rotate(0deg);
+}
+
+.faq-question.open::after {
+  content: "×";
+  font-size: 2.2rem;
+  transform: rotate(90deg); /* Rotation smooth */
+}
+
+/* SUPPRESSION DE L'ANCIEN ::before */
+.faq-question::before {
+  display: none !important;
+}
+
+/* FAQ ANSWER - BLANC */
+.faq-answer {
+  display: none;
+  padding: 16px 0 0 0;
+  
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.9); /* BLANC */
+  line-height: 1.7;
+  
+  animation: fadeIn 0.3s ease;
+}
+
+.faq-answer.open {
+  display: block;
+}
+
+/* ANIMATIONS */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* ==========================================
+   DARK MODE
+   ========================================== */
+
+body.dark-theme header {
+  background: rgba(26, 26, 26, 0.85);
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme header.scrolled {
+  background: rgba(26, 26, 26, 0.92);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .logo {
+  color: #fff;
+}
+
+body.dark-theme .logo-img {
+  border-color: #60a5fa; /* Bleu clair en dark mode */
+  box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.3);
+}
+
+body.dark-theme .sub-header a {
+  color: #60a5fa;
+}
+
+body.dark-theme .sub-header a:hover {
+  color: #93c5fd;
+}
+
+/* DARK MODE - Menu Dropdown - Inversion exacte du mode clair */
+body.dark-theme .menu-content {
+  background: rgba(26, 26, 26, 0.98); /* Fond noir très opaque (inverse du blanc) */
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1); /* Bordure blanche (inverse du noir) */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .menu-content a {
+  color: #ffffff; /* Texte blanc (inverse du noir #1a1a1a) */
+}
+
+body.dark-theme .menu-content a:hover {
+  color: #60a5fa; /* Bleu clair pour dark mode */
+}
+
+body.dark-theme .faq-dropdown {
+  background: rgba(26, 26, 26, 0.95);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark-theme .faq-question {
+  color: #e5e5e5;
+}
+
+body.dark-theme .faq-answer {
+  color: #a3a3a3;
+}
+
+body.dark-theme .faq-item {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+/* ==========================================
+   RESPONSIVE - APPROCHE SIMPLE
+   ========================================== 
+   
+   PHILOSOPHIE :
+   - Chaque breakpoint a des valeurs FIXES
+   - Pas de calc() compliqué
+   - Tout diminue proportionnellement
+   - Facile à debugger et maintenir
+*/
+
+/* ==========================================
+   TABLET - 768px
+   ========================================== */
+
+@media (max-width: 768px) {
+  header {
+    padding: 6px 15px; /* Réduit, aligné avec desktop */
+  }
+  
+  .logo {
+    font-size: 1.1rem; /* -0.1rem */
+  }
+
+  .logo-img {
+    width: 50px;  /* -10px */
+    height: 50px;
+  }
+  
+  .nav-links {
+    gap: 8px; /* -4px */
+  }
+  
+  .sub-header {
+    padding: 10px 15px; /* Aligned with header, keeping sticky */
+    margin-top: 0; /* Keep at 0 for sticky */
+  }
+
+  .sub-header a {
+    font-size: 0.9rem; /* -0.05rem */
+  }
+  
+  .faq-dropdown {
+    width: calc(100% - 30px); /* Width with margins */
+    margin: 0 auto; /* Center horizontally */
+  }
+  
+  #google_translate_element {
+    font-size: 0.85rem; /* Légèrement plus petit */
+  }
+}
+
+/* ==========================================
+   MOBILE - 480px
+   ========================================== */
+
+@media (max-width: 480px) {
+  header {
+    padding: 5px 12px; /* Ultra-compact */
+  }
+  
+  .logo {
+    font-size: 1rem; /* -0.2rem du base */
+  }
+
+  .logo-img {
+    width: 45px;  /* -15px du base */
+    height: 45px;
+  }
+  
+  .nav-links {
+    gap: 6px; /* Minimal */
+  }
+
+  .sub-header {
+    padding: 8px 12px;
+    margin-top: 0; /* Keep sticky */
+    flex-direction: column; /* Stack vertical */
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .sub-header a {
+    font-size: 0.85rem; /* Encore plus petit */
+  }
+
+  .faq-dropdown {
+    width: calc(100% - 20px); /* Width with margins */
+    margin: 0 auto; /* Center horizontally */
+    top: 100%; /* Suit le sub-header qui est en colonne */
+  }
+  
+  #google_translate_element {
+    font-size: 0.8rem; /* Ultra-compact */
+  }
+  
+  .menu-content {
+    position: fixed;
+    top: 80px;
+    right: 12px;
+    left: auto;
+    max-width: calc(100vw - 24px);
+  }
+}
+
+/* ==========================================
+   EXTRA SMALL - 375px (iPhone SE, small Android)
+   ========================================== */
+
+@media (max-width: 375px) {
+  header {
+    padding: 4px 10px; /* Minimal */
+  }
+  
+  .logo {
+    font-size: 0.95rem;
+    gap: 4px; /* Réduit l'espacement */
+  }
+
+  .logo-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .sub-header {
+    padding: 8px 10px;
+    margin-top: 0; /* Keep sticky */
+  }
+  
+  .sub-header a {
+    font-size: 0.8rem;
+  }
+  
+  .faq-dropdown {
+    padding: 16px;
+  }
+}
+
+/* ==========================================
+   DARK MODE - SUB-HEADER
+   ========================================== */
+
+body.dark-theme .sub-header {
+  background: rgba(26, 26, 26, 0.95);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-theme .sub-header a {
+  color: #60a5fa; /* Lighter blue for dark mode */
+}
+
+body.dark-theme .sub-header a:hover {
+  color: #93c5fd;
+}
+
+body.dark-theme #menu-btn::before {
+  background: #60a5fa;
+  box-shadow: 
+    0 -6px 0 #60a5fa,
+    0 6px 0 #60a5fa;
+}
+
+body.dark-theme #menu-btn:hover::before {
+  background: #93c5fd;
+  box-shadow: 
+    0 -6px 0 #93c5fd,
+    0 6px 0 #93c5fd;
+}
+
+/* ==========================================
+   PRINT STYLES
+   ========================================== */
+
+@media print {
+  header {
+    position: static;
+    box-shadow: none;
+    border-bottom: 1px solid #000;
+    background: #fff;
+  }
+  
+  .sub-header,
+  .menu-content,
+  .faq-dropdown {
+    display: none !important;
+  }
+}
+/* ============================================
+   DARK THEME: HEADER SCROLL FIX
+   Couleur dark fixe même au scroll
+   ============================================ */
+
+/* Dark theme: header garde sa couleur dark */
+body.dark-theme header {
+  background: rgba(26, 26, 26, 0.85) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Au scroll: augmente opacité + ombre mais couleur reste dark */
+body.dark-theme header.scrolled {
+  background: rgba(26, 26, 26, 0.95) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(16px) saturate(180%);
+}
+
+/* ============================================
+   MENU DROPDOWN GLASSMORPHISM - SUPPRIMÉ
+   Les styles sont maintenant définis dans la section
+   "MENU DROPDOWN" ci-dessus pour éviter les conflits
+   ============================================ */

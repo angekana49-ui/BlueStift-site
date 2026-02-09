@@ -1,0 +1,312 @@
+{
+  "school": {
+    "name": "Mary High School",
+    "country": "Cameroon",
+    "city": "Yaounde",
+    "planType": "Pro",
+    "expiryDate": "2026-02-24",
+    "rayaMessagesLeft": 50,
+    "contributionsLeft": -1,
+    "email": "admin@vogt-highschool.edu",
+    "phone": "+237 699 123 456",
+    "adminName": "Jean-Paul Kamga"
+  },
+  "global": {
+    "students": 1247,
+    "pkm": 0.74,
+    "avgTime": "3h45",
+    "completion": "72%",
+    "avgStreak": 9,
+    "lessonsCompleted": 4520,
+    "subjects": [
+      {
+        "name": "Mathematics",
+        "icon": "calculator",
+        "pkm": 0.71,
+        "difficulty": "Integral calculus (12th), Fractions (6th)",
+        "effort": "high",
+        "details": {
+          "difficulties": [
+            "Integral calculus - 12th Grade (142 students affected)",
+            "Fractions and proportions - 6th/7th Grade (89 students)",
+            "3D Geometry - 9th Grade (67 students)"
+          ],
+          "mastered": [
+            "Basic algebra (92% of students)",
+            "Descriptive statistics (88%)",
+            "First-degree equations (95%)"
+          ],
+          "recommendations": [
+            "Strengthen calculus basics for 12th graders",
+            "Fraction manipulation workshops for 6th grade",
+            "3D visual aids for geometry"
+          ],
+          "effortLevel": "High",
+          "effortDesc": "Strong overall engagement, many questions on RAYA"
+        }
+      },
+      {
+        "name": "Physics",
+        "icon": "atom",
+        "pkm": 0.73,
+        "difficulty": "SI units, Electrical circuits",
+        "effort": "high",
+        "details": {
+          "difficulties": [
+            "SI unit conversion (all grades)",
+            "Electrical circuit laws - 9th/10th Grade",
+            "Point mechanics - 12th Grade"
+          ],
+          "mastered": [
+            "Geometric optics (85%)",
+            "Basic kinematics (82%)"
+          ],
+          "recommendations": [
+            "Display SI units summary chart",
+            "Hands-on circuit lab work",
+            "Progressive mechanics exercises"
+          ],
+          "effortLevel": "High",
+          "effortDesc": "Curious students, many practical questions"
+        }
+      },
+      {
+        "name": "Chemistry",
+        "icon": "flask",
+        "pkm": 0.69,
+        "difficulty": "Equation balancing, Moles",
+        "effort": "medium",
+        "details": {
+          "difficulties": [
+            "Mole concept (all grades)",
+            "Redox equation balancing",
+            "Organic nomenclature - 12th Grade"
+          ],
+          "mastered": [
+            "Periodic table (90%)",
+            "Simple acid-base reactions (78%)"
+          ],
+          "recommendations": [
+            "Visual approach for moles",
+            "Step-by-step balancing method",
+            "Nomenclature card games"
+          ],
+          "effortLevel": "Medium",
+          "effortDesc": "Decent participation, could be improved"
+        }
+      },
+      {
+        "name": "French",
+        "icon": "book",
+        "pkm": 0.78,
+        "difficulty": "Essay writing, Subjunctive conjugation",
+        "effort": "medium",
+        "details": {
+          "difficulties": [
+            "Essay methodology - High School",
+            "Present/past subjunctive - Middle School",
+            "Argumentative text analysis"
+          ],
+          "mastered": [
+            "Reading comprehension (91%)",
+            "Common figures of speech (84%)",
+            "Indicative conjugation (89%)"
+          ],
+          "recommendations": [
+            "Annotated essay outline templates",
+            "Contextualized subjunctive exercises",
+            "Creative writing workshops"
+          ],
+          "effortLevel": "Medium",
+          "effortDesc": "Good oral participation, writing needs encouragement"
+        }
+      },
+      {
+        "name": "English",
+        "icon": "language",
+        "pkm": 0.76,
+        "difficulty": "Present perfect, Phrasal verbs",
+        "effort": "medium",
+        "details": {
+          "difficulties": [
+            "Present perfect vs preterit (all grades)",
+            "Common phrasal verbs - High School",
+            "Pronunciation - Middle School"
+          ],
+          "mastered": [
+            "Present simple/continuous (87%)",
+            "Everyday vocabulary (92%)",
+            "Past simple (85%)"
+          ],
+          "recommendations": [
+            "Visual tense timeline",
+            "Essential phrasal verbs list",
+            "Regular audio/video activities"
+          ],
+          "effortLevel": "Medium",
+          "effortDesc": "Variable interest depending on class"
+        }
+      },
+      {
+        "name": "Biology / Life Sciences",
+        "icon": "leaf",
+        "pkm": 0.75,
+        "difficulty": "Genetics, Cell cycles",
+        "effort": "high",
+        "details": {
+          "difficulties": [
+            "Mendelian genetics - 12th Grade",
+            "Mitosis/Meiosis - 9th/10th Grade",
+            "Food chain - 6th Grade"
+          ],
+          "mastered": [
+            "Basic human anatomy (88%)",
+            "Living organisms classification (85%)",
+            "Photosynthesis (80%)"
+          ],
+          "recommendations": [
+            "Animated cell division diagrams",
+            "Genetic crossing exercises",
+            "Ecology field trips"
+          ],
+          "effortLevel": "High",
+          "effortDesc": "Popular subject, strong engagement"
+        }
+      }
+    ]
+  },
+  "class": {
+    "students": 45,
+    "pkm": 0.72,
+    "avgTime": "4h20",
+    "completion": "78%",
+    "avgStreak": 12,
+    "lessonsCompleted": 156,
+    "subjects": [
+      {
+        "name": "Mathematics",
+        "icon": "calculator",
+        "pkm": 0.68,
+        "difficulty": "Composite function primitives",
+        "effort": "high",
+        "details": {
+          "difficulties": [
+            "Composite function primitives (28 students stuck)",
+            "Integration by parts (method confusion)"
+          ],
+          "mastered": [
+            "Composite derivatives (42/45 students)",
+            "Limits and asymptotes (38/45 students)"
+          ],
+          "recommendations": [
+            "Do 3-4 guided exercises on u'×f'(u)",
+            "Review common primitive formulas",
+            "Progressive integration by parts exercises"
+          ],
+          "effortLevel": "High",
+          "effortDesc": "Very engaged class, many RAYA questions"
+        }
+      },
+      {
+        "name": "Physics",
+        "icon": "atom",
+        "pkm": 0.75,
+        "difficulty": "SI units in mechanics",
+        "effort": "high",
+        "details": {
+          "difficulties": [
+            "Confusion between C (torsion) vs J (moment of inertia)",
+            "Applying oscillation formulas"
+          ],
+          "mastered": [
+            "Pendulum differential equations",
+            "Natural period calculation"
+          ],
+          "recommendations": [
+            "Comparison chart C vs J with units",
+            "SI review before mechanical oscillations chapter"
+          ],
+          "effortLevel": "High",
+          "effortDesc": "Active participation, request many explanations"
+        }
+      },
+      {
+        "name": "Chemistry",
+        "icon": "flask",
+        "pkm": 0.71,
+        "difficulty": "Redox balancing",
+        "effort": "medium",
+        "details": {
+          "difficulties": [
+            "Complex redox equation balancing",
+            "Oxidation number calculation"
+          ],
+          "mastered": [
+            "Acid-base reactions",
+            "pH and concentrations"
+          ],
+          "recommendations": [
+            "Progressive redox exercises (simple -> complex)",
+            "Systematic half-equation method"
+          ],
+          "effortLevel": "Medium",
+          "effortDesc": "Attentive class but rarely asks for clarification"
+        }
+      },
+      {
+        "name": "French",
+        "icon": "book",
+        "pkm": 0.82,
+        "difficulty": "Essay outline",
+        "effort": "medium",
+        "details": {
+          "difficulties": [
+            "Dialectical outline construction",
+            "Transitions between sections"
+          ],
+          "mastered": [
+            "Literary text analysis",
+            "Identifying figures of speech"
+          ],
+          "recommendations": [
+            "Annotated outline examples",
+            "Introduction/conclusion construction exercises"
+          ],
+          "effortLevel": "Medium",
+          "effortDesc": "Good oral participation, shy in writing"
+        }
+      },
+      {
+        "name": "English",
+        "icon": "language",
+        "pkm": 0.79,
+        "difficulty": "Present perfect",
+        "effort": "low",
+        "details": {
+          "difficulties": [
+            "Present perfect vs preterit difference",
+            "For vs Since"
+          ],
+          "mastered": [
+            "Present simple/continuous",
+            "Past simple"
+          ],
+          "recommendations": [
+            "Visual tense timeline",
+            "Contextualized daily life exercises"
+          ],
+          "effortLevel": "Low",
+          "effortDesc": "Disengaged class, minimal participation"
+        }
+      }
+    ]
+  },
+  "rayaResponses": {
+    "pkm": "The average PKM (Personal Knowledge Mastery) for your class is 0.72, which is good. Mathematics is slightly pulling it down (0.68) due to difficulties with primitives. I recommend targeted exercises on this topic.",
+    "math": "In mathematics, the main difficulty concerns composite function primitives. 28 out of 45 students are stuck on this topic. I suggest: 1) Review common formulas, 2) Guided u'×f'(u) exercises, 3) Gradual progression.",
+    "physics": "In physics, confusion between the torsion constant C and the moment of inertia J persists. A comparison chart with SI units before the mechanical oscillations chapter would be very useful.",
+    "compare": "To compare multiple classes, could you specify which ones? For example: 'Compare 12th Grade A and B in math' or 'Compare 6th Grade A and B'.",
+    "action": "To improve results, I recommend: 1) Target identified major difficulties, 2) Adapt pace to unmastered concepts, 3) Use progressive exercises, 4) Encourage questions (effort correlates with success).",
+    "default": "I'm here to help you analyze your data. Ask me specific questions about subjects, difficulties, or request comparisons between classes!"
+  }
+}

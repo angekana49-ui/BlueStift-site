@@ -1,0 +1,556 @@
+/* ==================================================================
+   BLUESTIFT - QUOTES SECTION v1.0
+   Citations motivantes avec carousel auto-scroll
+   Design minimaliste et impactant
+   ================================================================== */
+
+/* ==========================================
+   SECTION CONTAINER
+   ========================================== */
+
+.quotes-section {
+  position: relative;
+  width: 100%;
+  padding: var(--space-24) var(--space-6) var(--space-8);
+  background: transparent;
+  overflow: hidden;
+}
+
+.quotes-container {
+  max-width: var(--container-lg);
+  margin: 0 auto;
+  position: relative;
+}
+
+/* ==========================================
+   QUOTES WRAPPER - GLASSMORPHISM CARD
+   ========================================== */
+
+.quotes-wrapper {
+  position: relative;
+  min-height: 280px;
+  
+  /* Glassmorphism - same as other sections */
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-2xl);
+  
+  padding: var(--space-12) var(--space-8);
+  
+  /* Shadow */
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.08);
+  
+  /* Display for carousel */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================
+   QUOTE ITEM
+   ========================================== */
+
+.quote-item {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  max-width: 900px;
+  padding: 0 var(--space-6);
+
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.8s var(--ease-smooth),
+    visibility 0.8s var(--ease-smooth);
+}
+
+/* Active quote */
+.quote-item.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 1;
+}
+
+/* Fade out */
+.quote-item.fade-out {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* ==========================================
+   QUOTE TEXT - ITALIC WHITE
+   ========================================== */
+
+.quote-text {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-medium);
+  font-style: italic;
+  color: white;
+  line-height: var(--line-height-tight);
+  margin: 0 0 var(--space-6) 0;
+  letter-spacing: var(--letter-spacing-tight);
+  
+  /* Text shadow for readability */
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Quotation marks styling */
+.quote-text::before {
+  content: '\201C';
+  font-family: Georgia, serif;
+  font-size: 1.3em;
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.5);
+  margin-right: 0.1em;
+}
+
+.quote-text::after {
+  content: '\201D';
+  font-family: Georgia, serif;
+  font-size: 1.3em;
+  font-style: normal;
+  color: rgba(255, 255, 255, 0.5);
+  margin-left: 0.1em;
+}
+
+/* ==========================================
+   QUOTE AUTHOR
+   ========================================== */
+
+.quote-author {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-normal);
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: var(--line-height-normal);
+  margin: 0;
+  letter-spacing: var(--letter-spacing-wide);
+}
+
+/* Em dash before author name */
+.quote-author::before {
+  content: '\2014\00A0';
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* ==========================================
+   NAVIGATION DOTS (CENTERED BELOW)
+   ========================================== */
+
+.quotes-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding: var(--space-4);
+}
+
+.quotes-dots .dot {
+  width: 12px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.25);
+  border: 1.5px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition: all var(--transition-base);
+
+  /* Subtle glow */
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.quotes-dots .dot:hover {
+  background: rgba(255, 255, 255, 0.45);
+  transform: scale(1.25);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+}
+
+.quotes-dots .dot.active {
+  background: white;
+  width: 32px;
+  height: 6px;
+  border-color: white;
+  box-shadow:
+    0 0 16px rgba(255, 255, 255, 0.5),
+    0 0 24px rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================
+   TRANSITION TEXT (OUTSIDE GLASSMORPHISM)
+   ========================================== */
+
+.quotes-transition {
+  margin-top: var(--space-8);
+  text-align: center;
+  padding: var(--space-6) var(--space-4);
+  /* NO glassmorphism - just text on gradient background */
+
+  /* Responsive centering */
+  width: 100%;
+  max-width: var(--container-lg);
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.quotes-transition p {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-medium);
+  color: white;
+  line-height: var(--line-height-normal);
+  margin: 0 auto;
+  letter-spacing: var(--letter-spacing-tight);
+
+  /* Responsive width */
+  max-width: 90%;
+  width: 100%;
+
+  /* Subtle animation on load */
+  animation: fadeInUp 0.8s ease-out;
+
+  /* Text shadow */
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Optional: Add subtle gradient underline */
+.quotes-transition p::after {
+  content: '';
+  display: block;
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    transparent 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    transparent 100%
+  );
+  margin: var(--space-4) auto 0;
+  border-radius: var(--radius-full);
+}
+
+/* ==========================================
+   ANIMATIONS
+   ========================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInQuote {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -45%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+}
+
+@keyframes fadeOutQuote {
+  from {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  to {
+    opacity: 0;
+    transform: translate(-50%, -55%);
+  }
+}
+
+/* ==========================================
+   DARK MODE OVERRIDES
+   ========================================== */
+
+body.dark-theme .quotes-wrapper {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.dark-theme .quote-text {
+  color: rgba(255, 255, 255, 0.98);
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .quote-author {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+body.dark-theme .quotes-transition p {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+body.dark-theme .quotes-dots .dot {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+body.dark-theme .quotes-dots .dot.active {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+/* ==========================================
+   RESPONSIVE DESIGN
+   ========================================== */
+
+/* Large tablets */
+@media (max-width: 1024px) {
+  .quotes-section {
+    padding: var(--space-20) var(--space-4) var(--space-16);
+  }
+
+  .quote-text {
+    font-size: var(--font-size-4xl);
+  }
+
+  .quote-author {
+    font-size: var(--font-size-lg);
+  }
+
+  .quotes-transition p {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .quotes-section {
+    padding: var(--space-16) var(--space-4) var(--space-12);
+  }
+
+  .quotes-wrapper {
+    min-height: 220px;
+    padding: var(--space-8) var(--space-4);
+    border-radius: var(--radius-xl);
+  }
+
+  .quote-text {
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--space-4);
+  }
+
+  .quote-author {
+    font-size: var(--font-size-base);
+  }
+
+  .quotes-dots {
+    margin-top: var(--space-12);
+    gap: var(--space-2);
+  }
+
+  .quotes-dots .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .quotes-dots .dot.active {
+    width: 28px;
+  }
+
+  .quotes-transition {
+    margin-top: var(--space-6);
+    padding: var(--space-5) var(--space-4);
+  }
+
+  .quotes-transition p {
+    font-size: var(--font-size-lg);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .quotes-section {
+    padding: var(--space-12) var(--space-4) var(--space-10);
+  }
+
+  .quotes-wrapper {
+    min-height: 200px;
+    padding: var(--space-6) var(--space-3);
+    border-radius: var(--radius-lg);
+  }
+
+  .quote-text {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-snug);
+  }
+
+  .quote-text::before,
+  .quote-text::after {
+    font-size: 1.2em;
+  }
+
+  .quote-author {
+    font-size: var(--font-size-sm);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .quotes-dots {
+    margin-top: var(--space-10);
+    gap: var(--space-2);
+  }
+
+  .quotes-dots .dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .quotes-dots .dot.active {
+    width: 24px;
+  }
+
+  .quotes-transition {
+    margin-top: var(--space-6);
+    padding: var(--space-4) var(--space-3);
+  }
+
+  .quotes-transition p {
+    font-size: var(--font-size-base);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .quotes-transition p::after {
+    width: 60px;
+    height: 2px;
+    margin-top: var(--space-3);
+  }
+}
+
+/* Small mobile */
+@media (max-width: 360px) {
+  .quote-text {
+    font-size: var(--font-size-xl);
+  }
+
+  .quote-author {
+    font-size: 0.8rem;
+  }
+}
+
+/* ==========================================
+   ACCESSIBILITY
+   ========================================== */
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  .quote-item,
+  .quotes-dots .dot,
+  .quotes-transition p {
+    transition: none;
+    animation: none;
+  }
+  
+  .quote-item.active {
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Focus states for keyboard navigation */
+.quotes-dots .dot:focus {
+  outline: 2px solid rgba(255, 255, 255, 0.9);
+  outline-offset: 4px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .quote-text,
+  .quote-author,
+  .quotes-transition p {
+    color: white;
+    text-shadow: none;
+  }
+  
+  .quotes-dots .dot {
+    border-width: 2px;
+  }
+}
+
+/* ==========================================
+   NOTES D'IMPLEMENTATION
+   ========================================== */
+
+/*
+  JAVASCRIPT REQUIS :
+  
+  1. Auto-scroll functionality:
+     - setInterval pour changer de quote toutes les 7-8 secondes
+     - Transition smooth entre quotes (fade in/out)
+     
+  2. Navigation dots:
+     - Click handler pour chaque dot
+     - Update active state
+     - Immediate transition vers la quote selectionnee
+     
+  3. Quote transition logic:
+     - Remove 'active' class from current quote
+     - Add 'fade-out' class briefly
+     - Add 'active' class to next quote
+     - Update dots
+     
+  EXEMPLE STRUCTURE JS :
+  
+  const quotesWrapper = document.querySelector('.quotes-wrapper');
+  const quotes = document.querySelectorAll('.quote-item');
+  const dots = document.querySelectorAll('.quotes-dots .dot');
+  
+  let currentQuoteIndex = 0;
+  const autoScrollInterval = 7500; // 7.5 secondes
+  
+  function showQuote(index) {
+    // Hide current quote
+    quotes.forEach(quote => {
+      quote.classList.remove('active', 'fade-out');
+    });
+    
+    // Show new quote
+    setTimeout(() => {
+      quotes[index].classList.add('active');
+    }, 100);
+    
+    updateDots(index);
+  }
+  
+  function updateDots(index) {
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  }
+  
+  // Initialize: show first quote
+  showQuote(0);
+  
+  // Auto-scroll
+  setInterval(() => {
+    currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+    showQuote(currentQuoteIndex);
+  }, autoScrollInterval);
+  
+  // Dots click handlers
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+      currentQuoteIndex = index;
+      showQuote(index);
+    });
+  });
+  
+  TIPS :
+  - Pause auto-scroll when user hovers over quotes section
+  - Resume auto-scroll after 3 seconds of no interaction
+  - Add keyboard navigation (left/right arrows)
+  - Consider adding subtle entrance animation for page load
+*/

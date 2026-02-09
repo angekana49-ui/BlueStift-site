@@ -1,0 +1,13 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - ANIMATIONS
+   Keyframe animations
+   ================================================================== */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

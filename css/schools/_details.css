@@ -1,0 +1,123 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - SUBJECT DETAILS
+   Subject detail panel styles
+   ================================================================== */
+
+.subject-details {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--color-border-light);
+}
+
+.subject-details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.subject-details-header h3 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subject-details-header h3 i {
+  color: var(--color-primary-start);
+}
+
+.btn-close-details {
+  background: none;
+  border: none;
+  color: var(--color-text-tertiary-light);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.btn-close-details:hover {
+  background: var(--color-border-light);
+  color: var(--color-text-light);
+}
+
+.subject-details-content {
+  display: grid;
+  gap: 20px;
+}
+
+.detail-score h4 {
+  font-size: var(--font-size-base);
+  color: var(--color-text-light);
+}
+
+.detail-score h4 span {
+  color: var(--color-primary-start);
+  font-weight: 700;
+}
+
+.detail-section h4 {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-light);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-section.difficulties h4 i {
+  color: var(--color-warning);
+}
+
+.detail-section.mastered h4 i {
+  color: var(--color-success);
+}
+
+.detail-section.recommendations h4 i {
+  color: var(--color-info);
+}
+
+.detail-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.detail-section ul li {
+  padding: 8px 0;
+  padding-left: 20px;
+  position: relative;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary-light);
+}
+
+.detail-section ul li::before {
+  content: "\2022";
+  position: absolute;
+  left: 0;
+  color: var(--color-primary-start);
+}
+
+.detail-effort h4 {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.detail-effort h4 span {
+  color: var(--color-primary-start);
+}
+
+.detail-effort p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary-light);
+  margin: 8px 0 0;
+}

@@ -1,0 +1,98 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - HEADER
+   Dashboard badge & sub-headers
+   ================================================================== */
+
+/* ==========================================
+   DASHBOARD BADGE (Header)
+   ========================================== */
+
+.dashboard-badge {
+  background: var(--gradient-primary);
+  color: white;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  margin-left: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   SUB-HEADERS DASHBOARD
+   ========================================== */
+
+/* Schools dashboard - Header override */
+#dashboard-container > header {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.sub-header-dashboard {
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 25px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  z-index: 100;
+  margin: 0;
+}
+
+/* Sub-header 1: Admin Info */
+.sub-header-admin {
+  top: 0; /* Set by JS */
+  background: #ffffff;
+}
+
+/* Sub-header 2: Navigation */
+.sub-header-nav {
+  top: 0; /* Set by JS */
+  background: #f8fafc;
+  padding: 8px 25px;
+  margin-top: -1px; /* Overlap to avoid micro-gap */
+  border-top: 1px solid #f8fafc; /* Cover the gap */
+}
+
+.admin-info,
+.subscription-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+  color: #666666;
+}
+
+.admin-info i,
+.subscription-status i {
+  color: var(--color-primary-start);
+}
+
+.subscription-status .expires {
+  color: #999999;
+  font-size: var(--font-size-xs);
+}
+
+.separator {
+  color: var(--color-border-light);
+  margin: 0 4px;
+}
+
+/* ==========================================
+   SCHOOL INFO (Header)
+   ========================================== */
+
+.school-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary-light);
+}
+
+.school-info i {
+  color: var(--color-primary-start);
+}

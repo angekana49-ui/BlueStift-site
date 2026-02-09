@@ -1,0 +1,69 @@
+/* ==================================================================
+   BLUESTIFT - BUTTONS SYSTEM v5.0
+   Complete button component library
+   Glassmorphism + Gradients + Modern interactions
+   ================================================================== */
+
+/* BASE BUTTON */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  
+  /* GOOGLE TRANSLATE FIX - Natural wrapping like style.css */
+  max-width: 100%;
+  white-space: normal; /* Permet le retour à la ligne */
+  word-wrap: break-word; /* Coupe les mots longs */
+  line-height: 1.4;
+  text-align: center;
+}
+
+/* Force single line for specific cases */
+.btn.btn-nowrap {
+  white-space: nowrap;
+}
+
+/* PRIMARY BUTTON */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg), var(--shadow-glow-primary);
+}
+
+/* GLASS BUTTON */
+.btn-glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  color: var(--color-text);
+}
+
+.btn-glass:hover {
+  background: var(--glass-bg-hover);
+  transform: translateY(-2px);
+}
+
+/* SIZES */
+.btn-sm { padding: var(--space-2) var(--space-4); font-size: var(--font-size-sm); }
+.btn-lg { padding: var(--space-4) var(--space-8); font-size: var(--font-size-lg); }
+.btn-full { width: 100%; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .btn-mobile-full { width: 100%; }
+}

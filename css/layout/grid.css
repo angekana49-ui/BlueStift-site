@@ -1,0 +1,416 @@
+/* ==========================================
+   BLUESTIFT - BENTO GRID SYSTEM
+   Système de grille asymétrique moderne
+   Inspiré de : Apple, Linear, Notion
+   ========================================== */
+
+/* ==========================================
+   CONTAINER - WRAPPER PRINCIPAL
+   ========================================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-xl);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-4);
+  padding-right: var(--space-4);
+}
+
+/* Variantes de container */
+.container-sm { max-width: var(--container-sm); }
+.container-md { max-width: var(--container-md); }
+.container-lg { max-width: var(--container-lg); }
+.container-xl { max-width: var(--container-xl); }
+.container-2xl { max-width: var(--container-2xl); }
+.container-full { max-width: 100%; }
+
+/* Container sans padding (full bleed) */
+.container-flush {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* ==========================================
+   BENTO GRID - SYSTÈME PRINCIPAL
+   ========================================== */
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--grid-gap);
+  width: 100%;
+}
+
+/* Gap variations */
+.bento-grid-sm { gap: var(--space-4); }
+.bento-grid-md { gap: var(--space-6); }
+.bento-grid-lg { gap: var(--space-8); }
+.bento-grid-xl { gap: var(--space-10); }
+
+/* ==========================================
+   BENTO ITEMS - TAILLES DE CARDS
+   ========================================== */
+
+/* Small cards (3 colonnes) */
+.bento-item-sm {
+  grid-column: span 3;
+  min-height: 200px;
+}
+
+/* Medium cards (4 colonnes) */
+.bento-item-md {
+  grid-column: span 4;
+  min-height: 250px;
+}
+
+/* Large cards (6 colonnes - moitié) */
+.bento-item-lg {
+  grid-column: span 6;
+  min-height: 300px;
+}
+
+/* Extra Large cards (8 colonnes) */
+.bento-item-xl {
+  grid-column: span 8;
+  min-height: 350px;
+}
+
+/* Full width cards (12 colonnes) */
+.bento-item-full {
+  grid-column: span 12;
+  min-height: 250px;
+}
+
+/* ==========================================
+   BENTO ITEMS - HAUTEURS (ROWS)
+   ========================================== */
+
+/* Tall cards (2 rows) */
+.bento-item-tall {
+  grid-row: span 2;
+}
+
+/* Extra tall cards (3 rows) */
+.bento-item-xtall {
+  grid-row: span 3;
+}
+
+/* ==========================================
+   BENTO LAYOUTS PRÉDÉFINIS
+   Layout communs pour différentes sections
+   ========================================== */
+
+/* Layout 1: Hero avec sidebar */
+.bento-hero-sidebar .hero-main {
+  grid-column: span 8;
+  grid-row: span 2;
+}
+
+.bento-hero-sidebar .hero-side {
+  grid-column: span 4;
+}
+
+/* Layout 2: Features asymétriques (style Apple) */
+.bento-features .feature-hero {
+  grid-column: span 6;
+  grid-row: span 2;
+}
+
+.bento-features .feature-small {
+  grid-column: span 3;
+}
+
+.bento-features .feature-medium {
+  grid-column: span 4;
+}
+
+.bento-features .feature-wide {
+  grid-column: span 8;
+}
+
+/* Layout 3: Gallery masonry */
+.bento-gallery .gallery-large {
+  grid-column: span 6;
+  grid-row: span 2;
+}
+
+.bento-gallery .gallery-medium {
+  grid-column: span 4;
+}
+
+.bento-gallery .gallery-small {
+  grid-column: span 2;
+}
+
+/* ==========================================
+   RESPONSIVE - TABLET
+   ========================================== */
+
+@media (max-width: 1024px) {
+  .bento-grid {
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--space-4);
+  }
+  
+  /* Adapter les tailles */
+  .bento-item-sm { grid-column: span 4; }
+  .bento-item-md { grid-column: span 4; }
+  .bento-item-lg { grid-column: span 4; }
+  .bento-item-xl { grid-column: span 8; }
+  .bento-item-full { grid-column: span 8; }
+  
+  /* Layouts prédéfinis */
+  .bento-hero-sidebar .hero-main { grid-column: span 5; }
+  .bento-hero-sidebar .hero-side { grid-column: span 3; }
+  
+  .bento-features .feature-hero { grid-column: span 4; }
+  .bento-features .feature-small { grid-column: span 4; }
+  .bento-features .feature-medium { grid-column: span 4; }
+  .bento-features .feature-wide { grid-column: span 8; }
+}
+
+/* ==========================================
+   RESPONSIVE - MOBILE
+   ========================================== */
+
+@media (max-width: 768px) {
+  .container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+  
+  .bento-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  /* Tout en pleine largeur sur mobile */
+  .bento-item-sm,
+  .bento-item-md,
+  .bento-item-lg,
+  .bento-item-xl,
+  .bento-item-full {
+    grid-column: span 1;
+    min-height: 200px;
+  }
+  
+  /* Réduire hauteurs sur mobile */
+  .bento-item-tall,
+  .bento-item-xtall {
+    grid-row: span 1;
+  }
+  
+  /* Layouts prédéfinis → stack vertical */
+  .bento-hero-sidebar .hero-main,
+  .bento-hero-sidebar .hero-side,
+  .bento-features .feature-hero,
+  .bento-features .feature-small,
+  .bento-features .feature-medium,
+  .bento-features .feature-wide,
+  .bento-gallery .gallery-large,
+  .bento-gallery .gallery-medium,
+  .bento-gallery .gallery-small {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+/* ==========================================
+   SPACING UTILITIES
+   ========================================== */
+
+/* Section spacing (entre les sections Bento) */
+.section-spacing {
+  padding-top: var(--space-24);
+  padding-bottom: var(--space-24);
+}
+
+.section-spacing-sm {
+  padding-top: var(--space-16);
+  padding-bottom: var(--space-16);
+}
+
+.section-spacing-lg {
+  padding-top: var(--space-32);
+  padding-bottom: var(--space-32);
+}
+
+@media (max-width: 768px) {
+  .section-spacing {
+    padding-top: var(--space-16);
+    padding-bottom: var(--space-16);
+  }
+  
+  .section-spacing-sm {
+    padding-top: var(--space-12);
+    padding-bottom: var(--space-12);
+  }
+  
+  .section-spacing-lg {
+    padding-top: var(--space-20);
+    padding-bottom: var(--space-20);
+  }
+}
+
+/* ==========================================
+   FLEXBOX UTILITIES
+   Pour éléments à l'intérieur des Bento items
+   ========================================== */
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.flex-start {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.flex-end {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.items-end { align-items: flex-end; }
+.items-stretch { align-items: stretch; }
+
+.justify-center { justify-content: center; }
+.justify-start { justify-content: flex-start; }
+.justify-end { justify-content: flex-end; }
+.justify-between { justify-content: space-between; }
+.justify-around { justify-content: space-around; }
+
+.gap-2 { gap: var(--space-2); }
+.gap-4 { gap: var(--space-4); }
+.gap-6 { gap: var(--space-6); }
+.gap-8 { gap: var(--space-8); }
+.gap-10 { gap: var(--space-10); }
+.gap-12 { gap: var(--space-12); }
+
+/* ==========================================
+   VISIBILITY UTILITIES
+   ========================================== */
+
+/* Cacher sur mobile */
+.hidden-mobile {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .hidden-mobile {
+    display: none !important;
+  }
+}
+
+/* Cacher sur desktop */
+.hidden-desktop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .hidden-desktop {
+    display: block !important;
+  }
+}
+
+/* Cacher sur tablet */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hidden-tablet {
+    display: none !important;
+  }
+}
+
+/* ==========================================
+   ASPECT RATIO - Pour images dans Bento
+   ========================================== */
+
+.aspect-square {
+  aspect-ratio: 1 / 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-portrait {
+  aspect-ratio: 3 / 4;
+}
+
+.aspect-landscape {
+  aspect-ratio: 4 / 3;
+}
+
+/* ==========================================
+   NOTES D'UTILISATION
+   ========================================== */
+
+/*
+  EXEMPLE D'UTILISATION BENTO GRID :
+  
+  <section class="section-spacing">
+    <div class="container">
+      <div class="bento-grid bento-features">
+        
+        <!-- Grande card principale -->
+        <div class="bento-item-lg bento-item-tall feature-hero">
+          <h2>RAYA AI</h2>
+          <p>Your personal tutor</p>
+        </div>
+        
+        <!-- Petites cards -->
+        <div class="bento-item-sm feature-small">
+          <h3>Lessons</h3>
+        </div>
+        
+        <div class="bento-item-sm feature-small">
+          <h3>Track Progress</h3>
+        </div>
+        
+        <!-- Card wide -->
+        <div class="bento-item-lg feature-wide">
+          <h3>Multi-language</h3>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+  
+  AVANTAGES DU SYSTÈME :
+  
+  1. Responsive natif (mobile → tablet → desktop)
+  2. Layouts prédéfinis (gain de temps)
+  3. Flexible (créez vos propres layouts)
+  4. Performant (CSS Grid natif)
+  5. Accessible (ordre logique HTML)
+*/

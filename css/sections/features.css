@@ -1,0 +1,302 @@
+/* ==================================================================
+   BLUESTIFT - FEATURES SECTION v5.0
+   Bento Grid layout with glass cards
+   Apple-inspired asymmetric design
+   ================================================================== */
+
+/* FEATURES SECTION */
+.features-section {
+  padding: var(--space-24) var(--space-6);
+  background: var(--color-bg);
+  position: relative;
+}
+
+/* SECTION TITLE */
+.section-title {
+  text-align: center;
+  margin-bottom: var(--space-16);
+}
+
+.section-title h2 {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: var(--font-weight-extrabold);
+  margin-bottom: var(--space-3);
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.section-title p {
+  font-size: var(--font-size-xl);
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* BENTO FEATURES GRID */
+.bento-features {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--space-6);
+  max-width: var(--container-2xl);
+  margin: 0 auto;
+}
+
+/* FEATURE HERO CARD (Large - Main feature) */
+.feature-hero {
+  grid-column: span 6;
+  grid-row: span 2;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-10);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all var(--transition-slow);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.feature-hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: var(--gradient-primary);
+  transform: scaleX(0);
+  transition: transform var(--transition-base);
+}
+
+.feature-hero:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+  border-color: var(--color-primary-start);
+}
+
+.feature-hero:hover::before {
+  transform: scaleX(1);
+}
+
+/* FEATURE SMALL CARDS */
+.feature-small {
+  grid-column: span 3;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.feature-small:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+}
+
+/* FEATURE MEDIUM CARDS */
+.feature-medium {
+  grid-column: span 4;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.feature-medium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+}
+
+/* FEATURE WIDE CARDS */
+.feature-wide {
+  grid-column: span 8;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-8);
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  transition: all var(--transition-base);
+  cursor: pointer;
+}
+
+.feature-wide:hover {
+  transform: translateX(4px);
+  box-shadow: 0 12px 32px rgba(102, 126, 234, 0.2);
+}
+
+/* FEATURE CONTENT */
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-4);
+  display: block;
+}
+
+.feature-hero .feature-icon {
+  font-size: 4rem;
+}
+
+.feature-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-2);
+  color: var(--color-text);
+}
+
+.feature-hero .feature-title {
+  font-size: var(--font-size-4xl);
+  margin-bottom: var(--space-4);
+}
+
+.feature-description {
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.feature-hero .feature-description {
+  font-size: var(--font-size-lg);
+}
+
+/* FEATURE BADGE */
+.feature-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--gradient-primary);
+  color: white;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  margin-top: auto;
+}
+
+/* FEATURE IMAGE/ILLUSTRATION */
+.feature-image {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-lg);
+  margin-top: var(--space-4);
+}
+
+/* DARK MODE */
+body.dark-theme .feature-hero,
+body.dark-theme .feature-small,
+body.dark-theme .feature-medium,
+body.dark-theme .feature-wide {
+  background: var(--glass-bg-dark);
+  border-color: var(--glass-border-dark);
+}
+
+body.dark-theme .feature-hero:hover {
+  box-shadow: 0 20px 60px rgba(102, 126, 234, 0.4);
+}
+
+/* RESPONSIVE - TABLET */
+@media (max-width: 1024px) {
+  .bento-features {
+    grid-template-columns: repeat(8, 1fr);
+    gap: var(--space-4);
+  }
+  
+  .feature-hero {
+    grid-column: span 4;
+  }
+  
+  .feature-small {
+    grid-column: span 4;
+  }
+  
+  .feature-medium {
+    grid-column: span 4;
+  }
+  
+  .feature-wide {
+    grid-column: span 8;
+  }
+}
+
+/* RESPONSIVE - MOBILE */
+@media (max-width: 768px) {
+  .features-section {
+    padding: var(--space-16) var(--space-4);
+  }
+  
+  .section-title {
+    margin-bottom: var(--space-10);
+  }
+  
+  .bento-features {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .feature-hero,
+  .feature-small,
+  .feature-medium,
+  .feature-wide {
+    grid-column: span 1;
+    grid-row: span 1;
+    padding: var(--space-6);
+  }
+  
+  .feature-hero {
+    padding: var(--space-8);
+  }
+  
+  .feature-wide {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .feature-icon {
+    font-size: 2.5rem;
+  }
+  
+  .feature-hero .feature-icon {
+    font-size: 3.5rem;
+  }
+  
+  .feature-title {
+    font-size: var(--font-size-xl);
+  }
+  
+  .feature-hero .feature-title {
+    font-size: var(--font-size-3xl);
+  }
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .feature-hero,
+  .feature-small,
+  .feature-medium,
+  .feature-wide {
+    transition: none;
+  }
+  
+  .feature-hero:hover,
+  .feature-small:hover,
+  .feature-medium:hover,
+  .feature-wide:hover {
+    transform: none;
+  }
+}

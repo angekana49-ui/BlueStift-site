@@ -1,0 +1,146 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - TABLE
+   Subjects table styles
+   ================================================================== */
+
+.subjects-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--color-border-light);
+}
+
+.subjects-section h2 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: #1a1a1a !important;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subjects-section h2 i {
+  color: var(--color-primary-start);
+}
+
+.subjects-table-container {
+  overflow-x: auto;
+}
+
+.subjects-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.subjects-table th,
+.subjects-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.subjects-table th {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.subjects-table td {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-light);
+}
+
+.subjects-table tbody tr:hover {
+  background: rgba(102, 126, 234, 0.04);
+}
+
+.subjects-table .no-data td {
+  text-align: center;
+  color: var(--color-text-tertiary-light);
+  padding: 40px 16px;
+}
+
+.subjects-table .no-data i {
+  margin-right: 8px;
+  color: var(--color-primary-start);
+}
+
+/* View details button */
+.btn-view-details {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--color-primary-start);
+  border-radius: var(--radius-md);
+  color: var(--color-primary-start);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-view-details:hover {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+}
+
+/* Badges */
+.pkm-badge,
+.effort-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+}
+
+.pkm-badge.high {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
+
+.pkm-badge.medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.pkm-badge.low {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+.effort-badge.high {
+  background: rgba(16, 185, 129, 0.15);
+  color: #059669;
+}
+
+.effort-badge.medium {
+  background: rgba(245, 158, 11, 0.15);
+  color: #d97706;
+}
+
+.effort-badge.low {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+}
+
+/* Subject name with icon */
+.subject-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.subject-name i {
+  color: var(--color-primary-start);
+  width: 20px;
+}

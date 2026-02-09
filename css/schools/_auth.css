@@ -1,0 +1,109 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - AUTH & ALERTS
+   Authentication overlay & alert messages
+   ================================================================== */
+
+/* ==========================================
+   AUTH OVERLAY
+   ========================================== */
+
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: var(--z-modal);
+  padding: 20px;
+}
+
+.auth-box {
+  background: white;
+  border-radius: var(--radius-2xl);
+  padding: 40px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: var(--shadow-2xl);
+}
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.auth-logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+}
+
+.auth-header h2 {
+  font-size: var(--font-size-2xl);
+  color: var(--color-text-light);
+  margin: 0;
+}
+
+.auth-subtitle {
+  color: var(--color-text-secondary-light);
+  font-size: var(--font-size-sm);
+  margin-bottom: 24px;
+}
+
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.auth-footer p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary-light);
+  margin: 8px 0;
+}
+
+.auth-footer a {
+  color: var(--color-primary-start);
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
+   ALERTS
+   ========================================== */
+
+.alert {
+  padding: 20px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.alert i {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.alert h3 {
+  margin: 0 0 8px;
+  font-size: var(--font-size-lg);
+}
+
+.alert p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+}
+
+.alert-warning {
+  background: var(--color-warning-light);
+  color: #92400e;
+}
+
+.alert-warning i {
+  color: var(--color-warning);
+}

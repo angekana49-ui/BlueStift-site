@@ -1,0 +1,35 @@
+/* ==================================================================
+   BLUESTIFT - SCHOOLS DASHBOARD v1.0
+   Dashboard Analytics pour Ecoles
+   Glassmorphism + Design System Bluestift
+
+   This file imports all segmented CSS files
+   ================================================================== */
+
+/* Base Components */
+@import '_header.css';
+@import '_layout.css';
+@import '_menu-dropdown.css';
+@import '_selectors.css';
+
+/* Data Display */
+@import '_stats.css';
+@import '_table.css';
+@import '_details.css';
+@import '_drawer.css';
+
+/* Features */
+@import '_chat.css';
+@import '_auth.css';
+@import '_plans.css';
+@import '_contribute.css';
+@import '_export.css';
+@import '_contact.css';
+@import '_subscription.css';
+@import '_notifications.css';
+@import '_settings.css';
+
+/* Themes & Responsive */
+@import '_dark-mode.css';
+@import '_responsive.css';
+@import '_animations.css';

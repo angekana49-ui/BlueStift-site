@@ -1,0 +1,359 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - SELECTORS
+   Year selector, filter panel, class search
+   ================================================================== */
+
+/* ==========================================
+   GLOBAL YEAR SELECTOR
+   ========================================== */
+
+.year-selector-global {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  padding: 6px 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+}
+
+.year-selector-global i {
+  color: var(--color-primary-start);
+  font-size: 0.9rem;
+}
+
+.sub-header-dashboard .year-selector-global select,
+.sub-header-dashboard .form-select-year,
+.year-selector-global select,
+.form-select-year,
+select.form-select-year,
+#select-year.form-select-year {
+  background: transparent !important;
+  border: none !important;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: #1a1a1a !important;
+  cursor: pointer;
+  padding: 0;
+  padding-right: 20px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 12 12'%3E%3Cpath fill='%231a1a1a' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right center !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.sub-header-dashboard .year-selector-global select:focus,
+.form-select-year:focus,
+.year-selector-global select:focus {
+  outline: none;
+}
+
+.sub-header-dashboard .year-selector-global select option,
+.form-select-year option,
+.year-selector-global select option,
+#select-year option {
+  background: white !important;
+  color: #1a1a1a !important;
+}
+
+/* ==========================================
+   CURRENT VIEW INDICATOR
+   ========================================== */
+
+.current-view-indicator {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  padding: 16px 24px;
+  margin-bottom: 16px;
+  border: 1px solid var(--color-border-light);
+}
+
+.view-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-primary-start);
+}
+
+.view-info i {
+  font-size: 1.2rem;
+}
+
+.btn-toggle-filter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary-light);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-toggle-filter:hover {
+  background: rgba(102, 126, 234, 0.06);
+  border-color: var(--color-primary-start);
+  color: var(--color-primary-start);
+}
+
+.btn-toggle-filter.active {
+  background: var(--gradient-primary);
+  border-color: transparent;
+  color: white;
+}
+
+.btn-toggle-filter .toggle-arrow {
+  font-size: 0.7rem;
+  transition: transform var(--transition-fast);
+}
+
+.btn-toggle-filter.active .toggle-arrow {
+  transform: rotate(180deg);
+}
+
+/* ==========================================
+   SELECTORS CONTAINER (Collapsible)
+   ========================================== */
+
+.selectors-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 1px solid var(--color-border-light);
+  overflow: hidden;
+  max-height: 500px;
+  transition: all 0.3s ease;
+}
+
+.selectors-container.collapsed {
+  max-height: 0;
+  padding: 0 24px;
+  margin-bottom: 0;
+  border: none;
+}
+
+.selectors-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.selectors-header h2 {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  color: #1a1a1a !important;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.selectors-header h2 i {
+  color: var(--color-primary-start);
+}
+
+.btn-reset-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--color-error);
+  border-radius: var(--radius-md);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-reset-filter:hover {
+  background: var(--color-error);
+  color: white;
+}
+
+.selectors-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.selector-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.selector-group label {
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.selector-group label i {
+  color: var(--color-primary-start);
+  font-size: 0.9rem;
+}
+
+/* Override forms.css white text for dashboard selects */
+.selectors-container .form-select,
+.selectors-container select {
+  width: 100%;
+  padding: 10px 14px;
+  background: white !important;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: #1a1a1a !important;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666666' d='M6 9L1 4h10z'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 12px center !important;
+  padding-right: 36px;
+  backdrop-filter: none;
+}
+
+.selectors-container .form-select option,
+.selectors-container select option {
+  background: white;
+  color: #1a1a1a;
+}
+
+.selectors-container .form-select:focus,
+.selectors-container select:focus {
+  outline: none;
+  border-color: var(--color-primary-start);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.15);
+}
+
+.selected-class-display {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: rgba(102, 126, 234, 0.08);
+  border-radius: var(--radius-md);
+  color: var(--color-primary-start);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+/* ==========================================
+   CLASS SEARCH INPUT
+   ========================================== */
+
+.class-search-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.class-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: 4px 4px 4px 16px;
+  transition: all var(--transition-fast);
+}
+
+.class-search-input-wrapper:focus-within {
+  border-color: var(--color-primary-start);
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
+}
+
+.class-search-input-wrapper .search-icon {
+  color: var(--color-primary-start);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.class-search-input,
+input[type="text"].class-search-input,
+#class-search-input {
+  flex: 1;
+  border: none !important;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  font-size: var(--font-size-base);
+  color: #1a1a1a !important;
+  padding: 12px 0;
+  outline: none;
+  box-shadow: none !important;
+}
+
+.class-search-input::placeholder,
+input[type="text"].class-search-input::placeholder,
+#class-search-input::placeholder {
+  color: #999999 !important;
+}
+
+.class-search-input:focus,
+input[type="text"].class-search-input:focus,
+#class-search-input:focus {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.class-search-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  color: white;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.class-search-btn:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-glow-primary);
+}
+
+.class-search-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--font-size-sm);
+  color: #888888;
+  margin: 0;
+}
+
+.class-search-hint i {
+  color: var(--color-primary-start);
+}

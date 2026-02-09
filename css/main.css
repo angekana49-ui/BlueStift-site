@@ -1,0 +1,117 @@
+/* ==========================================
+   BLUESTIFT - MAIN CSS v5.0
+   Mode Hybride: Glassmorphism + Bento Grid
+   Architecture: Modular ITCSS-inspired
+   Date: 13 janvier 2025
+   ========================================== */
+
+/* ==========================================
+   0. BASE - FONDATIONS
+   Normalisation, variables, typographie
+   ========================================== */
+@import url('base/reset.css');
+@import url('base/variables.css');
+@import url('base/typography.css');
+
+/* ==========================================
+   1. LAYOUT - STRUCTURE
+   Grilles, espacements, responsive
+   ========================================== */
+@import url('layout/grid.css');
+@import url('layout/spacing.css');
+@import url('layout/responsive.css');
+
+/* ==========================================
+   2. COMPONENTS - ÉLÉMENTS UI
+   Boutons, cards, modals, forms, navigation
+   ========================================== */
+@import url('components/buttons.css');
+@import url('components/cards.css');
+@import url('components/modals.css');
+@import url('components/forms.css');
+@import url('components/navigation.css');
+@import url('components/footer.css');
+@import url('components/sub-header.css');
+
+/* ==========================================
+   3. EFFECTS - EFFETS VISUELS
+   Glassmorphism, gradients, animations
+   ========================================== */
+@import url('effects/glassmorphism.css');
+@import url('effects/gradients.css');
+@import url('effects/animations.css');
+@import url('effects/hover-effects.css');
+/* @import url('effects/toggle-switch.css'); */
+
+/* ==========================================
+   4. SECTIONS - PAGES SPÉCIFIQUES
+   Hero, features, lessons, testimonials, CTA
+   ========================================== */
+@import url('sections/hero.css');
+@import url('sections/features.css');
+/* HIDDEN: Waiting for better lesson content
+@import url('sections/lessons.css');
+*/
+@import url('sections/testimonials.css');
+@import url('sections/cta.css');
+@import url('sections/info-cards.css');
+@import url('sections/quotes.css');
+@import url('schools/index.css');   
+
+/* ==========================================
+   5. THEMES - LIGHT/DARK
+   Modes clair et sombre
+   ========================================== */
+@import url('themes/light-theme.css');
+@import url('themes/dark-theme.css');
+
+/* ==========================================
+   6. UTILITIES - HELPERS
+   Classes utilitaires et overrides
+   ========================================== */
+@import url('utilities/helpers.css');
+@import url('utilities/overrides.css');
+
+/* ==========================================
+   NOTES D'UTILISATION
+   ========================================== */
+
+/*
+  ORDRE DES IMPORTS : CRITIQUE !
+  
+  1. BASE d'abord (reset, variables)
+  2. LAYOUT ensuite (structure)
+  3. COMPONENTS (éléments réutilisables)
+  4. EFFECTS (décorations)
+  5. SECTIONS (pages spécifiques)
+  6. THEMES (overrides light/dark)
+  7. UTILITIES en dernier (highest specificity)
+  
+  Ne changez JAMAIS cet ordre sans raison !
+*/
+
+/*
+  COMMENT AJOUTER UNE NOUVELLE FEATURE :
+  
+  1. Créer le fichier dans le bon dossier
+     Ex: css/4-sections/pricing.css
+     
+  2. Ajouter l'import ici
+     @import url('4-sections/pricing.css');
+     
+  3. Développer vos styles dans le fichier
+  
+  C'est tout ! Modulaire et propre.
+*/
+
+/*
+  PERFORMANCE :
+  
+  En production, utilisez PostCSS pour :
+  - Minifier tous les fichiers
+  - Combiner en un seul CSS
+  - Purger les classes inutilisées
+  - Ajouter autoprefixer
+  
+  Mais en dev, cette structure est parfaite !
+*/

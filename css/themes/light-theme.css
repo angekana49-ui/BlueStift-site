@@ -1,0 +1,332 @@
+/* ==================================================================
+   BLUESTIFT - LIGHT THEME v5.0
+   Default light theme configuration
+   ================================================================== */
+
+/* Light theme is the default - already defined in variables.css */
+/* This file is for overrides and specific light-only styles */
+
+body {
+  /* Background */
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* LIGHT THEME SPECIFIC ADJUSTMENTS */
+
+/* Enhanced contrast for light mode */
+.text-high-contrast {
+  color: #000000;
+}
+
+/* Light mode specific shadows */
+.shadow-light {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Light mode borders */
+.border-light {
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Light mode glass effects (enhanced) */
+.glass-light {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+/* Light mode gradient overlays */
+.gradient-overlay-light {
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.8) 100%
+  );
+}
+
+/* Light mode code blocks */
+pre,
+code {
+  background: #f5f5f5;
+  color: #1a1a1a;
+  border: 1px solid #e5e7eb;
+}
+
+/* Light mode selection */
+::selection {
+  background: rgba(102, 126, 234, 0.2);
+  color: inherit;
+}
+
+/* Light mode scrollbar */
+::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Light mode focus rings */
+*:focus-visible {
+  outline: 2px solid var(--color-primary-start);
+  outline-offset: 2px;
+}
+
+/* Light mode placeholder text */
+::placeholder {
+  color: #9ca3af;
+  opacity: 1;
+}
+
+/* Light mode disabled states */
+[disabled],
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ==================================================================
+   LIGHT MODE OVERRIDE - GLASSMORPHISM MODALS & LESSONS
+   Glassmorphism comme le hero section avec TEXTE BLANC
+   Arrière-plan gradient animé identique au hero section
+   ================================================================== */
+
+/* MODAL BACKDROP - Gradient animé comme le hero section */
+body:not(.dark-theme) .modal {
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(8px) !important;
+}
+
+/* Ajouter le gradient animé derrière les modals */
+body:not(.dark-theme) .modal::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    45deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #4facfe 75%,
+    #667eea 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+  z-index: -1;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* MODALS - Glassmorphism avec texte blanc en light mode */
+body:not(.dark-theme) .modal-content {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1), 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+}
+
+body:not(.dark-theme) .modal-content h2,
+body:not(.dark-theme) .modal-content h3 {
+  color: white !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+body:not(.dark-theme) .modal-content p {
+  color: rgba(255, 255, 255, 0.95) !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2) !important;
+}
+
+body:not(.dark-theme) .close-modal {
+  background: rgba(255, 255, 255, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) .close-modal:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* FORMS - Inputs avec texte blanc en light mode */
+body:not(.dark-theme) .form-group label,
+body:not(.dark-theme) .form-label {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3) !important;
+}
+
+body:not(.dark-theme) input[type="text"],
+body:not(.dark-theme) input[type="email"],
+body:not(.dark-theme) input[type="tel"],
+body:not(.dark-theme) select,
+body:not(.dark-theme) textarea,
+body:not(.dark-theme) .form-input {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) input::placeholder,
+body:not(.dark-theme) textarea::placeholder {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+body:not(.dark-theme) input:focus,
+body:not(.dark-theme) select:focus,
+body:not(.dark-theme) textarea:focus {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2) !important;
+}
+
+body:not(.dark-theme) select option {
+  background: #fff !important;
+  color: #1a1a1a !important;
+}
+
+/* SUBJECT & LESSON CARDS - Glassmorphism en light mode */
+body:not(.dark-theme) .subject-card {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+body:not(.dark-theme) .subject-card:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(102, 126, 234, 0.6) !important;
+}
+
+body:not(.dark-theme) .subject-card h3,
+body:not(.dark-theme) .subject-count,
+body:not(.dark-theme) .subject-desc,
+body:not(.dark-theme) .subject-icon {
+  color: white !important;
+}
+
+body:not(.dark-theme) .lesson-card {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+body:not(.dark-theme) .lesson-card:hover {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(102, 126, 234, 0.6) !important;
+}
+
+body:not(.dark-theme) .lesson-card-icon,
+body:not(.dark-theme) .lesson-card-title,
+body:not(.dark-theme) .lesson-card-subtitle,
+body:not(.dark-theme) .lesson-card-meta {
+  color: white !important;
+}
+
+/* LESSON CONTENT - Texte blanc en light mode */
+body:not(.dark-theme) .lesson-icon-large {
+  color: white !important;
+}
+
+body:not(.dark-theme) #lesson-title {
+  color: white !important;
+}
+
+body:not(.dark-theme) #lesson-subtitle {
+  color: white !important;
+}
+
+body:not(.dark-theme) .progress-bar {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+body:not(.dark-theme) .progress-text {
+  color: white !important;
+}
+
+body:not(.dark-theme) .step-hook,
+body:not(.dark-theme) .step-concept,
+body:not(.dark-theme) .step-quiz,
+body:not(.dark-theme) .step-feedback {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+}
+
+body:not(.dark-theme) .step-title {
+  color: white !important;
+}
+
+body:not(.dark-theme) .step-text {
+  color: white !important;
+}
+
+body:not(.dark-theme) .step-summary {
+  background: rgba(96, 165, 250, 0.25) !important;
+  backdrop-filter: blur(10px) !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) .step-highlight {
+  background: rgba(102, 126, 234, 0.2) !important;
+  backdrop-filter: blur(10px) !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) .step-visual-zone {
+  border: 2px solid #e5e7eb !important;
+}
+
+body:not(.dark-theme) .step-visual-placeholder {
+  color: #fff !important;
+}
+
+/* QUIZ OPTIONS - Glassmorphism avec texte blanc en light mode */
+body:not(.dark-theme) .quiz-option {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+body:not(.dark-theme) .quiz-option:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(102, 126, 234, 0.6) !important;
+}
+
+body:not(.dark-theme) .quiz-option.selected {
+  background: rgba(102, 126, 234, 0.3) !important;
+  border-color: #667eea !important;
+}
+
+body:not(.dark-theme) .quiz-option.correct {
+  background: rgba(16, 185, 129, 0.25) !important;
+  border-color: #10b981 !important;
+  color: white !important;
+}
+
+body:not(.dark-theme) .quiz-option.incorrect {
+  background: rgba(239, 68, 68, 0.25) !important;
+  border-color: #ef4444 !important;
+  color: white !important;
+}
+
+/* EARLY BIRD BANNER - Texte blanc en light mode */
+body:not(.dark-theme) .early-bird-banner-inline p {
+  color: white !important;
+}
+
+body:not(.dark-theme) .early-bird-banner-inline .banner-small {
+  color: rgba(255, 255, 255, 0.9) !important;
+}

@@ -1,0 +1,9 @@
+/* ==================================================================
+   BLUESTIFT - SCHOOLS DASHBOARD v1.0
+   Dashboard Analytics pour Ecoles
+
+   This file imports the modular schools dashboard CSS.
+   All styles are organized in the ./schools/ subfolder.
+   ================================================================== */
+
+@import 'schools/index.css';

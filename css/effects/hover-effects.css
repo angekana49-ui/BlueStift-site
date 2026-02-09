@@ -1,0 +1,317 @@
+/* ==================================================================
+   BLUESTIFT - HOVER EFFECTS v5.0
+   Modern interactive hover effects
+   GPU-accelerated and performant
+   ================================================================== */
+
+/* LIFT EFFECT */
+.hover-lift {
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* SCALE EFFECT */
+.hover-scale {
+  transition: transform var(--transition-base);
+}
+
+.hover-scale:hover {
+  transform: scale(1.05);
+}
+
+.hover-scale-sm:hover {
+  transform: scale(1.02);
+}
+
+.hover-scale-lg:hover {
+  transform: scale(1.1);
+}
+
+/* GLOW EFFECT */
+.hover-glow {
+  transition: all var(--transition-base);
+}
+
+.hover-glow:hover {
+  box-shadow: var(--shadow-glow-primary);
+  filter: brightness(1.1);
+}
+
+/* TILT EFFECT (3D) */
+.hover-tilt {
+  transition: transform var(--transition-base);
+  transform-style: preserve-3d;
+}
+
+.hover-tilt:hover {
+  transform: perspective(1000px) rotateX(5deg) rotateY(5deg);
+}
+
+/* BRIGHTNESS EFFECT */
+.hover-brightness {
+  transition: filter var(--transition-base);
+}
+
+.hover-brightness:hover {
+  filter: brightness(1.2);
+}
+
+/* BLUR EFFECT */
+.hover-blur {
+  transition: filter var(--transition-base);
+}
+
+.hover-blur:hover {
+  filter: blur(2px);
+}
+
+/* BORDER GLOW */
+.hover-border-glow {
+  position: relative;
+  transition: all var(--transition-base);
+}
+
+.hover-border-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  z-index: -1;
+  filter: blur(8px);
+}
+
+.hover-border-glow:hover::before {
+  opacity: 0.6;
+}
+
+/* UNDERLINE EFFECT */
+.hover-underline {
+  position: relative;
+  text-decoration: none;
+}
+
+.hover-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--color-primary-start);
+  transition: width var(--transition-base);
+}
+
+.hover-underline:hover::after {
+  width: 100%;
+}
+
+/* GRADIENT SHIFT */
+.hover-gradient-shift {
+  background-size: 200% 100%;
+  transition: background-position var(--transition-slow);
+}
+
+.hover-gradient-shift:hover {
+  background-position: 100% 0;
+}
+
+/* SHADOW GROW */
+.hover-shadow-grow {
+  transition: box-shadow var(--transition-base);
+}
+
+.hover-shadow-grow:hover {
+  box-shadow: 
+    0 0 20px rgba(102, 126, 234, 0.3),
+    0 0 40px rgba(102, 126, 234, 0.2);
+}
+
+/* ROTATE */
+.hover-rotate {
+  transition: transform var(--transition-base);
+}
+
+.hover-rotate:hover {
+  transform: rotate(5deg);
+}
+
+.hover-rotate-full:hover {
+  transform: rotate(360deg);
+}
+
+/* ICON BOUNCE */
+.hover-icon-bounce i {
+  transition: transform var(--transition-bounce);
+}
+
+.hover-icon-bounce:hover i {
+  transform: translateY(-4px);
+}
+
+/* BACKGROUND SHIFT */
+.hover-bg-shift {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-bg-shift::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity var(--transition-base);
+}
+
+.hover-bg-shift:hover::before {
+  opacity: 0.1;
+}
+
+/* SHIMMER EFFECT */
+.hover-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.hover-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.hover-shimmer:hover::after {
+  left: 100%;
+}
+
+/* EXPAND */
+.hover-expand {
+  transition: all var(--transition-base);
+}
+
+.hover-expand:hover {
+  padding: calc(var(--space-4) + 4px) calc(var(--space-6) + 8px);
+}
+
+/* FOCUS RING */
+.hover-focus-ring {
+  transition: all var(--transition-base);
+}
+
+.hover-focus-ring:hover {
+  outline: 2px solid var(--color-primary-start);
+  outline-offset: 2px;
+}
+
+/* COLOR SHIFT */
+.hover-color-shift {
+  transition: color var(--transition-base);
+}
+
+.hover-color-shift:hover {
+  color: var(--color-primary-start);
+}
+
+/* BACKGROUND COLOR SHIFT */
+.hover-bg-color-shift {
+  transition: background-color var(--transition-base);
+}
+
+.hover-bg-color-shift:hover {
+  background-color: var(--glass-bg-hover);
+}
+
+/* SLIDE ICON */
+.hover-slide-icon {
+  transition: transform var(--transition-base);
+}
+
+.hover-slide-icon:hover i {
+  transform: translateX(4px);
+}
+
+/* PULSE EFFECT */
+.hover-pulse:hover {
+  animation: pulse 0.5s ease;
+}
+
+/* 3D FLIP */
+.hover-flip {
+  transition: transform var(--transition-slow);
+  transform-style: preserve-3d;
+}
+
+.hover-flip:hover {
+  transform: rotateY(180deg);
+}
+
+/* MULTIPLE EFFECTS COMBO */
+.hover-combo {
+  transition: all var(--transition-base);
+}
+
+.hover-combo:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: var(--shadow-glow-primary);
+}
+
+/* GROUP HOVER (affects children) */
+.group:hover .group-hover-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.group-hover-visible {
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-base);
+}
+
+/* DISABLE HOVER ON TOUCH DEVICES */
+@media (hover: none) {
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .hover-glow:hover,
+  .hover-tilt:hover {
+    transform: none;
+    box-shadow: none;
+    filter: none;
+  }
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift,
+  .hover-scale,
+  .hover-tilt,
+  .hover-rotate,
+  .hover-expand,
+  .hover-flip {
+    transition: none;
+  }
+  
+  .hover-lift:hover,
+  .hover-scale:hover,
+  .hover-tilt:hover,
+  .hover-rotate:hover,
+  .hover-expand:hover,
+  .hover-flip:hover {
+    transform: none;
+  }
+}

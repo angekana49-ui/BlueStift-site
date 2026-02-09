@@ -1,0 +1,505 @@
+/* ==========================================
+   BLUESTIFT - ANIMATED GRADIENTS
+   Backgrounds dynamiques et modernes
+   ========================================== */
+
+/* ==========================================
+   GRADIENT BACKGROUNDS - STATIQUES
+   ========================================== */
+
+.gradient-primary {
+  background: var(--gradient-primary);
+}
+
+.gradient-secondary {
+  background: var(--gradient-secondary);
+}
+
+.gradient-accent {
+  background: var(--gradient-accent);
+}
+
+/* ==========================================
+   ANIMATED GRADIENT BACKGROUND
+   Gradient qui change de position (effet fluide)
+   ========================================== */
+
+.gradient-animated {
+  background: linear-gradient(
+    45deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #4facfe 75%,
+    #667eea 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Vitesses alternatives */
+.gradient-animated-fast {
+  animation: gradient-shift 8s ease infinite;
+}
+
+.gradient-animated-slow {
+  animation: gradient-shift 25s ease infinite;
+}
+
+/* ==========================================
+   GRADIENT BACKGROUND + PARTICLES
+   Combinaison gradient + effet particules (CSS pur)
+   ========================================== */
+
+.gradient-particles {
+  position: relative;
+  background: var(--gradient-animated);
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+  overflow: hidden;
+}
+
+/* Particules flottantes (pseudo-éléments) */
+.gradient-particles::before,
+.gradient-particles::after {
+  content: '';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float-particles 20s ease-in-out infinite;
+}
+
+.gradient-particles::before {
+  top: -50px;
+  left: -50px;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  animation-delay: 0s;
+}
+
+.gradient-particles::after {
+  bottom: -50px;
+  right: -50px;
+  background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+  animation-delay: 5s;
+}
+
+@keyframes float-particles {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(30px, -30px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+}
+
+/* ==========================================
+   GRADIENT MESH (Style Apple)
+   Effet dégradé complexe et moderne
+   ========================================== */
+
+.gradient-mesh {
+  background: 
+    radial-gradient(at 40% 20%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(118, 75, 162, 0.3) 0%, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(79, 172, 254, 0.3) 0%, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(240, 147, 251, 0.3) 0%, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(245, 87, 108, 0.3) 0%, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+    var(--color-bg);
+  background-size: 100% 100%;
+  animation: gradient-mesh-move 20s ease infinite;
+}
+
+@keyframes gradient-mesh-move {
+  0%, 100% {
+    background-position: 0% 0%, 100% 0%, 0% 50%, 100% 50%, 0% 100%, 100% 100%, center;
+  }
+  50% {
+    background-position: 50% 0%, 50% 0%, 50% 50%, 50% 50%, 50% 100%, 50% 100%, center;
+  }
+}
+
+/* ==========================================
+   GRADIENT HERO SECTION
+   Background parfait pour hero
+   ========================================== */
+
+.gradient-hero {
+  position: relative;
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+.gradient-hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    rgba(102, 126, 234, 0.2) 0deg,
+    rgba(118, 75, 162, 0.2) 90deg,
+    rgba(240, 147, 251, 0.2) 180deg,
+    rgba(79, 172, 254, 0.2) 270deg,
+    rgba(102, 126, 234, 0.2) 360deg
+  );
+  animation: rotate-gradient 30s linear infinite;
+}
+
+@keyframes rotate-gradient {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ==========================================
+   GRADIENT OVERLAY
+   Superposition de gradient sur image/video
+   ========================================== */
+
+.gradient-overlay {
+  position: relative;
+}
+
+.gradient-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.3) 50%,
+    rgba(0,0,0,0.7) 100%
+  );
+  pointer-events: none;
+}
+
+/* Overlay avec gradient de couleur */
+.gradient-overlay-color::after {
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.8) 0%,
+    rgba(118, 75, 162, 0.8) 100%
+  );
+}
+
+/* ==========================================
+   GRADIENT TEXT
+   Texte avec gradient (titres modernes)
+   ========================================== */
+
+.text-gradient {
+  background: var(--gradient-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+/* Gradient text animé */
+.text-gradient-animated {
+  background: linear-gradient(
+    90deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #4facfe 75%,
+    #667eea 100%
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: text-gradient-shift 5s ease infinite;
+}
+
+@keyframes text-gradient-shift {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+/* ==========================================
+   GRADIENT BORDER
+   Bordures avec gradient
+   ========================================== */
+
+.gradient-border {
+  position: relative;
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+  padding: var(--space-6);
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  background: var(--gradient-primary);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* Gradient border animé */
+.gradient-border-animated::before {
+  background: linear-gradient(
+    90deg,
+    #667eea,
+    #764ba2,
+    #f093fb,
+    #4facfe,
+    #667eea
+  );
+  background-size: 300% 100%;
+  animation: border-gradient-shift 3s ease infinite;
+}
+
+@keyframes border-gradient-shift {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+/* ==========================================
+   GRADIENT GLOW EFFECT
+   Lueur colorée (hover effects)
+   ========================================== */
+
+.gradient-glow {
+  position: relative;
+  transition: all var(--transition-base);
+}
+
+.gradient-glow:hover {
+  filter: drop-shadow(0 0 20px rgba(102, 126, 234, 0.5))
+          drop-shadow(0 0 40px rgba(118, 75, 162, 0.3));
+}
+
+/* Glow pulsant */
+.gradient-glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.3));
+  }
+  50% {
+    filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.6))
+            drop-shadow(0 0 50px rgba(118, 75, 162, 0.4));
+  }
+}
+
+/* ==========================================
+   GRADIENT BUTTON EFFECT
+   Boutons avec gradient dynamique
+   ========================================== */
+
+.btn-gradient {
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.btn-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,0.3),
+    transparent
+  );
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+.btn-gradient:hover::before {
+  transform: translateX(100%);
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+/* ==========================================
+   GRADIENT CARD BACKGROUND
+   Fond de card avec gradient subtil
+   ========================================== */
+
+.card-gradient-bg {
+  background: 
+    linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.05) 0%,
+      rgba(118, 75, 162, 0.05) 100%
+    ),
+    var(--color-surface);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+/* ==========================================
+   GRADIENT DIVIDER
+   SÃ©parateur avec gradient
+   ========================================== */
+
+.gradient-divider {
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    var(--color-primary-start) 50%,
+    transparent 100%
+  );
+  margin: var(--space-8) 0;
+}
+
+/* ==========================================
+   DARK MODE - AJUSTEMENTS
+   ========================================== */
+
+body.dark-theme .gradient-animated {
+  background: linear-gradient(
+    45deg,
+    #7c8ff7 0%,
+    #8b5cf6 25%,
+    #f5a3ff 50%,
+    #60bdff 75%,
+    #7c8ff7 100%
+  );
+}
+
+body.dark-theme .gradient-mesh {
+  background: 
+    radial-gradient(at 40% 20%, rgba(124, 143, 247, 0.4) 0%, transparent 50%),
+    radial-gradient(at 80% 0%, rgba(139, 92, 246, 0.4) 0%, transparent 50%),
+    radial-gradient(at 0% 50%, rgba(96, 189, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(245, 163, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(245, 87, 108, 0.4) 0%, transparent 50%),
+    radial-gradient(at 80% 100%, rgba(124, 143, 247, 0.4) 0%, transparent 50%),
+    var(--color-bg-dark);
+}
+
+/* ==========================================
+   PERFORMANCE - REDUCE MOTION
+   ========================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .gradient-animated,
+  .gradient-particles::before,
+  .gradient-particles::after,
+  .gradient-mesh,
+  .gradient-hero::before,
+  .text-gradient-animated,
+  .gradient-border-animated::before,
+  .gradient-glow-pulse {
+    animation: none;
+  }
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Sur mobile, simplifier les gradients pour performance */
+@media (max-width: 768px) {
+  .gradient-animated,
+  .gradient-mesh,
+  .gradient-hero::before {
+    animation-duration: 20s; /* Plus lent = moins GPU */
+  }
+  
+  .gradient-particles::before,
+  .gradient-particles::after {
+    width: 150px;
+    height: 150px;
+  }
+}
+
+/* ==========================================
+   NOTES D'UTILISATION
+   ========================================== */
+
+/*
+  GRADIENTS BEST PRACTICES :
+  
+  1. PERFORMANCE :
+     - Gradients animés = GPU
+     - Limiter à 1-2 par page
+     - Simplifier sur mobile
+  
+  2. COMBINAISONS GAGNANTES :
+     - Hero: gradient-animated + glass cards ✅
+     - Features: gradient-mesh + glass-card ✅
+     - CTA: btn-gradient + hover effect ✅
+  
+  3. ACCESSIBILITY :
+     - Toujours tester contraste texte
+     - prefers-reduced-motion support
+     - Fallback solide
+  
+  4. DARK MODE :
+     - Augmenter légèrement saturation
+     - Plus d'opacity sur radial-gradients
+  
+  EXEMPLE D'UTILISATION :
+  
+  <section class="gradient-animated">
+    <div class="glass-card">
+      <h2 class="text-gradient-animated">
+        Welcome to Bluestift
+      </h2>
+    </div>
+  </section>
+  
+  Résultat : Section avec background animé + card glass + titre gradient !
+*/

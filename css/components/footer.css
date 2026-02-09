@@ -1,0 +1,52 @@
+/* ==================================================================
+   BLUESTIFT - FOOTER v5.0
+   Modern footer with social links
+   ================================================================== */
+
+/* FOOTER */
+footer {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-6) var(--space-6);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+footer p {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+}
+
+/* SOCIAL LINKS IN FOOTER */
+.footer-socials {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: center;
+  margin-top: var(--space-4);
+}
+
+.footer-socials a {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-xl);
+  transition: all var(--transition-base);
+}
+
+.footer-socials a:hover {
+  color: var(--color-primary-start);
+  transform: scale(1.2);
+}
+
+/* DARK MODE */
+body.dark-theme footer {
+  background: var(--color-surface-dark);
+  border-top-color: var(--color-border-dark);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  footer {
+    padding: var(--space-4);
+  }
+}

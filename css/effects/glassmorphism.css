@@ -1,0 +1,437 @@
+/* ==========================================
+   BLUESTIFT - GLASSMORPHISM EFFECTS
+   Effets de verre modernes (backdrop-filter)
+   ========================================== */
+
+/* ==========================================
+   BASE GLASS EFFECT
+   ========================================== */
+
+.glass {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+/* Hover state */
+.glass:hover {
+  background: var(--glass-bg-hover);
+  border-color: var(--glass-border);
+}
+
+/* ==========================================
+   GLASS VARIATIONS - BLUR LEVELS
+   ========================================== */
+
+.glass-sm {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border);
+}
+
+.glass-md {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+}
+
+.glass-lg {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border);
+}
+
+.glass-xl {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-xl));
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl));
+  border: 1px solid var(--glass-border);
+}
+
+/* ==========================================
+   GLASS CARDS - COMPOSANTS PRÊTS
+   ========================================== */
+
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  box-shadow: var(--glass-shadow);
+  transition: all var(--transition-base);
+}
+
+.glass-card:hover {
+  background: var(--glass-bg-hover);
+  transform: translateY(-4px);
+  box-shadow: 
+    var(--glass-shadow),
+    var(--shadow-glow-primary);
+}
+
+/* Variantes de padding */
+.glass-card-sm {
+  padding: var(--space-4);
+}
+
+.glass-card-lg {
+  padding: var(--space-8);
+}
+
+.glass-card-xl {
+  padding: var(--space-10);
+}
+
+/* ==========================================
+   GLASS BUTTON
+   ========================================== */
+
+.glass-btn {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-6);
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.glass-btn:hover {
+  background: var(--glass-bg-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+}
+
+.glass-btn:active {
+  transform: translateY(0);
+}
+
+/* ==========================================
+   GLASS MODAL
+   ========================================== */
+
+.glass-modal {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-xl));
+  -webkit-backdrop-filter: blur(var(--glass-blur-xl));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-2xl);
+  padding: var(--space-8);
+  box-shadow: 
+    var(--glass-shadow),
+    0 24px 64px rgba(0, 0, 0, 0.3);
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Modal backdrop */
+.glass-modal-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ==========================================
+   GLASS NAV/HEADER
+   ========================================== */
+
+.glass-nav {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Sticky glass header */
+.glass-header-sticky {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border-bottom: 1px solid var(--glass-border);
+  transition: all var(--transition-base);
+}
+
+.glass-header-sticky.scrolled {
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================
+   GLASS INPUT/FORM
+   ========================================== */
+
+.glass-input {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 2px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  transition: all var(--transition-base);
+  width: 100%;
+}
+
+.glass-input:focus {
+  background: var(--glass-bg-hover);
+  border-color: var(--color-primary-start);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.glass-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+/* ==========================================
+   GLASS BADGE/TAG
+   ========================================== */
+
+.glass-badge {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-sm));
+  -webkit-backdrop-filter: blur(var(--glass-blur-sm));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ==========================================
+   GLASS TOOLTIP
+   ========================================== */
+
+.glass-tooltip {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  box-shadow: var(--shadow-md);
+  white-space: nowrap;
+}
+
+/* ==========================================
+   GLASS DROPDOWN
+   ========================================== */
+
+.glass-dropdown {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-2);
+  box-shadow: var(--shadow-lg);
+  min-width: 200px;
+}
+
+.glass-dropdown-item {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  color: var(--color-text);
+}
+
+.glass-dropdown-item:hover {
+  background: var(--glass-bg-hover);
+}
+
+/* ==========================================
+   GLASS FLOATING ELEMENT
+   Pour éléments qui flottent (badges, notifications)
+   ========================================== */
+
+.glass-floating {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-lg));
+  -webkit-backdrop-filter: blur(var(--glass-blur-lg));
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+  box-shadow: 
+    var(--glass-shadow),
+    0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* ==========================================
+   GLASS WITH GRADIENT BORDER
+   Pour un effet premium
+   ========================================== */
+
+.glass-gradient-border {
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur-md));
+  -webkit-backdrop-filter: blur(var(--glass-blur-md));
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-xl);
+  padding: 2px;
+  background: var(--gradient-primary);
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) content-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+/* ==========================================
+   GLASS SHIMMER EFFECT
+   Animation subtile de brillance
+   ========================================== */
+
+.glass-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-shimmer::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 100%
+  );
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* ==========================================
+   FALLBACK - NAVIGATEURS SANS SUPPORT
+   ========================================== */
+
+/* Si backdrop-filter n'est pas supporté */
+@supports not (backdrop-filter: blur(10px)) {
+  .glass,
+  .glass-card,
+  .glass-btn,
+  .glass-modal,
+  .glass-nav,
+  .glass-input,
+  .glass-dropdown {
+    background: var(--color-surface);
+    border: 2px solid var(--color-border);
+  }
+}
+
+/* ==========================================
+   DARK MODE - AJUSTEMENTS
+   ========================================== */
+
+body.dark-theme .glass-card:hover {
+  box-shadow: 
+    var(--glass-shadow),
+    0 20px 60px rgba(102, 126, 234, 0.2);
+}
+
+body.dark-theme .glass-btn:hover {
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* ==========================================
+   RESPONSIVE
+   ========================================== */
+
+/* Sur mobile, réduire légèrement le blur pour performance */
+@media (max-width: 768px) {
+  .glass-card,
+  .glass-modal {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* ==========================================
+   NOTES D'UTILISATION
+   ========================================== */
+
+/*
+  GLASSMORPHISM BEST PRACTICES :
+  
+  1. TOUJOURS avoir un gradient/image en background
+     - Le blur n'a d'effet que sur ce qui est derrière
+     - Fond uni = pas d'effet visible
+  
+  2. Contraste suffisant
+     - Vérifier WCAG AA (4.5:1 pour texte)
+     - Tester en light + dark mode
+  
+  3. Performance
+     - backdrop-filter est GPU-accéléré
+     - Mais éviter trop d'éléments superposés
+     - Réduire blur sur mobile si lag
+  
+  4. Fallback
+     - @supports not() pour vieux navigateurs
+     - Fond solide alternatif
+  
+  5. Combinaisons gagnantes :
+     - Glass card + gradient background ✅
+     - Glass modal + backdrop blur ✅
+     - Glass nav + sticky header ✅
+  
+  EXEMPLE D'UTILISATION :
+  
+  <div class="glass-card">
+    <h3>RAYA AI</h3>
+    <p>Your personal tutor</p>
+  </div>
+  
+  Résultat : Card avec effet verre moderne !
+*/

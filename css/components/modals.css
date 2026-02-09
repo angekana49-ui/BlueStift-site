@@ -1,0 +1,236 @@
+/* ==================================================================
+   BLUESTIFT - MODAL SYSTEM v5.0
+   Glassmorphism modals with backdrop blur
+   Accessible and animated
+   ================================================================== */
+
+/* MODAL BACKDROP */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  z-index: var(--z-modal-backdrop);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* MODAL CONTENT */
+.modal-content {
+  /* GLASSMORPHISM CLAIR */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 24px;
+  padding: 40px;
+  max-width: 90%;
+  width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    0 20px 60px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.4s ease;
+  position: relative;
+  margin: 0 auto; /* Centrage horizontal */
+}
+
+/* MODAL TITLES - BLANC */
+.modal-content h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: white; /* BLANC */
+  margin: 0 0 20px 0;
+  text-align: center;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content p {
+  color: rgba(255, 255, 255, 0.95); /* BLANC */
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* MODAL HEADER */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-6);
+}
+
+.modal-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* CLOSE BUTTON */
+.close-modal {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white; /* BLANC */
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  font-weight: 300;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+/* MODAL BODY */
+.modal-body {
+  margin-bottom: var(--space-6);
+}
+
+/* MODAL FOOTER */
+.modal-footer {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--glass-border);
+}
+
+/* MODAL SIZES */
+.modal-sm .modal-content { width: 400px; }
+.modal-lg .modal-content { width: 800px; }
+.modal-xl .modal-content { width: 1000px; }
+.modal-full .modal-content { width: 95%; max-width: 1400px; }
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(50px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* SCROLLBAR STYLING */
+.modal-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--color-primary-start);
+  border-radius: 10px;
+}
+
+/* DARK MODE */
+body.dark-theme .modal-content {
+  background: var(--glass-bg-dark);
+  border-color: var(--glass-border-dark);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    padding: var(--space-6);
+    max-height: 95vh;
+    margin: 0 auto; /* Force le centrage sur mobile */
+  }
+
+  .modal-sm .modal-content,
+  .modal-lg .modal-content,
+  .modal-xl .modal-content {
+    width: 95%;
+    margin: 0 auto;
+  }
+}
+
+/* ACCESSIBILITY */
+@media (prefers-reduced-motion: reduce) {
+  .modal,
+  .modal-content {
+    animation: none;
+  }
+}
+
+/* ==========================================
+   WAITLIST MODAL SPECIFIC STYLES
+   ========================================== */
+
+/* EARLY BIRD BANNER INLINE */
+.early-bird-banner-inline {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.3), rgba(255, 237, 78, 0.3));
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(245, 158, 11, 0.5);
+  border-radius: 16px;
+  padding: 16px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.early-bird-banner-inline p {
+  margin: 4px 0;
+  color: white; /* BLANC */
+  font-weight: 600;
+}
+
+.early-bird-banner-inline .banner-small {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9); /* BLANC */
+}
+
+/* SUBMIT BUTTON - GRADIENT BLEU-VIOLET + GLASSMORPHISM */
+.btn-submit {
+  width: 100%;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white; /* BLANC */
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  margin-top: 10px;
+  
+  /* GLASSMORPHISM SUBTIL */
+  backdrop-filter: blur(10px);
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  filter: brightness(1.1);
+}
+
+.btn-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

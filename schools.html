@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schools Dashboard - Bluestift Analytics</title>
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="shortcut icon" href="/favicon.ico" />
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- DNS Prefetch for Google Translate -->
+  <link rel="dns-prefetch" href="//translate.google.com">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <!-- Google Translate with Auto-Detection -->
+  <script>
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({
+    pageLanguage: 'en',
+    includedLanguages: 'en,fr,es,de,zh-CN,ar,pt,ru',
+    autoDisplay: false,
+    multilanguagePage: true
+  }, 'google_translate_element');
+}
+
+// Auto-detect browser language and trigger translation
+document.addEventListener('DOMContentLoaded', function() {
+  const userLang = navigator.language || navigator.userLanguage;
+  const langCode = userLang.split('-')[0];
+
+  // Store preferred language for future visits
+  if (!localStorage.getItem('preferredLang')) {
+    localStorage.setItem('preferredLang', langCode);
+  }
+});
+  </script>
+  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+  <!-- Hidden Google Translate Element -->
+  <div id="google_translate_element"></div>
+
+  <!-- Main Dashboard -->
+  <div id="dashboard-container">
+    
+    <!-- Header (Bluestift style) -->
+    <header>
+      <div class="logo">
+        <img src="Bluestift_iLogo.png" alt="Bluestift Logo" class="logo-img">
+        <span class="notranslate">BlueStift</span>
+        <span class="dashboard-badge notranslate">Schools</span>
+      </div>
+      <nav class="nav-links">
+        <div class="school-info">
+          <i class="fas fa-school"></i>
+          <span id="school-name">Loading...</span>
+        </div>
+      </nav>
+    </header>
+    
+    <!-- Sub-header 1: Admin Info -->
+    <div class="sub-header-dashboard sub-header-admin">
+      <div class="admin-info">
+        <i class="fas fa-user-shield"></i>
+        <span id="admin-name">Admin</span>
+        <span class="separator">|</span>
+        <i class="fas fa-calendar"></i>
+        <span id="current-date"></span>
+      </div>
+
+      <div class="subscription-status">
+        <i class="fas fa-crown"></i>
+        <span id="plan-type">Pro</span>
+        <span class="expires">Expires: <span id="expiry-date">--</span></span>
+      </div>
+    </div>
+
+    <!-- Sub-header 2: Navigation -->
+    <div class="sub-header-dashboard sub-header-nav">
+      <!-- Menu Dropdown -->
+      <div class="menu-dropdown-container" id="menu-dropdown-container">
+        <button class="menu-dropdown-btn" id="menu-dropdown-btn" type="button">
+          <i class="fas fa-bars"></i>
+          <span>Menu</span>
+          <i class="fas fa-chevron-down dropdown-arrow"></i>
+        </button>
+
+        <div class="menu-dropdown" id="menu-dropdown">
+          <a href="#dashboard" class="menu-dropdown-item active" data-section="dashboard">
+            <i class="fas fa-chart-line"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Dashboard</span>
+              <span class="menu-item-desc">Analytics overview</span>
+            </div>
+          </a>
+
+          <a href="#raya-chat" class="menu-dropdown-item" data-section="raya">
+            <i class="fas fa-comments"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Chat with RAYA</span>
+              <span class="menu-item-desc">AI assistant for your data</span>
+            </div>
+            <span class="badge" id="raya-messages-left">50</span>
+          </a>
+
+          <a href="#export" class="menu-dropdown-item" data-section="export">
+            <i class="fas fa-download"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Export Data</span>
+              <span class="menu-item-desc">Download reports and stats</span>
+            </div>
+          </a>
+
+          <a href="#contribute" class="menu-dropdown-item" data-section="contribute">
+            <i class="fas fa-upload"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Add Contribution</span>
+              <span class="menu-item-desc">Submit educational content</span>
+            </div>
+            <span class="badge" id="contributions-left">∞</span>
+          </a>
+
+          <div class="menu-dropdown-divider"></div>
+
+          <a href="#subscription" class="menu-dropdown-item" data-section="subscription">
+            <i class="fas fa-credit-card"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Subscription</span>
+              <span class="menu-item-desc">Manage your plan</span>
+            </div>
+          </a>
+
+          <a href="#settings" class="menu-dropdown-item" data-section="settings">
+            <i class="fas fa-cog"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Settings</span>
+              <span class="menu-item-desc">Account configuration</span>
+            </div>
+          </a>
+
+          <a href="#contact" class="menu-dropdown-item" data-section="contact">
+            <i class="fas fa-headset"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Help & Support</span>
+              <span class="menu-item-desc">Contact us, glossary</span>
+            </div>
+          </a>
+
+          <div class="menu-dropdown-divider"></div>
+
+          <a href="#logout" class="menu-dropdown-item logout" id="menu-logout">
+            <i class="fas fa-sign-out-alt"></i>
+            <div class="menu-item-content">
+              <span class="menu-item-label">Logout</span>
+              <span class="menu-item-desc">Exit dashboard</span>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- Year Selector -->
+      <div class="year-selector-global">
+        <i class="fas fa-calendar-alt"></i>
+        <select id="select-year" class="form-select-year">
+          <option value="2025-2026" selected>2025-2026</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="dashboard-layout">
+      
+      <!-- Main Content -->
+      <main class="main-content" id="main-content">
+        
+        <!-- Dashboard Section -->
+        <section id="section-dashboard" class="content-section active">
+          
+          <!-- Current View Indicator -->
+          <div class="current-view-indicator">
+            <div class="view-info">
+              <i class="fas fa-school"></i>
+              <span id="selected-class-text">Global view - Entire school</span>
+            </div>
+            <button class="btn-toggle-filter" id="toggle-filter-btn" type="button">
+              <i class="fas fa-filter"></i>
+              <span>Filter by class</span>
+              <i class="fas fa-chevron-down toggle-arrow"></i>
+            </button>
+          </div>
+
+          <!-- Class Search (Collapsible) -->
+          <div class="selectors-container collapsed" id="selectors-container">
+            <div class="selectors-header">
+              <h2><i class="fas fa-search"></i> Search for a class</h2>
+              <button class="btn-reset-filter" id="reset-filter-btn" type="button">
+                <i class="fas fa-times"></i> Reset
+              </button>
+            </div>
+
+            <div class="class-search-container">
+              <div class="class-search-input-wrapper">
+                <i class="fas fa-users search-icon"></i>
+                <input
+                  type="text"
+                  id="class-search-input"
+                  class="class-search-input"
+                  placeholder="Ex: 12th Grade A, 6th Grade B..."
+                  autocomplete="off"
+                >
+                <button type="button" id="class-search-btn" class="class-search-btn">
+                  <i class="fas fa-arrow-right"></i>
+                </button>
+              </div>
+              <p class="class-search-hint">
+                <i class="fas fa-info-circle"></i>
+                Enter the exact class name to see its insights
+              </p>
+            </div>
+          </div>
+          
+          <!-- Stats Cards -->
+          <div class="stats-grid" id="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="stat-students">--</h3>
+                <p>Active Students</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="stat-pkm">--</h3>
+                <p>Average PKM</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="stat-time">--</h3>
+                <p>Avg. Time/Week</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="stat-completion">--</h3>
+                <p>Completion Rate</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-fire"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="stat-streak">--</h3>
+                <p>Average Streak</p>
+              </div>
+            </div>
+            
+            <div class="stat-card">
+              <div class="stat-icon">
+                <i class="fas fa-book"></i>
+              </div>
+              <div class="stat-content">
+                <h3 id="stat-lessons">--</h3>
+                <p>Lessons Completed</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Subjects Insights Table -->
+          <div class="subjects-section">
+            <h2><i class="fas fa-brain"></i> Insights by Subject</h2>
+            
+            <div class="subjects-table-container">
+              <table class="subjects-table" id="subjects-table">
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>PKM</th>
+                    <th>Major Difficulty</th>
+                    <th>Effort</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="subjects-tbody">
+                  <!-- Dynamically populated -->
+                  <tr class="no-data">
+                    <td colspan="5">
+                      <i class="fas fa-info-circle"></i>
+                      Select a class to see insights
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </section>
+        
+        <!-- RAYA Chat Section - Redirect to dedicated site -->
+        <section id="section-raya" class="content-section">
+          <div class="raya-redirect-container">
+            <div class="raya-redirect-icon">
+              <i class="fas fa-robot"></i>
+            </div>
+            <h2>Chat with RAYA</h2>
+            <p>RAYA, votre assistant IA analytique, est disponible sur sa plateforme dédiée.</p>
+            <p class="raya-redirect-desc">Posez des questions sur vos données, obtenez des recommandations personnalisées et analysez les performances de vos élèves.</p>
+            <a href="https://raya.thebluestift.com" target="_blank" rel="noopener" class="btn-raya-redirect">
+              <i class="fas fa-external-link-alt"></i>
+              Ouvrir RAYA
+            </a>
+            <p class="raya-redirect-note">
+              <i class="fas fa-info-circle"></i>
+              Messages restants ce mois: <strong id="raya-count">50</strong>
+            </p>
+          </div>
+        </section>
+        
+        <!-- Contribute Section -->
+        <section id="section-contribute" class="content-section">
+          <h2><i class="fas fa-upload"></i> Add a Contribution</h2>
+          <p>Share educational resources to make RAYA smarter for your students!</p>
+
+          <!-- Contributions remaining info -->
+          <div class="contributions-info" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; gap: 15px;">
+            <i class="fas fa-gift" style="font-size: 2rem; color: #fff;"></i>
+            <div>
+              <strong style="color: #fff;">Contributions:</strong>
+              <span id="contrib-remaining-display" style="color: #fbbf24; font-size: 1.5rem; font-weight: bold; margin-left: 10px;">Unlimited</span>
+            </div>
+          </div>
+
+          <!-- RAG Info Banner -->
+          <div class="rag-info-banner" style="background: #1e3a8a; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #60a5fa;">
+            <div style="display: flex; align-items: start; gap: 12px;">
+              <i class="fas fa-brain" style="color: #ffffff; font-size: 1.5rem; margin-top: 2px;"></i>
+              <div>
+                <strong style="color: #ffffff;">How it works:</strong>
+                <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #ffffff;">
+                  Your documents help train RAYA's knowledge base. The more quality content we have,
+                  the better RAYA can explain complex topics to your students.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <form id="school-contribute-form" class="contribute-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="school-contrib-name">Contributor Name *</label>
+                <input type="text" id="school-contrib-name" name="contrib-name" required placeholder="Your name">
+              </div>
+
+              <div class="form-group">
+                <label for="school-contrib-email">Email *</label>
+                <input type="email" id="school-contrib-email" name="contrib-email" required placeholder="your@email.com">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="school-contrib-phone">Phone (optional)</label>
+                <input type="tel" id="school-contrib-phone" name="contrib-phone" placeholder="+237 6XX XXX XXX">
+              </div>
+
+              <div class="form-group">
+                <label for="school-contrib-class">Target Class (optional)</label>
+                <input type="text" id="school-contrib-class" name="contrib-class" placeholder="e.g., 12th Grade, 6th Grade...">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="school-contrib-title">Resource Title *</label>
+              <input type="text" id="school-contrib-title" name="contrib-title" required placeholder="E.g.: Algebra Course Notes - Chapter 5">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="school-contrib-category">Subject *</label>
+                <select id="school-contrib-category" name="contrib-category" required>
+                  <option value="">Select a subject</option>
+                  <option value="mathematics">Mathematics</option>
+                  <option value="physics">Physics</option>
+                  <option value="chemistry">Chemistry</option>
+                  <option value="biology">Biology / Life Sciences</option>
+                  <option value="french">French</option>
+                  <option value="english">English</option>
+                  <option value="history">History & Geography</option>
+                  <option value="computer-science">Computer Science</option>
+                  <option value="philosophy">Philosophy</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="school-contrib-level">Difficulty Level</label>
+                <select id="school-contrib-level" name="contrib-level">
+                  <option value="">Select level</option>
+                  <option value="beginner">Beginner (6th-7th Grade)</option>
+                  <option value="intermediate">Intermediate (8th-10th Grade)</option>
+                  <option value="advanced">Advanced (11th-12th Grade)</option>
+                  <option value="all">All Levels</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="school-contrib-description">Description (optional)</label>
+              <textarea id="school-contrib-description" name="contrib-description" rows="3" placeholder="What does this resource cover? Any specific topics or chapters?"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="school-contrib-file">File(s) *</label>
+              <div class="file-upload-area" id="file-upload-area">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #667eea;"></i>
+                <p>Drag & drop files here or click to browse</p>
+                <input type="file" id="school-contrib-file" name="contrib-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.mp4,.mp3" multiple>
+              </div>
+              <div id="file-list" class="file-list"></div>
+              <small style="color: #888; font-size: 0.85rem;">
+                Accepted: PDF, Word, PowerPoint, Images, Videos, Audio (Max 50MB per file)
+              </small>
+            </div>
+
+            <!-- Privacy Notice -->
+            <div style="background: #1f2937; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #ffffff;">
+              <i class="fas fa-lock" style="color: #10b981;"></i>
+              <strong>Privacy:</strong> Your contributions are used solely to train RAYA for your school.
+              Documents are kept confidential and not shared publicly.
+            </div>
+
+            <button type="submit" class="btn-submit" id="school-contrib-submit">
+              <i class="fas fa-brain"></i> Submit Contribution
+            </button>
+          </form>
+        </section>
+        
+        <!-- Dynamic Section: Export Data -->
+        <section id="section-export" class="content-section">
+          <!-- Content loaded dynamically from schools/sections/export.js -->
+          <div class="section-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+          </div>
+        </section>
+
+        <!-- Dynamic Section: Help & Support -->
+        <section id="section-contact" class="content-section">
+          <!-- Content loaded dynamically from schools/sections/contact.js -->
+          <div class="section-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+          </div>
+        </section>
+
+        <!-- Dynamic Section: Settings -->
+        <section id="section-settings" class="content-section">
+          <!-- Content loaded dynamically from schools/sections/settings.js -->
+          <div class="section-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+          </div>
+        </section>
+        
+        <!-- Dynamic Section: Subscription -->
+        <section id="section-subscription" class="content-section">
+          <!-- Content loaded dynamically from schools/sections/subscription.js -->
+          <div class="section-loading">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+          </div>
+        </section>
+        
+      </main>
+    </div>
+
+    <!-- Floating RAYA Button -->
+    <a href="https://raya.thebluestift.com" target="_blank" rel="noopener" class="raya-floating-btn" title="Chat with RAYA">
+      <i class="fas fa-robot"></i>
+      <span class="raya-floating-label">RAYA</span>
+    </a>
+
+    <!-- Insights Drawer Overlay -->
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <!-- Insights Drawer (Slide-in Panel) -->
+    <div class="insights-drawer" id="insights-drawer">
+      <!-- Header -->
+      <div class="drawer-header">
+        <div class="drawer-header-icon" id="drawer-subject-icon">
+          <i class="fas fa-brain"></i>
+        </div>
+        <div class="drawer-header-info">
+          <h2 id="drawer-subject-name">Mathematics</h2>
+          <p id="drawer-class-name">12th Grade A</p>
+        </div>
+        <div class="drawer-header-actions">
+          <button class="btn-drawer-action" id="btn-drawer-fullscreen" title="Fullscreen">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button class="btn-drawer-action btn-drawer-close" id="btn-drawer-close" title="Close">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="drawer-tabs">
+        <button class="drawer-tab active" data-tab="overview">
+          <i class="fas fa-chart-pie"></i> Overview
+        </button>
+        <button class="drawer-tab" data-tab="analytics">
+          <i class="fas fa-chart-line"></i> Analytics
+        </button>
+        <button class="drawer-tab" data-tab="simulations">
+          <i class="fas fa-flask"></i> Simulations
+        </button>
+      </div>
+
+      <!-- Content -->
+      <div class="drawer-content">
+        <!-- Overview Tab -->
+        <div class="drawer-tab-panel active" id="panel-overview">
+          <!-- PKM Score Card -->
+          <div class="drawer-pkm-card">
+            <div class="pkm-score-circle" id="pkm-circle" style="--pkm-percent: 68;">
+              <span class="pkm-score-value" id="drawer-pkm-value">0.68</span>
+            </div>
+            <div class="pkm-info">
+              <h3>PKM Score</h3>
+              <p>Performance Knowledge Metric</p>
+              <span class="pkm-level medium" id="drawer-pkm-level">Medium</span>
+            </div>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="drawer-stats-grid">
+            <div class="drawer-stat-card">
+              <h4>Completion</h4>
+              <span class="value" id="drawer-stat-completion">72%</span>
+              <span class="trend up"><i class="fas fa-arrow-up"></i> 5%</span>
+            </div>
+            <div class="drawer-stat-card">
+              <h4>Avg. Time</h4>
+              <span class="value" id="drawer-stat-time">2.4h</span>
+              <span class="trend up"><i class="fas fa-arrow-up"></i> 0.3h</span>
+            </div>
+            <div class="drawer-stat-card">
+              <h4>Effort</h4>
+              <span class="value" id="drawer-stat-effort">High</span>
+            </div>
+            <div class="drawer-stat-card">
+              <h4>Students</h4>
+              <span class="value" id="drawer-stat-students">42</span>
+            </div>
+          </div>
+
+          <!-- Difficulties Section -->
+          <div class="drawer-section difficulties">
+            <div class="drawer-section-header difficulties">
+              <i class="fas fa-exclamation-triangle"></i>
+              <h4>Detected Difficulties</h4>
+            </div>
+            <ul class="drawer-section-list" id="drawer-difficulties">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <!-- Mastered Section -->
+          <div class="drawer-section mastered">
+            <div class="drawer-section-header mastered">
+              <i class="fas fa-check-circle"></i>
+              <h4>Mastered Concepts</h4>
+            </div>
+            <ul class="drawer-section-list" id="drawer-mastered">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+
+          <!-- Recommendations Section -->
+          <div class="drawer-section recommendations">
+            <div class="drawer-section-header recommendations">
+              <i class="fas fa-lightbulb"></i>
+              <h4>Recommendations</h4>
+            </div>
+            <ul class="drawer-section-list" id="drawer-recommendations">
+              <!-- Dynamically populated -->
+            </ul>
+          </div>
+        </div>
+
+        <!-- Analytics Tab -->
+        <div class="drawer-tab-panel" id="panel-analytics">
+          <div class="drawer-chart-container">
+            <div class="drawer-chart-header">
+              <h4><i class="fas fa-chart-line"></i> PKM Evolution</h4>
+              <div class="chart-period-selector">
+                <button class="chart-period-btn active" data-period="week">Week</button>
+                <button class="chart-period-btn" data-period="month">Month</button>
+                <button class="chart-period-btn" data-period="year">Year</button>
+              </div>
+            </div>
+            <div class="chart-placeholder" id="chart-pkm-evolution">
+              <i class="fas fa-chart-area"></i>
+              <p>PKM trend chart will appear here</p>
+            </div>
+          </div>
+
+          <div class="drawer-chart-container">
+            <div class="drawer-chart-header">
+              <h4><i class="fas fa-tasks"></i> Topic Performance</h4>
+            </div>
+            <div class="chart-placeholder" id="chart-topics">
+              <i class="fas fa-chart-bar"></i>
+              <p>Topic breakdown chart will appear here</p>
+            </div>
+          </div>
+
+          <div class="drawer-chart-container">
+            <div class="drawer-chart-header">
+              <h4><i class="fas fa-clock"></i> Time Distribution</h4>
+            </div>
+            <div class="chart-placeholder" id="chart-time">
+              <i class="fas fa-chart-pie"></i>
+              <p>Time spent per topic chart will appear here</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulations Tab -->
+        <div class="drawer-tab-panel" id="panel-simulations">
+          <div class="simulation-info-banner">
+            <i class="fas fa-info-circle"></i>
+            <p>Run Bayesian simulations to predict student outcomes based on current performance patterns and intervention scenarios.</p>
+          </div>
+
+          <div class="simulation-controls">
+            <div class="simulation-control-group">
+              <label>Study Time Increase</label>
+              <input type="range" class="simulation-slider" id="sim-study-time" min="0" max="100" value="20">
+              <small>+<span id="sim-study-time-val">20</span>% additional study time per week</small>
+            </div>
+
+            <div class="simulation-control-group">
+              <label>Intervention Intensity</label>
+              <input type="range" class="simulation-slider" id="sim-intervention" min="0" max="100" value="50">
+              <small><span id="sim-intervention-val">50</span>% teacher intervention level</small>
+            </div>
+
+            <div class="simulation-control-group">
+              <label>Peer Collaboration</label>
+              <input type="range" class="simulation-slider" id="sim-collaboration" min="0" max="100" value="30">
+              <small><span id="sim-collaboration-val">30</span>% group study sessions</small>
+            </div>
+
+            <button class="btn-run-simulation" id="btn-run-simulation">
+              <i class="fas fa-play"></i> Run Simulation
+            </button>
+          </div>
+
+          <div class="simulation-results" id="simulation-results" style="display: none;">
+            <h4><i class="fas fa-chart-line"></i> Predicted Outcomes</h4>
+            <p id="simulation-outcome">Based on the parameters, the estimated PKM improvement is <strong>+15%</strong> over the next 8 weeks, with a confidence interval of 85%.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="drawer-footer">
+        <button class="btn-drawer-footer btn-drawer-secondary" id="btn-drawer-export">
+          <i class="fas fa-download"></i> Export PDF
+        </button>
+        <button class="btn-drawer-footer btn-drawer-primary" id="btn-drawer-share">
+          <i class="fas fa-share-alt"></i> Share Insights
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="schools-utils.js"></script>
+
+  <!-- Section Templates (loaded before main script) -->
+  <script src="schools/sections/index.js"></script>
+  <script src="schools/sections/export.js"></script>
+  <script src="schools/sections/contact.js"></script>
+  <script src="schools/sections/settings.js"></script>
+  <script src="schools/sections/subscription.js"></script>
+
+  <!-- Main Dashboard Script -->
+  <script src="schools.js"></script>
+</body>
+</html>

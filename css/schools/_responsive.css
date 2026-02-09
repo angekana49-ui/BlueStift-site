@@ -1,0 +1,398 @@
+/* ==================================================================
+   SCHOOLS DASHBOARD - RESPONSIVE
+   All responsive breakpoints
+   ================================================================== */
+
+/* === TABLET (1024px) === */
+@media (max-width: 1024px) {
+  .main-content {
+    padding: 20px;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .selectors-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* === MOBILE LANDSCAPE / SMALL TABLET (768px) === */
+@media (max-width: 768px) {
+  /* Current View Indicator */
+  .current-view-indicator {
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px 16px;
+    text-align: center;
+  }
+
+  .view-info {
+    font-size: var(--font-size-sm);
+  }
+
+  .btn-toggle-filter {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Selectors */
+  .selectors-container {
+    padding: 16px;
+  }
+
+  .selectors-container.collapsed {
+    padding: 0 16px;
+  }
+
+  .selectors-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .selectors-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .btn-reset-filter {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .selectors-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .selector-group label {
+    font-size: 0.8rem;
+  }
+
+  /* Main Content */
+  .main-content {
+    padding: 16px;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    padding: 14px;
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .stat-icon {
+    width: 42px;
+    height: 42px;
+    font-size: 1rem;
+  }
+
+  .stat-content h3 {
+    font-size: var(--font-size-xl);
+  }
+
+  .stat-content p {
+    font-size: 0.75rem;
+  }
+
+  /* Subjects Table - Responsive Cards */
+  .subjects-section {
+    padding: 16px;
+  }
+
+  .subjects-section h2 {
+    font-size: 1.1rem;
+  }
+
+  .subjects-table thead {
+    display: none;
+  }
+
+  .subjects-table,
+  .subjects-table tbody,
+  .subjects-table tr,
+  .subjects-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .subjects-table tbody tr {
+    background: rgba(0, 0, 0, 0.02);
+    margin-bottom: 12px;
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    border: 1px solid var(--color-border-light);
+  }
+
+  .subjects-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.06);
+  }
+
+  .subjects-table tbody tr.no-data {
+    background: transparent;
+    border: none;
+  }
+
+  .subjects-table td {
+    padding: 8px 0;
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .subjects-table td::before {
+    font-weight: 600;
+    color: var(--color-text-secondary-light);
+    font-size: 0.8rem;
+    flex-shrink: 0;
+    margin-right: 10px;
+  }
+
+  .subjects-table td:nth-child(2)::before {
+    content: "PKM";
+  }
+
+  .subjects-table td:nth-child(3)::before {
+    content: "Difficulty";
+  }
+
+  .subjects-table td:nth-child(4)::before {
+    content: "Effort";
+  }
+
+  .subjects-table td:first-child {
+    font-weight: 600;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+
+  .subjects-table td:first-child::before {
+    display: none;
+  }
+
+  .subjects-table td:last-child {
+    justify-content: center;
+    padding-top: 10px;
+  }
+
+  .btn-view-details {
+    width: 100%;
+    padding: 10px;
+  }
+
+  /* Subject Details */
+  .subject-details {
+    padding: 16px;
+  }
+
+  .subject-details-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+
+  .subject-details-header h3 {
+    font-size: 1.1rem;
+  }
+
+  .btn-close-details {
+    align-self: flex-end;
+  }
+
+  /* Plans */
+  .plans-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Content Sections */
+  .content-section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
+
+  /* Contribute Form */
+  .contribute-form .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Dark mode - Responsive table cards */
+  body.dark-theme .subjects-table tbody tr {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: var(--color-border-dark);
+  }
+
+  body.dark-theme .subjects-table tbody tr:hover {
+    background: rgba(102, 126, 234, 0.1);
+  }
+
+  body.dark-theme .subjects-table td:first-child {
+    border-bottom-color: var(--color-border-dark);
+  }
+
+  body.dark-theme .subjects-table td::before {
+    color: var(--color-text-secondary-dark);
+  }
+}
+
+/* === MOBILE PORTRAIT (480px) === */
+@media (max-width: 480px) {
+  /* Main Content */
+  .main-content {
+    padding: 12px;
+  }
+
+  /* Current View Indicator */
+  .current-view-indicator {
+    padding: 12px;
+  }
+
+  .view-info {
+    font-size: 0.85rem;
+  }
+
+  .view-info i {
+    font-size: 1rem;
+  }
+
+  /* Selectors */
+  .selectors-container {
+    padding: 14px;
+  }
+
+  .selectors-container.collapsed {
+    padding: 0 14px;
+  }
+
+  .selectors-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  /* Stats */
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .stat-card {
+    flex-direction: row;
+    text-align: left;
+    padding: 12px;
+  }
+
+  .stat-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  .stat-content h3 {
+    font-size: 1.3rem;
+  }
+
+  /* Subjects Table */
+  .subjects-section {
+    padding: 14px;
+  }
+
+  .subjects-table tbody tr {
+    padding: 10px;
+  }
+
+  .subjects-table td {
+    font-size: 0.85rem;
+  }
+
+  .pkm-badge,
+  .effort-badge {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+  }
+
+  /* Subject Details */
+  .subject-details {
+    padding: 14px;
+  }
+
+  .detail-section {
+    padding: 12px;
+  }
+
+  .detail-section h4 {
+    font-size: 0.9rem;
+  }
+
+  .detail-section ul li {
+    font-size: 0.85rem;
+  }
+
+  /* Auth Box */
+  .auth-box {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .auth-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .plan-card {
+    padding: 16px;
+  }
+
+  .plan-card h5 {
+    font-size: 1.1rem;
+  }
+
+  .plan-card .price {
+    font-size: 1.4rem;
+  }
+}
+
+/* === VERY SMALL SCREENS (360px) === */
+@media (max-width: 360px) {
+  .current-view-indicator {
+    padding: 10px;
+  }
+
+  .view-info {
+    font-size: 0.8rem;
+  }
+
+  .btn-toggle-filter {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .stats-grid {
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 10px;
+  }
+
+  .stat-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  .stat-content h3 {
+    font-size: 1.1rem;
+  }
+
+  .stat-content p {
+    font-size: 0.7rem;
+  }
+}

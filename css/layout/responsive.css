@@ -1,0 +1,73 @@
+/* ==================================================================
+   BLUESTIFT - RESPONSIVE UTILITIES v5.0
+   Breakpoints and responsive helpers
+   ================================================================== */
+
+/* VISIBILITY UTILITIES */
+.hidden { display: none !important; }
+.visible { display: block !important; }
+
+/* HIDE ON MOBILE */
+@media (max-width: 768px) {
+  .hidden-mobile { display: none !important; }
+}
+
+/* HIDE ON TABLET */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .hidden-tablet { display: none !important; }
+}
+
+/* HIDE ON DESKTOP */
+@media (min-width: 1025px) {
+  .hidden-desktop { display: none !important; }
+}
+
+/* SHOW ONLY ON MOBILE */
+.show-mobile { display: none !important; }
+@media (max-width: 768px) {
+  .show-mobile { display: block !important; }
+}
+
+/* SHOW ONLY ON DESKTOP */
+.show-desktop { display: none !important; }
+@media (min-width: 1025px) {
+  .show-desktop { display: block !important; }
+}
+
+/* TEXT ALIGNMENT RESPONSIVE */
+@media (max-width: 768px) {
+  .text-mobile-center { text-align: center !important; }
+  .text-mobile-left { text-align: left !important; }
+}
+
+/* CONTAINER RESPONSIVE */
+@media (max-width: 768px) {
+  .container {
+    padding-left: var(--space-4);
+    padding-right: var(--space-4);
+  }
+}
+
+/* GRID RESPONSIVE */
+@media (max-width: 768px) {
+  .grid-mobile-1 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* FLEX RESPONSIVE */
+@media (max-width: 768px) {
+  .flex-mobile-col {
+    flex-direction: column !important;
+  }
+  
+  .flex-mobile-center {
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}
+
+/* RESPONSIVE HELPERS */
+@media (max-width: 480px) {
+  .w-full-mobile { width: 100% !important; }
+}
