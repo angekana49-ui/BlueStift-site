@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Bluestift</title>
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f9fafb;
+      color: #1a1a1a;
+    }
+    
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 25px 40px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header-left h1 {
+      font-size: 1.8rem;
+      margin-bottom: 5px;
+    }
+    
+    .header-left p {
+      opacity: 0.9;
+      font-size: 0.95rem;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .btn-logout {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.2);
+      border: 2px solid white;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-logout:hover {
+      background: white;
+      color: #667eea;
+    }
+    
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 40px;
+    }
+    
+    /* Auth Overlay */
+    .auth-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+    }
+
+    .auth-box {
+      background: white;
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+      max-width: 450px;
+      width: 90%;
+    }
+
+    .auth-box h2 {
+      color: #667eea;
+      margin-bottom: 10px;
+    }
+
+    .auth-box p {
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    .auth-input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+
+    .auth-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .auth-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .auth-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .auth-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .auth-error {
+      color: #ef4444;
+      margin-top: 15px;
+      display: none;
+      font-size: 0.9rem;
+    }
+
+    .auth-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #fef3c7;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      color: #92400e;
+    }
+    
+    /* Tabs Navigation */
+    .tabs-nav {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e5e7eb;
+    }
+    
+    .tab-btn {
+      padding: 15px 30px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .tab-btn:hover {
+      color: #667eea;
+      background: #f9fafb;
+    }
+    
+    .tab-btn.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+      background: #f9fafb;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-left: 4px solid #2563eb;
+      transition: all 0.3s ease;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    .stat-card.pending {
+      border-left-color: #f59e0b;
+    }
+    
+    .stat-card.approved {
+      border-left-color: #10b981;
+    }
+    
+    .stat-card.rejected {
+      border-left-color: #ef4444;
+    }
+    
+    .stat-card .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      opacity: 0.7;
+    }
+    
+    .stat-card .number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 10px 0;
+    }
+    
+    .stat-card .label {
+      color: #666;
+      font-size: 0.95rem;
+    }
+    
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: space-between;
+    }
+    
+    .section-title i {
+      color: #667eea;
+    }
+    
+    /* Filters */
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .filter-btn {
+      padding: 8px 16px;
+      background: #f3f4f6;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #666;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+    
+    .filter-btn.active {
+      background: #667eea;
+      border-color: #667eea;
+      color: white;
+    }
+    
+    .contributions-list,
+    .feedbacks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    
+    .contribution-card,
+    .feedback-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border: 2px solid #e5e7eb;
+      transition: all 0.3s ease;
+    }
+    
+    .contribution-card:hover,
+    .feedback-card:hover {
+      border-color: #667eea;
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    }
+    
+    .contribution-header,
+    .feedback-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      margin-bottom: 20px;
+    }
+    
+    .contribution-title,
+    .feedback-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 5px;
+    }
+    
+    .contribution-meta,
+    .feedback-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 15px;
+    }
+    
+    .contribution-meta span,
+    .feedback-meta span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .contribution-description,
+    .feedback-message {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border-left: 3px solid #667eea;
+    }
+    
+    .contribution-files {
+      background: #f9fafb;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .contribution-files h4 {
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      color: #666;
+    }
+    
+    .file-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      background: white;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+    
+    .file-item i {
+      color: #ef4444;
+      font-size: 1.2rem;
+    }
+
+    .file-item a {
+      color: #667eea;
+      text-decoration: none;
+      margin-left: auto;
+    }
+
+    .file-item a:hover {
+      text-decoration: underline;
+    }
+    
+    .contribution-actions,
+    .feedback-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-approve {
+      background: #10b981;
+      color: white;
+    }
+    
+    .btn-approve:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+    
+    .btn-reject {
+      background: #ef4444;
+      color: white;
+    }
+    
+    .btn-reject:hover {
+      background: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    }
+    
+    .btn-delete {
+      background: #6b7280;
+      color: white;
+    }
+    
+    .btn-delete:hover {
+      background: #4b5563;
+    }
+    
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+      background: white;
+      border-radius: 12px;
+    }
+    
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #666;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .badge-pending {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    
+    .badge-approved {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    
+    .badge-rejected {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    
+    .badge-category {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    
+    .star-rating {
+      display: flex;
+      gap: 3px;
+      font-size: 1.2rem;
+      color: #fbbf24;
+    }
+    
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 500px;
+      width: 90%;
+    }
+    
+    .modal-content h3 {
+      margin-bottom: 15px;
+    }
+    
+    .modal-content textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      resize: vertical;
+      font-family: inherit;
+      margin: 15px 0;
+    }
+    
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+    
+    .btn-cancel {
+      background: #e5e7eb;
+      color: #333;
+    }
+    
+    .btn-cancel:hover {
+      background: #d1d5db;
+    }
+
+    /* Loading */
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+
+    .loading i {
+      font-size: 2rem;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Auth Overlay -->
+  <div id="auth-overlay" class="auth-overlay" style="display: none;">
+    <div class="auth-box">
+      <h2>🔐 Admin Access</h2>
+      <p>Sign in to access the admin dashboard</p>
+      
+      <input type="email" id="admin-email" class="auth-input" placeholder="Email" autocomplete="email">
+      <input type="password" id="admin-password" class="auth-input" placeholder="Password" autocomplete="current-password">
+      
+      <button id="admin-login-btn" class="auth-btn">
+        Sign In
+      </button>
+      
+      <p id="admin-error" class="auth-error"></p>
+      
+      <div class="auth-info">
+        <strong>💡 Note:</strong> Use your admin account from Supabase with <code>is_admin = TRUE</code>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" style="display: none;">
+    <!-- Header -->
+    <div class="header">
+      <div class="header-left">
+        <h1><i class="fas fa-shield-alt"></i> Admin Dashboard</h1>
+        <p>Manage contributions and community feedback</p>
+      </div>
+      <div class="header-right">
+        <span style="opacity: 0.9; font-size: 0.9rem;" id="admin-email-display"></span>
+        <button class="btn-logout" id="logout-btn">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+    </div>
+    
+    <!-- Container -->
+    <div class="container">
+      
+      <!-- Tabs Navigation -->
+      <div class="tabs-nav">
+        <button class="tab-btn active" data-tab="contributions">
+          <i class="fas fa-upload"></i> Contributions
+        </button>
+        <button class="tab-btn" data-tab="feedbacks">
+          <i class="fas fa-comments"></i> Feedbacks
+        </button>
+        <button class="tab-btn" data-tab="waitlist">
+          <i class="fas fa-users"></i> Waitlist
+        </button>
+      </div>
+      
+      <!-- TAB 1: CONTRIBUTIONS -->
+      <div id="tab-contributions" class="tab-content active">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card pending">
+            <div class="icon">⏳</div>
+            <div class="number" id="stat-pending">-</div>
+            <div class="label">Pending</div>
+          </div>
+          
+          <div class="stat-card approved">
+            <div class="icon">✅</div>
+            <div class="number" id="stat-approved">-</div>
+            <div class="label">Approved</div>
+          </div>
+          
+          <div class="stat-card rejected">
+            <div class="icon">❌</div>
+            <div class="number" id="stat-rejected">-</div>
+            <div class="label">Rejected</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="icon">📊</div>
+            <div class="number" id="stat-total">-</div>
+            <div class="label">Total</div>
+          </div>
+        </div>
+        
+        <div class="section-title">
+          <div>
+            <i class="fas fa-filter"></i>
+            Contributions
+          </div>
+        </div>
+        
+        <!-- Filters -->
+        <div class="filters">
+          <button class="filter-btn active" data-status="all">All</button>
+          <button class="filter-btn" data-status="pending">Pending</button>
+          <button class="filter-btn" data-status="approved">Approved</button>
+          <button class="filter-btn" data-status="rejected">Rejected</button>
+        </div>
+        
+        <div class="contributions-list" id="contributions-list">
+          <div class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading contributions...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- TAB 2: FEEDBACKS -->
+      <div id="tab-feedbacks" class="tab-content">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="icon">💬</div>
+            <div class="number" id="stat-feedbacks-total">-</div>
+            <div class="label">Total Feedbacks</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="icon">⭐</div>
+            <div class="number" id="stat-feedbacks-avg">-</div>
+            <div class="label">Average Rating</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="icon">📈</div>
+            <div class="number" id="stat-feedbacks-positive">-</div>
+            <div class="label">Positive (4-5★)</div>
+          </div>
+          
+          <div class="stat-card">
+            <div class="icon">🛠</div>
+            <div class="number" id="stat-feedbacks-bugs">-</div>
+            <div class="label">Bugs Reported</div>
+          </div>
+        </div>
+        
+        <h2 class="section-title">
+          <i class="fas fa-comments"></i>
+          All Feedbacks
+        </h2>
+        
+        <div class="feedbacks-list" id="feedbacks-list">
+          <div class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading feedbacks...</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- TAB 3: WAITLIST -->
+      <div id="tab-waitlist" class="tab-content">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="icon">👥</div>
+            <div class="number" id="stat-waitlist-total">-</div>
+            <div class="label">Total Registered</div>
+          </div>
+          
+          <div class="stat-card pending">
+            <div class="icon">🔥</div>
+            <div class="number" id="stat-waitlist-early">-</div>
+            <div class="label">Early Birds</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="icon">📊</div>
+            <div class="number" id="stat-waitlist-spots">-</div>
+            <div class="label">Spots Left</div>
+          </div>
+        </div>
+        
+        <h2 class="section-title">
+          <i class="fas fa-users"></i>
+          Waitlist
+        </h2>
+        
+        <div id="waitlist-list">
+          <div class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>Loading waitlist...</p>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+  <!-- Modal de rejet -->
+  <div id="reject-modal" class="modal">
+    <div class="modal-content">
+      <h3>❌ Reject this contribution</h3>
+      <p>Please indicate the reason for rejection (optional):</p>
+      <textarea id="rejection-reason" rows="4" placeholder="Ex: Inappropriate content, poor quality..."></textarea>
+      
+      <div class="modal-actions">
+        <button class="btn btn-cancel" id="cancel-reject-btn">Cancel</button>
+        <button class="btn btn-reject" id="confirm-reject-btn">
+          <i class="fas fa-times"></i> Confirm Rejection
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Supabase Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  
+  <script src="admin-dashboard.js"></script>
+  
+</body>
+</html>
