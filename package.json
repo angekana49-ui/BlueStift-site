@@ -1,6 +1,9 @@
 {
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "dependencies": {
-    "supabase": "^2.76.9",
     "web-push": "^3.6.7"
   }
 }
