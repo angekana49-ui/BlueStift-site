@@ -16,17 +16,15 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-
   <!-- Supabase SDK -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <!-- Supabase Config (gitignored) + DB Layer -->
+  <!-- Supabase Config + VAPID public key + DB Layer -->
   <script src="config.js"></script>
-  <!-- Web Push public VAPID key — replace value after: npx web-push generate-vapid-keys -->
-  <script>window.VAPID_PUBLIC_KEY = 'REPLACE_WITH_YOUR_VAPID_PUBLIC_KEY';</script>
   <script src="schools-db.js"></script>
+
+  <!-- Chart.js — defer: only needed after login for charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js" defer></script>
 
   <!-- DNS Prefetch for Google Translate -->
   <link rel="dns-prefetch" href="//translate.google.com">
@@ -58,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
   </script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script async src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <!-- Hidden Google Translate Element (not used in schools dashboard) -->
   <div id="google_translate_element" style="display: none !important; visibility: hidden !important; position: absolute !important; top: -9999px !important;"></div>
