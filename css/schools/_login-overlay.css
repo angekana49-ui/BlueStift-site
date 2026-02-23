@@ -1,0 +1,735 @@
+/* ==========================================
+   LOGIN OVERLAY — Shown when not authenticated
+   Fully self-contained: does NOT inherit dark theme
+   All colors hardcoded with !important to beat
+   body.dark-theme overrides
+   ========================================== */
+
+.login-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%) !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.login-overlay .login-container {
+  width: 100%;
+  max-width: 440px;
+  animation: loginFadeInUp 0.6s ease;
+}
+
+/* ---- White card ---- */
+.login-overlay .auth-box {
+  background: #ffffff !important;
+  color: #1a1a2e !important;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 0 80px rgba(102, 126, 234, 0.15);
+}
+
+/* ---- Force ALL text dark inside the overlay ---- */
+.login-overlay *:not(.btn-login):not(.btn-login *) {
+  color: #1a1a2e !important;
+}
+
+/* Specific overrides for lighter text */
+.login-overlay .auth-logo-section p {
+  color: #6b7280 !important;
+}
+
+.login-overlay .form-group label {
+  color: #374151 !important;
+}
+
+.login-overlay .checkbox-group label {
+  color: #6b7280 !important;
+}
+
+.login-overlay .auth-footer p {
+  color: #9ca3af !important;
+}
+
+.login-overlay .forgot-description {
+  color: #6b7280 !important;
+}
+
+.login-overlay .auth-toggle {
+  color: #6b7280 !important;
+}
+
+/* Links — classic blue */
+.login-overlay .auth-footer a,
+.login-overlay .auth-toggle a,
+.login-overlay .forgot-link {
+  color: #2563eb !important;
+}
+
+.login-overlay .forgot-link:hover,
+.login-overlay .auth-footer a:hover,
+.login-overlay .auth-toggle a:hover {
+  color: #1d4ed8 !important;
+}
+
+/* Error message */
+.login-overlay .error-message,
+.login-overlay .error-message * {
+  color: #dc2626 !important;
+}
+
+/* ---- Logo & Header ---- */
+.login-overlay .auth-logo-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-overlay .auth-logo {
+  display: block;
+  margin: 0 auto 16px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #2563eb !important;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2), 0 4px 20px rgba(37, 99, 235, 0.3);
+}
+
+.login-overlay .auth-logo-section h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.login-overlay .auth-logo-section p {
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ---- Form ---- */
+.login-overlay .form-group {
+  margin-bottom: 20px;
+}
+
+.login-overlay .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.login-overlay .input-wrapper {
+  position: relative;
+}
+
+.login-overlay .input-wrapper i {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af !important;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+}
+
+.login-overlay .input-wrapper:focus-within i {
+  color: #2563eb !important;
+}
+
+/* ---- Inputs: nuclear override for dark theme ---- */
+.login-overlay .form-input,
+.login-overlay input,
+.login-overlay select,
+.login-overlay textarea {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  background: #f9fafb !important;
+  border: 2px solid #cbd5e1 !important;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  color: #1a1a2e !important;
+  transition: all 0.25s ease;
+  -webkit-text-fill-color: #1a1a2e !important;
+}
+
+.login-overlay .form-input:focus,
+.login-overlay input:focus,
+.login-overlay select:focus {
+  outline: none;
+  border-color: #2563eb !important;
+  background: #ffffff !important;
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+}
+
+.login-overlay .form-input::placeholder,
+.login-overlay input::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+}
+
+/* ---- Remember me & forgot ---- */
+.login-overlay .form-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.login-overlay .checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-overlay .checkbox-group input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #667eea;
+  cursor: pointer;
+  padding: 0;
+}
+
+.login-overlay .forgot-link {
+  font-size: 0.875rem;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.login-overlay .forgot-link:hover {
+  text-decoration: underline;
+}
+
+/* ---- Button ---- */
+.login-overlay .btn-login,
+.login-overlay .btn-login * {
+  color: #ffffff !important;
+}
+
+.login-overlay .btn-login {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8b5cf6 100%) !important;
+  border: none !important;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 16px rgba(102, 126, 234, 0.35);
+}
+
+.login-overlay .btn-login:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.5);
+}
+
+.login-overlay .btn-login:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.login-overlay .btn-login:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ---- Error message ---- */
+.login-overlay .error-message {
+  display: none;
+  padding: 12px 16px;
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  text-align: center;
+  animation: loginFadeIn 0.3s ease;
+}
+
+.login-overlay .error-message i {
+  margin-right: 8px;
+}
+
+/* ---- Footer ---- */
+.login-overlay .auth-footer {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #f3f4f6 !important;
+  text-align: center;
+}
+
+.login-overlay .auth-footer p {
+  font-size: 0.85rem;
+  margin: 6px 0;
+}
+
+/* ---- Auth view toggle ---- */
+.login-overlay .auth-toggle {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.login-overlay .auth-toggle a {
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.login-overlay .auth-toggle a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Form row (two columns) ---- */
+.login-overlay .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* ---- Select input styling ---- */
+.login-overlay .select-wrapper select.form-input {
+  appearance: none;
+  padding-right: 16px;
+  cursor: pointer;
+}
+
+/* ---- Forgot password view ---- */
+.login-overlay .forgot-description {
+  text-align: center;
+  font-size: 0.9rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* ---- Animations ---- */
+@keyframes loginFadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes loginFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes loginShake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-5px); }
+  80%      { transform: translateX(5px); }
+}
+
+.login-overlay .shake {
+  animation: loginShake 0.4s ease;
+}
+
+/* ---- Demo hint (Try Demo button — ?demo=true only) ---- */
+.login-overlay .demo-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0 10px;
+}
+
+.login-overlay .demo-divider::before,
+.login-overlay .demo-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.login-overlay .demo-divider span {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.login-overlay .btn-try-demo {
+  width: 100%;
+  padding: 11px 20px;
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(102, 126, 234, 0.4);
+  background: rgba(102, 126, 234, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.login-overlay .btn-try-demo:hover {
+  border-color: rgba(102, 126, 234, 0.7);
+  background: rgba(102, 126, 234, 0.15);
+  color: #ffffff;
+}
+
+.login-overlay .btn-try-demo i {
+  color: var(--color-primary-start);
+}
+
+/* ---- Language toggle (EN | FR) ---- */
+.login-overlay .lang-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.login-overlay .lang-sep {
+  color: #cbd5e1 !important;
+  font-size: 0.8rem;
+}
+
+.login-overlay .lang-btn {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #9ca3af !important;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.2s;
+  width: auto;
+}
+
+.login-overlay .lang-btn.active,
+.login-overlay .lang-btn:hover {
+  color: #2563eb !important;
+}
+
+/* ---- Signup progress bar ---- */
+.login-overlay .signup-progress {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.login-overlay .progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.login-overlay .step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #e5e7eb !important;
+  color: #9ca3af !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.3s;
+}
+
+.login-overlay .progress-step.active .step-num {
+  background: linear-gradient(135deg, #667eea, #764ba2) !important;
+  color: #ffffff !important;
+}
+
+.login-overlay .progress-step.done .step-num {
+  background: #10b981 !important;
+  color: #ffffff !important;
+}
+
+.login-overlay .step-label {
+  font-size: 0.75rem;
+  color: #9ca3af !important;
+}
+
+.login-overlay .progress-step.active .step-label,
+.login-overlay .progress-step.done .step-label {
+  color: #374151 !important;
+  font-weight: 600;
+}
+
+.login-overlay .progress-line {
+  flex: 1;
+  height: 2px;
+  background: #e5e7eb !important;
+  margin: 0 8px 18px;
+  transition: background 0.3s;
+}
+
+.login-overlay .progress-line.active {
+  background: linear-gradient(90deg, #667eea, #764ba2) !important;
+}
+
+/* ---- Classes hint ---- */
+.login-overlay .signup-classes-hint {
+  font-size: 0.875rem;
+  color: #6b7280 !important;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+/* ---- Classes list ---- */
+.login-overlay .classes-list-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 2px 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(0,0,0,0.35);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.login-overlay .classes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 8px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.login-overlay .class-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-overlay .btn-remove-class {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none !important;
+  background: #fef2f2 !important;
+  color: #dc2626 !important;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+  padding: 0;
+}
+
+.login-overlay .btn-remove-class:hover {
+  background: #fee2e2 !important;
+}
+
+/* ---- Add class button ---- */
+.login-overlay .btn-add-class {
+  width: 100%;
+  padding: 10px;
+  background: #f0f4ff !important;
+  border: 2px dashed #a5b4fc !important;
+  border-radius: 10px;
+  color: #4f46e5 !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 4px;
+  font-family: 'Inter', sans-serif;
+}
+
+.login-overlay .btn-add-class:hover {
+  background: #e0e7ff !important;
+  border-color: #818cf8 !important;
+}
+
+/* ---- Signup success screen ---- */
+.login-overlay .signup-success-content {
+  text-align: center;
+}
+
+.login-overlay .success-icon-wrap {
+  font-size: 3rem;
+  color: #10b981 !important;
+  margin-bottom: 12px;
+}
+
+.login-overlay .signup-success-content h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.login-overlay .success-msg {
+  font-size: 0.9rem;
+  color: #6b7280 !important;
+  margin-bottom: 20px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.login-overlay .admin-key-block {
+  background: #f0fdf4 !important;
+  border: 1px solid #86efac !important;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.login-overlay .admin-key-block label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #15803d !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.login-overlay .admin-key-value {
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #166534 !important;
+  letter-spacing: 0.1em;
+  word-break: break-all;
+}
+
+.login-overlay .admin-key-hint {
+  font-size: 0.8rem;
+  color: #16a34a !important;
+  margin-top: 8px;
+}
+
+.login-overlay .promo-codes-block {
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe !important;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.login-overlay .promo-codes-block h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1e40af !important;
+  margin-bottom: 10px;
+}
+
+.login-overlay .promo-codes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.login-overlay .promo-code-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: #ffffff !important;
+  border-radius: 8px;
+  border: 1px solid #dbeafe !important;
+}
+
+.login-overlay .promo-class-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e40af !important;
+}
+
+.login-overlay .promo-code-value {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1d4ed8 !important;
+  letter-spacing: 0.05em;
+}
+
+.login-overlay .promo-codes-hint {
+  font-size: 0.8rem;
+  color: #3b82f6 !important;
+  margin-top: 10px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 480px) {
+  .login-overlay .auth-box { padding: 28px 24px; }
+  .login-overlay .form-options { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .login-overlay .form-row { grid-template-columns: 1fr; }
+}
+
+/* ---- Plan Picker (signup step 2) ---- */
+.login-overlay .signup-plan-pick {
+  margin-bottom: 20px;
+}
+.login-overlay .signup-plan-pick__title {
+  font-size: 0.82rem;
+  color: #6b7280 !important;
+  margin-bottom: 10px;
+  text-align: center;
+}
+.login-overlay .signup-plan-pick__options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.login-overlay .signup-plan-pick__opt {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 10px 6px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  background: #fff !important;
+  text-align: center;
+}
+.login-overlay .signup-plan-pick__opt input[type="radio"] { display: none; }
+.login-overlay .signup-plan-pick__opt .opt-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #1f2937 !important;
+}
+.login-overlay .signup-plan-pick__opt .opt-desc {
+  font-size: 0.72rem;
+  color: #6b7280 !important;
+}
+.login-overlay .signup-plan-pick__opt .opt-badge {
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #7c3aed;
+  color: #fff !important;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+.login-overlay .signup-plan-pick__opt:has(input:checked) {
+  border-color: #7c3aed;
+  background: #f5f3ff !important;
+}
+.login-overlay .signup-plan-pick__opt.popular { border-color: #c4b5fd; }
+@media (max-width: 380px) {
+  .login-overlay .signup-plan-pick__options { grid-template-columns: 1fr; }
+}

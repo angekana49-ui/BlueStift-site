@@ -1,475 +1,303 @@
-# BlueStift Schools - Plan Base de Données & Authentification
+# BlueStift Schools Dashboard - Plan Connexion DB
 
-> Document de référence pour l'implémentation de la DB Supabase pour le dashboard Schools
-
----
-
-## 1. Architecture Actuelle
-
-### Fichiers Concernés
-
-| Fichier | Rôle |
-|---------|------|
-| `schools.html` | Dashboard principal avec toutes les sections UI |
-| `schools.js` | Logique principale, charge les données mock |
-| `schools-data.json` | Données mock (école, stats globales, par classe) |
-| `schools-utils.js` | Utilitaires (notifications, langues, dates) |
-| `schools/sections/index.js` | Système de chargement des sections dynamiques |
-| `schools/sections/export.js` | Section export de données |
-| `schools/sections/settings.js` | Section paramètres |
-| `schools/sections/subscription.js` | Section abonnement |
-| `schools/sections/contact.js` | Section support |
-| `supabase-client.js` | Client Supabase existant (waitlist, contributions générales) |
-
-### Flux Actuel (Sans Auth)
-
-```
-[Utilisateur] → schools.html → schools.js → schools-data.json (MOCK)
-```
-
-### Flux Cible (Avec Auth)
-
-```
-[Utilisateur] → schools-login.html → [Auth Supabase]
-                     ↓
-              schools.html → schools-db.js → [Supabase Tables]
-                     ↓
-              Vérification session active
-```
+> Remplacement de toutes les données mock par Supabase (DB existante, 19 tables)
+> `supabase-client.js` est OBSOLÈTE et à supprimer.
 
 ---
 
-## 2. Schéma de Base de Données Supabase
+## 1. Inventaire Complet: Chaque Point Mock à Remplacer
 
-### 2.1 Table `schools`
+### 1.1 `schools.js` - Fichier Principal (738 lignes)
+
+| Ligne(s) | Fonction | Ce qu'elle fait actuellement (MOCK) | Remplacement DB |
+|-----------|----------|-------------------------------------|-----------------|
+| 11-13 | Variables globales | `currentSchool`, `selectedClassName`, `mockData` | Garder `currentSchool`, `selectedClassName`. Supprimer `mockData`. |
+| 19-29 | `loadMockData()` | `fetch('schools-data.json')` | **Supprimer entièrement.** Remplacer par `SchoolsDB.init()` |
+| 35-67 | `DOMContentLoaded` | Appelle `loadMockData()` puis `loadSchoolData()` | Ajouter **auth guard** en premier. Si pas connecté → redirect `schools-login.html` |
+| 96-108 | `loadSchoolData()` | `mockData.school` → peuple `#school-name`, `#plan-type`, `#expiry-date`, `#raya-messages-left`, `#raya-count`, `#contributions-left` | `SchoolsDB.getSchoolInfo()` → query `schools` + `users` |
+| — | **BUG actuel** | `#admin-name` n'est JAMAIS peuplé (reste "Admin") | Ajouter: `#admin-name` ← `users.full_name` |
+| 110-122 | `loadGlobalData()` | `mockData.global` → peuple `#stat-students`, `#stat-pkm`, `#stat-time`, `#stat-completion`, `#stat-streak`, `#stat-lessons` + appelle `populateSubjectsTable()` | `SchoolsDB.getGlobalStats()` → vue `school_global_overview` + `SchoolsDB.getSubjectOverview()` |
+| 124-141 | `loadClassData()` | `mockData.class` → même pattern mais données de classe | `SchoolsDB.getClassInsights(classYearId)` → query `insights` filtrés par `class_year_id` |
+| 143-182 | `populateSubjectsTable()` | Itère sur `subjects[]` array (name, icon, pkm, difficulty, effort) | **Garder la fonction**, juste changer la source de données (DB au lieu de mock) |
+| 184-193 | `showSubjectDetails()` | `mockData.global.subjects` ou `mockData.class.subjects` | `SchoolsDB.getClassSubjectDetail(classYearId, subject)` |
+| 199-253 | `openInsightsDrawer()` | Peuple le drawer: PKM, difficulties, mastered, recommendations depuis `subject.details` | Même structure, données venant de `insights` table |
+| 405-423 | `handleClassSearch()` | Stocke juste `selectedClassName` en string, appelle `loadClassData()` | `SchoolsDB.searchClass(query)` → query `class_years` JOIN `classes` WHERE name ILIKE. Retourne `class_year_id` pour les queries suivantes. |
+| 538-573 | `initContributeForm()` | Setup du form (drag&drop, etc.) | **Garder tel quel** (c'est du UI) |
+| 575-585 | `prefillContributeForm()` | Utilise `currentSchool.email/phone/adminName` | Utiliser données de `SchoolsDB.currentAdmin` et `SchoolsDB.currentSchool` |
+| 613-657 | `handleContributeSubmit()` | **FAKE** - `setTimeout(2000)`, aucun upload réel | `SchoolsDB.submitContribution(formData, files)` → INSERT `contributions` + upload Storage `Contribute` bucket |
+| 693-706 | Event listener menu | `#menu-logout` existe dans le HTML mais **AUCUN handler** | Ajouter: `SchoolsDB.logout()` → redirect `schools-login.html` |
+| 728-734 | `window.SchoolsDashboard` | Expose `currentSchool`, `selectedClassName` | Garder, adapter |
+
+### 1.2 `schools.html` (719 lignes)
+
+| Ligne(s) | Élément | Problème | Fix |
+|-----------|---------|----------|-----|
+| — | `<head>` | **Pas de Supabase SDK** | Ajouter `<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>` |
+| — | `<head>` | **Pas de schools-db.js** | Ajouter `<script src="schools-db.js"></script>` après Supabase SDK |
+| 66 | `#school-name` | "Loading..." par défaut | OK (sera remplacé par DB) |
+| 75 | `#admin-name` | "Admin" par défaut, **jamais mis à jour** | Fix dans `loadSchoolData()` |
+| 83 | `#plan-type` | "Pro" par défaut | Sera remplacé par DB |
+| 84 | `#expiry-date` | "--" par défaut | Sera remplacé par DB |
+| 113 | `#raya-messages-left` | "50" hardcodé | Sera remplacé par DB |
+| 130 | `#contributions-left` | "∞" hardcodé | OK (unlimited) |
+| 161-167 | `#menu-logout` | **Aucun handler JS** | Ajouter logout dans `initEventListeners()` |
+| 174-177 | `#select-year` | Hardcodé "2025-2026" seulement | `SchoolsDB.getSchoolYears()` → populate dynamiquement depuis `school_years` |
+| 326-343 | Section RAYA | Redirect vers `raya.thebluestift.com` | OK (pas de changement, RAYA est externe) |
+| 707-717 | Scripts | Charge `schools-utils.js`, sections, `schools.js` | Ajouter Supabase SDK + `schools-db.js` AVANT `schools.js` |
+
+### 1.3 `schools-utils.js` (172 lignes)
+
+| Fonction | État | Action |
+|----------|------|--------|
+| `generateRayaResponse()` | Match keyword → réponse mock | **Peut être supprimée** (RAYA est maintenant externe à `raya.thebluestift.com`) |
+| `initLanguageSelector()` | Fonctionne avec localStorage | **Garder tel quel** (pas lié à la DB) |
+| `changeLanguage()` | Google Translate | **Garder tel quel** |
+| `showSchoolNotification()` | Notifications toast | **Garder tel quel** |
+| `updateCurrentDate()` | Date locale | **Garder tel quel** |
+| `formatDate()` | Formatage de date | **Garder tel quel** |
+
+### 1.4 `schools/sections/settings.js` (717 lignes)
+
+| Ligne(s) | Fonction | MOCK actuel | Remplacement DB |
+|-----------|----------|-------------|-----------------|
+| 33 | `render()` | `window.SchoolsDashboard?.currentSchool` (mock) | Utiliser `SchoolsDB.currentSchool` (données réelles) |
+| 34 | Langue | `localStorage.getItem('preferredLang')` | **Garder localStorage** (préférence locale) |
+| 35 | Notifications | `localStorage.getItem('settings_notifications')` | **Garder localStorage** pour MVP (ou table `user_preferences` plus tard) |
+| 63 | `#settings-school-name` | `school.name` du mock | `SchoolsDB.currentSchool.name` |
+| 67 | `#settings-school-code` | `school.schoolCode` (N'EXISTE PAS dans le mock!) | `SchoolsDB.currentSchool.admin_key` ou `school.id` |
+| 75 | `#settings-admin-email` | `school.adminEmail` (N'EXISTE PAS dans le mock!) | `SchoolsDB.currentSchool.email` |
+| 79 | `#settings-admin-phone` | `school.phone` | `SchoolsDB.currentSchool.phone` |
+| 86 | `#settings-school-location` | `school.location` (N'EXISTE PAS) | `SchoolsDB.currentSchool.city` |
+| 90-94 | `#settings-school-type` | `school.type` (N'EXISTE PAS) | Pas dans la table `schools` actuelle → **ajouter colonne `school_type`** OU ignorer pour MVP |
+| 521-538 | `initProfileForm()` | Sauve dans **localStorage** | `SchoolsDB.updateSchoolProfile({name, email, phone, city})` → UPDATE `schools` |
+| 543-559 | `initNotifications()` | Sauve dans **localStorage** | **Garder localStorage** pour MVP |
+| 569-609 | `initSecurity()` | Tout "demo mode" / "coming soon" | **Garder tel quel** pour MVP. Change password fonctionnera quand auth est en place via `supabase.auth.updateUser()` |
+| 614-672 | `initDataPrivacy()` | Tout "demo mode" | **Garder tel quel** pour MVP |
+| 677-711 | `initDangerZone()` | Reset localStorage, "demo mode" | **Garder tel quel** pour MVP |
+
+### 1.5 `schools/sections/contact.js` (539 lignes)
+
+| Ligne(s) | Fonction | MOCK actuel | Remplacement DB |
+|-----------|----------|-------------|-----------------|
+| 117-156 | Contact cards | WhatsApp/Email/Phone hardcodés | **Garder tel quel** (infos de contact BlueStift, pas de l'école) |
+| 405-445 | `initSupportForm()` | **FAKE** - `setTimeout(1500)`, log console | `SchoolsDB.submitSupportTicket(data)` → INSERT `contact_messages` avec `school_id` + `source='form'` |
+| 447-521 | `initFileUpload()` | Upload de screenshot fonctionnel (UI only) | Ajouter upload vers Supabase Storage bucket |
+| 524-533 | `prefillFormFromSchool()` | `window.SchoolsDashboard?.currentSchool.adminName/email` | `SchoolsDB.currentAdmin.full_name` / `SchoolsDB.currentSchool.email` |
+
+### 1.6 `schools/sections/subscription.js` (443 lignes)
+
+| Ligne(s) | Fonction | MOCK actuel | Remplacement DB |
+|-----------|----------|-------------|-----------------|
+| 12-72 | `plansData` | **Hardcodé** en JS (Standard 80k, Pro 120k, Custom) | `SchoolsDB.getPlans()` → SELECT `subscription_plans` WHERE `category = 'school_b2b'` |
+| 75-79 | `billingHistory` | **Hardcodé** 3 factures mock | `SchoolsDB.getAdjustmentsHistory()` → SELECT `class_adjustments` + `subscriptions` |
+| 82-84 | `render()` | `window.SchoolsDashboard?.currentSchool` pour planType, expiryDate, rayaLeft | `SchoolsDB.currentSchool` (données réelles) |
+| 342-356 | `initUpgradeButton()`, `initRenewButton()` | "Coming soon" notifications | **Garder tel quel** pour MVP (paiement pas encore intégré) |
+| 358-382 | `initPlanButtons()` | "Demo mode" notifications | **Garder tel quel** pour MVP |
+| 384-408 | `initInvoiceButtons()` | "Downloading..." fake | Connecter quand billing est réel |
+| 419-437 | `initDangerButtons()` | Confirm dialog + notification | Connecter à `SchoolsDB.cancelSubscription()` plus tard |
+
+### 1.7 `schools/sections/export.js` (495 lignes)
+
+| Ligne(s) | Fonction | MOCK actuel | Remplacement DB |
+|-----------|----------|-------------|-----------------|
+| 239-249 | `populateClassFilter()` | **Hardcodé**: `['12th Grade A', '12th Grade B', ...]` | `SchoolsDB.getClasses()` → SELECT `class_years` JOIN `classes` |
+| 355-411 | `generateCSVContent()` | **Hardcodé** données fictives pour chaque type de rapport | Remplacer par données réelles de la DB (insights, users, etc.) |
+| 334-353 | `simulateDownload()` | Génère un CSV blob et le télécharge | **Garder le mécanisme**, changer les données source |
+
+### 1.8 `schools/sections/index.js` (103 lignes)
+
+**Rien à changer.** C'est un loader de templates, pas de données.
+
+### 1.9 `schools-data.json` (313 lignes)
+
+**À SUPPRIMER** quand tout est connecté à la DB. C'est le fichier mock principal.
+
+### 1.10 `supabase-client.js` (528 lignes)
+
+**À SUPPRIMER.** Obsolète et inutilisé. Le nouveau `schools-db.js` sera autonome.
+
+---
+
+## 2. Tables Existantes Utilisées
+
+| Table DB | Utilisée par | Données fournies |
+|----------|-------------|------------------|
+| `schools` | `loadSchoolData()`, Settings, Subscription | name, city, country, email, phone, subscription_tier, subscription_expires_at, admin_key, actual_enrolled_count |
+| `users` (role=school_admin) | Auth, `#admin-name`, prefill forms | full_name, email, school_id, auth_user_id |
+| `users` (role=student) | Stats globales | current_streak_days, total_lessons_completed, school_id |
+| `school_years` | Year selector, filtrage insights | label, is_current |
+| `classes` | Class search, export filter | name, expected_size, school_id |
+| `class_years` | Class search, class stats | class_id, school_year_id, student_count, promo_code, school_id |
+| `insights` | Subjects table, drawer, global stats | subject, mastery_score, critical_gap, concepts_acquired, recommended_action, student_effort_level, sample_size, class_year_id |
+| `contributions` + `contribution_files` | Contribute form | Réutiliser le même flow que l'existant, ajouter school_id |
+| `contact_messages` | Support form | INSERT avec school_id |
+| `subscriptions` + `subscription_plans` | Subscription section | Plan actif, prix, features, dates |
+| `class_adjustments` | Billing history | Historique d'ajustements payants |
+
+---
+
+## 3. Vues SQL à Créer dans Supabase
+
+### Vue 1: `school_global_overview`
+
+Stats globales d'une école pour les 6 stat cards du dashboard.
 
 ```sql
-CREATE TABLE schools (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL,
-    code TEXT UNIQUE NOT NULL,  -- Ex: "VOGT-HS-001"
-    country TEXT DEFAULT 'Cameroon',
-    city TEXT,
-    school_type TEXT CHECK (school_type IN ('primary', 'secondary', 'high', 'mixed')),
-
-    -- Subscription
-    plan_type TEXT DEFAULT 'standard' CHECK (plan_type IN ('standard', 'pro', 'custom')),
-    subscription_expires_at TIMESTAMPTZ,
-    raya_messages_limit INT DEFAULT 50,
-    raya_messages_used INT DEFAULT 0,
-
-    -- Contact
-    admin_email TEXT,
-    admin_phone TEXT,
-
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-    updated_at TIMESTAMPTZ DEFAULT NOW()
-);
+CREATE OR REPLACE VIEW school_global_overview
+WITH (security_invoker = true) AS
+SELECT
+    s.id AS school_id,
+    s.name AS school_name,
+    s.subscription_tier,
+    s.subscription_expires_at,
+    s.actual_enrolled_count AS total_students,
+    sy.label AS academic_year,
+    COALESCE(AVG(u.current_streak_days), 0)::int AS avg_streak,
+    COALESCE(SUM(u.total_lessons_completed), 0)::int AS total_lessons_completed,
+    COALESCE(AVG(i.mastery_score), 0)::numeric(4,3) AS avg_pkm
+FROM schools s
+LEFT JOIN school_years sy ON sy.is_current = true
+LEFT JOIN users u ON u.school_id = s.id AND u.role = 'student'
+LEFT JOIN class_years cy ON cy.school_id = s.id AND cy.school_year_id = sy.id
+LEFT JOIN insights i ON i.class_year_id = cy.id AND i.school_id = s.id
+GROUP BY s.id, s.name, s.subscription_tier, s.subscription_expires_at,
+         s.actual_enrolled_count, sy.label;
 ```
 
-### 2.2 Table `school_admins`
+### Vue 2: `school_subject_overview`
+
+Stats par matière agrégées au niveau école (pour la table "Insights by Subject").
 
 ```sql
-CREATE TABLE school_admins (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
-
-    full_name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    role TEXT DEFAULT 'admin' CHECK (role IN ('owner', 'admin', 'viewer')),
-
-    is_active BOOLEAN DEFAULT true,
-    last_login_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW(),
-
-    UNIQUE(school_id, user_id)
-);
+CREATE OR REPLACE VIEW school_subject_overview
+WITH (security_invoker = true) AS
+SELECT
+    i.school_id,
+    i.subject,
+    sy.label AS academic_year,
+    COUNT(*)::int AS insight_count,
+    AVG(i.mastery_score)::numeric(4,3) AS avg_pkm,
+    SUM(i.sample_size)::int AS total_sample_size,
+    MODE() WITHIN GROUP (ORDER BY i.student_effort_level) AS dominant_effort_level,
+    ARRAY_AGG(DISTINCT i.critical_gap) FILTER (WHERE i.critical_gap IS NOT NULL) AS all_difficulties,
+    ARRAY_AGG(DISTINCT i.recommended_action) FILTER (WHERE i.recommended_action IS NOT NULL) AS all_recommendations
+FROM insights i
+JOIN class_years cy ON i.class_year_id = cy.id
+JOIN school_years sy ON cy.school_year_id = sy.id AND sy.is_current = true
+WHERE i.sample_size >= 5
+GROUP BY i.school_id, i.subject, sy.label;
 ```
 
-### 2.3 Table `classes`
+### Modification mineure: `contact_messages`
 
 ```sql
-CREATE TABLE classes (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-
-    name TEXT NOT NULL,  -- Ex: "12th Grade A"
-    grade_level TEXT,
-    academic_year TEXT DEFAULT '2025-2026',
-
-    student_count INT DEFAULT 0,
-
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+ALTER TABLE contact_messages ADD COLUMN school_id UUID REFERENCES schools(id);
 ```
 
-### 2.4 Table `students` (Optionnel pour MVP)
+---
 
-```sql
-CREATE TABLE students (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-    class_id UUID REFERENCES classes(id) ON DELETE SET NULL,
+## 4. Authentification
 
-    student_code TEXT,
-    full_name TEXT,
-    email TEXT,
+### Flux choisi: Supabase Auth (email/password)
 
-    -- Métriques globales
-    pkm_score DECIMAL(4,3) DEFAULT 0,
-    lessons_completed INT DEFAULT 0,
-    total_time_minutes INT DEFAULT 0,
-    current_streak INT DEFAULT 0,
-
-    last_activity_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
+```
+schools-login.html → email + password
+    ↓
+supabase.auth.signInWithPassword()
+    ↓
+SELECT * FROM users WHERE auth_user_id = auth.uid()
+    ↓
+Vérifier role = 'school_admin'
+    ↓  OUI                          ↓  NON
+Stocker school_id              Afficher erreur
+Redirect → schools.html       "Accès non autorisé"
+    ↓
+schools.js: vérifier session
+Si pas de session → redirect login
 ```
 
-### 2.5 Table `subjects`
+### Prérequis DB pour tester
 
 ```sql
-CREATE TABLE subjects (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    name TEXT NOT NULL UNIQUE,
-    icon TEXT,  -- FontAwesome icon name (calculator, atom, flask, etc.)
-    category TEXT  -- sciences, languages, humanities
-);
+-- 1. Créer un user dans Supabase Auth (via Dashboard > Authentication > Add User)
+-- Email: admin@vogt-highschool.edu
+-- Password: Test1234!
 
--- Seed data
-INSERT INTO subjects (name, icon, category) VALUES
-('Mathematics', 'calculator', 'sciences'),
-('Physics', 'atom', 'sciences'),
-('Chemistry', 'flask', 'sciences'),
-('Biology / Life Sciences', 'leaf', 'sciences'),
-('French', 'book', 'languages'),
-('English', 'language', 'languages'),
-('History & Geography', 'globe', 'humanities'),
-('Philosophy', 'brain', 'humanities'),
-('Computer Science', 'laptop-code', 'sciences');
-```
+-- 2. Insérer l'école de test (si pas déjà fait)
+INSERT INTO schools (name, city, country, email, phone, subscription_tier, admin_key, actual_enrolled_count)
+VALUES ('Mary High School', 'Yaounde', 'Cameroon', 'admin@vogt-highschool.edu', '+237 699 123 456', 'pro', 'MARY2025-ADMIN', 1247)
+RETURNING id;
 
-### 2.6 Table `class_subject_stats`
-
-```sql
-CREATE TABLE class_subject_stats (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-    class_id UUID REFERENCES classes(id) ON DELETE CASCADE,
-    subject_id UUID REFERENCES subjects(id) ON DELETE CASCADE,
-    academic_year TEXT DEFAULT '2025-2026',
-
-    -- Métriques
-    avg_pkm DECIMAL(4,3) DEFAULT 0,
-    completion_rate DECIMAL(5,2) DEFAULT 0,
-    avg_time_minutes INT DEFAULT 0,
-    effort_level TEXT CHECK (effort_level IN ('low', 'medium', 'high')),
-
-    -- Insights (JSON)
-    difficulties JSONB DEFAULT '[]',
-    mastered_concepts JSONB DEFAULT '[]',
-    recommendations JSONB DEFAULT '[]',
-
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-
-    UNIQUE(class_id, subject_id, academic_year)
-);
-```
-
-### 2.7 Table `school_global_stats`
-
-```sql
-CREATE TABLE school_global_stats (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-    academic_year TEXT DEFAULT '2025-2026',
-
-    total_students INT DEFAULT 0,
-    avg_pkm DECIMAL(4,3) DEFAULT 0,
-    avg_completion_rate DECIMAL(5,2) DEFAULT 0,
-    avg_time_per_week TEXT,  -- Ex: "3h45"
-    avg_streak INT DEFAULT 0,
-    total_lessons_completed INT DEFAULT 0,
-
-    -- Stats par matière (pré-agrégées)
-    subjects_stats JSONB DEFAULT '[]',
-
-    updated_at TIMESTAMPTZ DEFAULT NOW(),
-
-    UNIQUE(school_id, academic_year)
-);
-```
-
-### 2.8 Table `school_contributions`
-
-```sql
-CREATE TABLE school_contributions (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-    admin_id UUID REFERENCES school_admins(id),
-
-    contributor_name TEXT,
-    contributor_email TEXT,
-    contributor_phone TEXT,
-    title TEXT NOT NULL,
-    category TEXT,  -- mathematics, physics, etc.
-    target_class TEXT,
-    difficulty_level TEXT CHECK (difficulty_level IN ('beginner', 'intermediate', 'advanced', 'all')),
-    description TEXT,
-
-    file_count INT DEFAULT 0,
-    status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
-
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### 2.9 Table `school_contribution_files`
-
-```sql
-CREATE TABLE school_contribution_files (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    contribution_id UUID REFERENCES school_contributions(id) ON DELETE CASCADE,
-
-    file_name TEXT NOT NULL,
-    file_path TEXT NOT NULL,
-    file_url TEXT,
-    mime_type TEXT,
-    file_size BIGINT,
-
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### 2.10 Table `school_support_tickets`
-
-```sql
-CREATE TABLE school_support_tickets (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-
-    name TEXT NOT NULL,
-    email TEXT NOT NULL,
-    category TEXT,
-    priority TEXT DEFAULT 'normal' CHECK (priority IN ('normal', 'high', 'urgent')),
-    subject TEXT NOT NULL,
-    message TEXT NOT NULL,
-    attachment_url TEXT,
-
-    status TEXT DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved', 'closed')),
-
-    created_at TIMESTAMPTZ DEFAULT NOW()
-);
-```
-
-### 2.11 Table `billing_history`
-
-```sql
-CREATE TABLE billing_history (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    school_id UUID REFERENCES schools(id) ON DELETE CASCADE,
-
-    invoice_number TEXT UNIQUE,
-    description TEXT,
-    amount DECIMAL(12,2),
-    currency TEXT DEFAULT 'XAF',
-    status TEXT DEFAULT 'paid' CHECK (status IN ('pending', 'paid', 'failed', 'refunded')),
-
-    invoice_url TEXT,
-    paid_at TIMESTAMPTZ,
-    created_at TIMESTAMPTZ DEFAULT NOW()
+-- 3. Lier le user auth à la table users
+INSERT INTO users (auth_user_id, email, full_name, role, school_id, account_type)
+VALUES (
+    'UUID-DU-USER-AUTH',  -- Copier depuis Auth > Users
+    'admin@vogt-highschool.edu',
+    'Jean-Paul Kamga',
+    'school_admin',
+    'UUID-DE-LECOLE',     -- Copier depuis étape 2
+    'pro'
 );
 ```
 
 ---
 
-## 3. Row Level Security (RLS)
-
-```sql
--- Activer RLS sur toutes les tables
-ALTER TABLE schools ENABLE ROW LEVEL SECURITY;
-ALTER TABLE school_admins ENABLE ROW LEVEL SECURITY;
-ALTER TABLE classes ENABLE ROW LEVEL SECURITY;
-ALTER TABLE students ENABLE ROW LEVEL SECURITY;
-ALTER TABLE class_subject_stats ENABLE ROW LEVEL SECURITY;
-ALTER TABLE school_global_stats ENABLE ROW LEVEL SECURITY;
-ALTER TABLE school_contributions ENABLE ROW LEVEL SECURITY;
-ALTER TABLE school_contribution_files ENABLE ROW LEVEL SECURITY;
-ALTER TABLE school_support_tickets ENABLE ROW LEVEL SECURITY;
-ALTER TABLE billing_history ENABLE ROW LEVEL SECURITY;
-
--- Fonction helper pour récupérer le school_id de l'utilisateur connecté
-CREATE OR REPLACE FUNCTION get_user_school_id()
-RETURNS UUID AS $$
-BEGIN
-    RETURN (
-        SELECT school_id FROM school_admins
-        WHERE user_id = auth.uid() AND is_active = true
-        LIMIT 1
-    );
-END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- Politique pour schools
-CREATE POLICY "Users can view their own school"
-ON schools FOR SELECT
-USING (id = get_user_school_id());
-
-CREATE POLICY "Owners can update their school"
-ON schools FOR UPDATE
-USING (id = get_user_school_id());
-
--- Politique pour school_admins
-CREATE POLICY "Users can view admins of their school"
-ON school_admins FOR SELECT
-USING (school_id = get_user_school_id());
-
--- Politique pour classes
-CREATE POLICY "Users can view classes of their school"
-ON classes FOR SELECT
-USING (school_id = get_user_school_id());
-
--- Politique pour class_subject_stats
-CREATE POLICY "Users can view stats of their school"
-ON class_subject_stats FOR SELECT
-USING (school_id = get_user_school_id());
-
--- Politique pour school_global_stats
-CREATE POLICY "Users can view global stats of their school"
-ON school_global_stats FOR SELECT
-USING (school_id = get_user_school_id());
-
--- Politique pour school_contributions
-CREATE POLICY "Users can view and insert contributions for their school"
-ON school_contributions FOR ALL
-USING (school_id = get_user_school_id());
-
--- Politique pour billing_history
-CREATE POLICY "Users can view billing of their school"
-ON billing_history FOR SELECT
-USING (school_id = get_user_school_id());
-```
-
----
-
-## 4. Plan d'Implémentation
-
-### Phase 1: Authentification
-
-| Étape | Tâche | Priorité |
-|-------|-------|----------|
-| 1.1 | Créer tables `schools` et `school_admins` dans Supabase | Critique |
-| 1.2 | Configurer RLS de base | Critique |
-| 1.3 | Créer `schools-login.html` (page de connexion) | Critique |
-| 1.4 | Créer `schools-login.js` (logique auth) | Critique |
-| 1.5 | Ajouter vérification session dans `schools.js` | Critique |
-| 1.6 | Ajouter bouton logout fonctionnel | Critique |
-
-### Phase 2: Données de l'École
-
-| Étape | Tâche | Priorité |
-|-------|-------|----------|
-| 2.1 | Créer table `school_global_stats` | Critique |
-| 2.2 | Créer `schools-db.js` (client DB) | Critique |
-| 2.3 | Remplacer `loadSchoolData()` | Critique |
-| 2.4 | Remplacer `loadGlobalData()` | Critique |
-| 2.5 | Insérer données de test | Important |
-
-### Phase 3: Classes & Stats
-
-| Étape | Tâche | Priorité |
-|-------|-------|----------|
-| 3.1 | Créer tables `classes`, `subjects`, `class_subject_stats` | Important |
-| 3.2 | Implémenter `loadClassData()` depuis DB | Important |
-| 3.3 | Implémenter recherche de classe | Important |
-| 3.4 | Connecter drawer insights | Important |
-
-### Phase 4: Fonctionnalités Secondaires
-
-| Étape | Tâche | Priorité |
-|-------|-------|----------|
-| 4.1 | Connecter formulaire Contributions | Moyen |
-| 4.2 | Connecter formulaire Support | Moyen |
-| 4.3 | Connecter Settings (profil) | Moyen |
-| 4.4 | Connecter Billing history | Faible |
-| 4.5 | Connecter Export (si données réelles) | Faible |
-
----
-
-## 5. Fichiers à Créer
-
-```
-BlueStift Website/
-├── schools-login.html      # Page de connexion
-├── schools-login.js        # Logique d'authentification
-├── schools-db.js           # Client Supabase pour Schools
-└── schools-auth.js         # Helpers d'authentification (optionnel)
-```
-
----
-
-## 6. Structure du Client `schools-db.js`
+## 5. Structure de `schools-db.js` (Nouveau Fichier)
 
 ```javascript
+/*
+ * SCHOOLS-DB.JS - Client Supabase pour le Dashboard Schools
+ * Autonome (ne dépend PAS de supabase-client.js)
+ */
+
+const SUPABASE_URL = 'https://xyxsuoeldkfznodblgvp.supabase.co';
+const SUPABASE_ANON_KEY = '...';
+
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 class SchoolsDB {
+
     constructor() {
-        this.supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        this.currentAdmin = null;
-        this.currentSchool = null;
+        this.supabase = supabase;
+        this.currentAdmin = null;   // { id, full_name, email, role, school_id }
+        this.currentSchool = null;  // { id, name, city, ... }
     }
 
-    // ==========================================
-    // AUTHENTIFICATION
-    // ==========================================
+    // === AUTH ===
+    async login(email, password) { ... }
+    async logout() { ... }
+    async checkSession() { ... }     // Retourne admin ou null
+    async isAuthenticated() { ... }
 
-    async loginSchoolAdmin(email, password) { }
-    async logoutSchoolAdmin() { }
-    async getCurrentSchoolAdmin() { }
-    async isAuthenticated() { }
+    // === SCHOOL INFO ===
+    async getSchoolInfo() { ... }                    // SELECT schools WHERE id = school_id
+    async updateSchoolProfile(data) { ... }          // UPDATE schools
 
-    // ==========================================
-    // DONNÉES ÉCOLE
-    // ==========================================
+    // === GLOBAL STATS ===
+    async getGlobalStats() { ... }                   // SELECT school_global_overview
+    async getSubjectOverview() { ... }               // SELECT school_subject_overview
 
-    async getSchoolInfo() { }
-    async updateSchoolProfile(data) { }
+    // === CLASSES ===
+    async getClasses() { ... }                       // SELECT class_years JOIN classes
+    async searchClass(query) { ... }                 // ILIKE classes.name
+    async getSchoolYears() { ... }                   // SELECT school_years ORDER BY label DESC
 
-    // ==========================================
-    // STATISTIQUES
-    // ==========================================
+    // === INSIGHTS (per class) ===
+    async getClassStats(classYearId) { ... }         // Agrégation: student_count, avg PKM, etc.
+    async getClassSubjects(classYearId) { ... }      // insights GROUP BY subject
+    async getSubjectDetail(classYearId, subject) { } // insights détaillés pour le drawer
 
-    async getGlobalStats(academicYear = '2025-2026') { }
-    async getClassStats(classId, academicYear) { }
-    async getSubjectInsights(classId, subjectId) { }
+    // === CONTRIBUTIONS ===
+    async submitContribution(formData, files) { ... } // INSERT contributions + upload Storage
+    async getContributions() { ... }                   // SELECT contributions WHERE school_id
 
-    // ==========================================
-    // CLASSES
-    // ==========================================
+    // === SUPPORT ===
+    async submitSupportTicket(data) { ... }           // INSERT contact_messages
 
-    async getClasses(academicYear) { }
-    async searchClass(query) { }
-
-    // ==========================================
-    // CONTRIBUTIONS
-    // ==========================================
-
-    async submitContribution(formData, files) { }
-    async getContributions(status = null) { }
-
-    // ==========================================
-    // SUPPORT
-    // ==========================================
-
-    async submitSupportTicket(data) { }
-
-    // ==========================================
-    // ABONNEMENT
-    // ==========================================
-
-    async getSubscriptionInfo() { }
-    async getBillingHistory() { }
-    async getUsageStats() { }
+    // === SUBSCRIPTION ===
+    async getPlans() { ... }                          // SELECT subscription_plans WHERE school_b2b
+    async getCurrentSubscription() { ... }            // SELECT subscriptions WHERE school_id
+    async getBillingHistory() { ... }                 // SELECT class_adjustments WHERE school_id
 }
 
 window.SchoolsDB = new SchoolsDB();
@@ -477,49 +305,173 @@ window.SchoolsDB = new SchoolsDB();
 
 ---
 
-## 7. Mapping Mock Data → Tables
+## 6. Fichiers Finaux
 
-| Champ Mock (schools-data.json) | Table Supabase | Colonne |
-|-------------------------------|----------------|---------|
-| `school.name` | `schools` | `name` |
-| `school.planType` | `schools` | `plan_type` |
-| `school.expiryDate` | `schools` | `subscription_expires_at` |
-| `school.rayaMessagesLeft` | `schools` | `raya_messages_limit - raya_messages_used` |
-| `school.email` | `schools` | `admin_email` |
-| `school.phone` | `schools` | `admin_phone` |
-| `school.adminName` | `school_admins` | `full_name` |
-| `global.students` | `school_global_stats` | `total_students` |
-| `global.pkm` | `school_global_stats` | `avg_pkm` |
-| `global.avgTime` | `school_global_stats` | `avg_time_per_week` |
-| `global.completion` | `school_global_stats` | `avg_completion_rate` |
-| `global.avgStreak` | `school_global_stats` | `avg_streak` |
-| `global.lessonsCompleted` | `school_global_stats` | `total_lessons_completed` |
-| `global.subjects[].name` | `subjects` | `name` |
-| `global.subjects[].pkm` | `class_subject_stats` | `avg_pkm` |
-| `global.subjects[].difficulty` | `class_subject_stats` | `difficulties` (JSONB) |
-| `global.subjects[].effort` | `class_subject_stats` | `effort_level` |
-| `global.subjects[].details` | `class_subject_stats` | `difficulties`, `mastered_concepts`, `recommendations` |
+### À CRÉER
 
----
+| Fichier | Rôle |
+|---------|------|
+| `schools-login.html` | Page de connexion (email + password) |
+| `schools-login.js` | Logique auth (login, redirect) |
+| `schools-db.js` | Client Supabase autonome pour Schools |
 
-## 8. Notes Importantes
+### À MODIFIER
 
-### Sécurité
-- Ne jamais exposer le `service_role` key côté client
-- Utiliser uniquement `anon` key avec RLS activé
-- Valider les inputs côté serveur (Edge Functions si besoin)
+| Fichier | Modifications |
+|---------|---------------|
+| `schools.html` | Ajouter scripts Supabase SDK + schools-db.js. Supprimer référence à supabase-client.js si présente. |
+| `schools.js` | Auth guard + remplacer toutes les fonctions mock par SchoolsDB |
+| `schools/sections/settings.js` | `initProfileForm()` → SchoolsDB.updateSchoolProfile() |
+| `schools/sections/contact.js` | `initSupportForm()` → SchoolsDB.submitSupportTicket() |
+| `schools/sections/subscription.js` | Plans + billing depuis DB |
+| `schools/sections/export.js` | `populateClassFilter()` + `generateCSVContent()` depuis DB |
 
-### Performance
-- Les tables `*_stats` sont pré-agrégées pour éviter les calculs en temps réel
-- Utiliser des index sur `school_id`, `class_id`, `academic_year`
-- Pagination pour les listes longues (contributions, billing)
+### À SUPPRIMER
 
-### Migration Future
-- Ce schéma est compatible avec une future migration React/Next.js
-- Les API Supabase restent les mêmes
-- Seul le client-side change
+| Fichier | Raison |
+|---------|--------|
+| `supabase-client.js` | Obsolète, inutilisé |
+| `schools-data.json` | Remplacé par DB (après migration complète) |
 
 ---
 
-*Document créé le 5 février 2026*
-*Dernière mise à jour: 5 février 2026*
+## 7. Ordre d'Implémentation
+
+```
+PHASE 1: AUTH (Critique)
+├── 1.1  Créer schools-db.js (classe vide + init Supabase)
+├── 1.2  Créer schools-login.html + schools-login.js
+├── 1.3  Créer user test dans Supabase (Auth + users table)
+├── 1.4  Ajouter auth guard dans schools.js (redirect si pas connecté)
+├── 1.5  Connecter bouton logout (#menu-logout)
+└── 1.6  Ajouter scripts dans schools.html (<script> tags)
+
+PHASE 2: DONNÉES ÉCOLE (Critique)
+├── 2.1  Implémenter SchoolsDB.getSchoolInfo()
+├── 2.2  Remplacer loadSchoolData() → données DB
+├── 2.3  Fix #admin-name (jamais peuplé actuellement)
+├── 2.4  Créer les 2 vues SQL dans Supabase
+├── 2.5  Implémenter SchoolsDB.getGlobalStats() + getSubjectOverview()
+├── 2.6  Remplacer loadGlobalData() → données DB
+├── 2.7  Implémenter SchoolsDB.getSchoolYears()
+└── 2.8  Peupler dynamiquement #select-year
+
+PHASE 3: CLASSES & INSIGHTS (Important)
+├── 3.1  Implémenter SchoolsDB.searchClass()
+├── 3.2  Remplacer handleClassSearch() → recherche DB (retourne class_year_id)
+├── 3.3  Implémenter SchoolsDB.getClassSubjects()
+├── 3.4  Remplacer loadClassData() → données DB
+├── 3.5  Implémenter SchoolsDB.getSubjectDetail()
+├── 3.6  Connecter openInsightsDrawer() → données DB
+└── 3.7  Insérer données test (insights) dans Supabase
+
+PHASE 4: SECTIONS (Moyen)
+├── 4.1  Connecter Contribute form → SchoolsDB.submitContribution()
+├── 4.2  Connecter Settings profile → SchoolsDB.updateSchoolProfile()
+├── 4.3  Connecter Support form → SchoolsDB.submitSupportTicket()
+├── 4.4  Connecter Subscription plans → SchoolsDB.getPlans()
+├── 4.5  Connecter Billing history → SchoolsDB.getBillingHistory()
+└── 4.6  Connecter Export class filter → SchoolsDB.getClasses()
+
+PHASE 5: CLEANUP
+├── 5.1  Supprimer supabase-client.js
+├── 5.2  Supprimer schools-data.json
+├── 5.3  Supprimer generateRayaResponse() de schools-utils.js
+└── 5.4  Test complet du flux
+```
+
+---
+
+## 8. Mapping Précis: Mock → DB
+
+### `schools-data.json` → Tables
+
+| Chemin JSON | Table.colonne | Notes |
+|-------------|---------------|-------|
+| `school.name` | `schools.name` | Direct |
+| `school.country` | `schools.country` | Direct |
+| `school.city` | `schools.city` | Direct |
+| `school.planType` | `schools.subscription_tier` | "Pro" → "pro" |
+| `school.expiryDate` | `schools.subscription_expires_at` | ISO date |
+| `school.rayaMessagesLeft` | Calculé | Plan limite - usage (pas de colonne dédiée dans schools, vient de subscription_plans.message_limit) |
+| `school.contributionsLeft` | — | Toujours "∞" (unlimited) |
+| `school.email` | `schools.email` | Direct |
+| `school.phone` | `schools.phone` | Direct |
+| `school.adminName` | `users.full_name` | WHERE role='school_admin' AND school_id=X |
+| `global.students` | `schools.actual_enrolled_count` | Direct |
+| `global.pkm` | `AVG(insights.mastery_score)` | Agrégé par école |
+| `global.avgTime` | `users` agrégé | Pas de colonne directe → à calculer ou stocker |
+| `global.completion` | `users` agrégé | Ratio lessons_completed |
+| `global.avgStreak` | `AVG(users.current_streak_days)` | WHERE school_id=X AND role='student' |
+| `global.lessonsCompleted` | `SUM(users.total_lessons_completed)` | WHERE school_id=X AND role='student' |
+| `global.subjects[].name` | `insights.subject` | Texte libre |
+| `global.subjects[].icon` | — | Mapping côté client (subject name → icon) |
+| `global.subjects[].pkm` | `AVG(insights.mastery_score)` | GROUP BY subject |
+| `global.subjects[].difficulty` | `insights.critical_gap` | Agrégé (premier ou plus fréquent) |
+| `global.subjects[].effort` | `insights.student_effort_level` | MODE() = le plus fréquent |
+| `global.subjects[].details.difficulties` | `insights.critical_gap` | ARRAY_AGG(DISTINCT) |
+| `global.subjects[].details.mastered` | `insights.concepts_acquired` | ARRAY_AGG(DISTINCT unnest) |
+| `global.subjects[].details.recommendations` | `insights.recommended_action` | ARRAY_AGG(DISTINCT) |
+| `global.subjects[].details.effortLevel` | `insights.student_effort_level` | MODE() |
+| `global.subjects[].details.effortDesc` | — | **N'existe pas en DB** → générer côté client ou ignorer |
+| `class.*` | Même que `global.*` | Mais filtré par `class_year_id` au lieu de `school_id` |
+| `rayaResponses.*` | — | **Inutilisé** (RAYA est externe à raya.thebluestift.com) |
+
+### Icon Mapping (côté client)
+
+```javascript
+const SUBJECT_ICONS = {
+    'Mathematics': 'calculator',
+    'Physics': 'atom',
+    'Chemistry': 'flask',
+    'Biology / Life Sciences': 'leaf',
+    'French': 'book',
+    'English': 'language',
+    'History & Geography': 'globe',
+    'Philosophy': 'brain',
+    'Computer Science': 'laptop-code'
+};
+```
+
+---
+
+## 9. Données Manquantes dans la DB Actuelle
+
+| Donnée mock | Existe en DB? | Solution |
+|-------------|---------------|----------|
+| `global.avgTime` ("3h45") | **NON** - Pas de tracking temps dans `users` ni `insights` | Option A: Ignorer pour MVP. Option B: Ajouter colonne `avg_weekly_minutes` à `users`. Option C: Calculer depuis `conversations` (created_at → updated_at) |
+| `global.completion` ("72%") | **PARTIEL** - `users.total_lessons_completed` existe mais pas le total de leçons disponibles | Option A: Hardcoder "—" pour MVP. Option B: Calculer depuis un autre metric |
+| `school.contributionsLeft` | **NON** | Toujours "∞", OK |
+| `subjects[].details.effortDesc` | **NON** | Générer côté client: "High" → "Strong engagement", etc. |
+| `settings.school_type` | **NON** - Pas de colonne dans `schools` | Option A: Ajouter `ALTER TABLE schools ADD COLUMN school_type TEXT`. Option B: Ignorer |
+
+---
+
+## 10. Résumé des Modifications DB
+
+### À exécuter dans Supabase SQL Editor
+
+```sql
+-- 1. Vue school_global_overview
+-- (voir section 3)
+
+-- 2. Vue school_subject_overview
+-- (voir section 3)
+
+-- 3. Colonne school_id sur contact_messages
+ALTER TABLE contact_messages ADD COLUMN school_id UUID REFERENCES schools(id);
+
+-- 4. (Optionnel) Colonne school_type sur schools
+ALTER TABLE schools ADD COLUMN school_type TEXT CHECK (school_type IN ('primary', 'secondary', 'high', 'mixed'));
+
+-- 5. Données de test
+-- (voir section 4 - Prérequis DB pour tester)
+```
+
+**Total: 2 vues + 1-2 colonnes. Zéro nouvelle table.**
+
+---
+
+*Document final - 10 février 2026*
+*Basé sur lecture exhaustive de tous les fichiers du projet*
+*Aligné avec DOCUMENTATION_COMPLETE.md (19 tables existantes)*

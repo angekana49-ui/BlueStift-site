@@ -15,12 +15,25 @@
   
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Supabase Config (gitignored) + DB Layer -->
+  <script src="config.js"></script>
+  <!-- Web Push public VAPID key — replace value after: npx web-push generate-vapid-keys -->
+  <script>window.VAPID_PUBLIC_KEY = 'REPLACE_WITH_YOUR_VAPID_PUBLIC_KEY';</script>
+  <script src="schools-db.js"></script>
+
   <!-- DNS Prefetch for Google Translate -->
   <link rel="dns-prefetch" href="//translate.google.com">
 
   <!-- External CSS -->
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/schools/_login-overlay.css">
 </head>
 <body>
   <!-- Google Translate with Auto-Detection -->
@@ -47,8 +60,271 @@ document.addEventListener('DOMContentLoaded', function() {
   </script>
   <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
-  <!-- Hidden Google Translate Element -->
-  <div id="google_translate_element"></div>
+  <!-- Hidden Google Translate Element (not used in schools dashboard) -->
+  <div id="google_translate_element" style="display: none !important; visibility: hidden !important; position: absolute !important; top: -9999px !important;"></div>
+
+  <!-- Login Overlay (shown when not authenticated) -->
+  <div id="login-overlay" class="login-overlay" style="display: none;">
+    <div class="login-container">
+      <div class="auth-box" id="auth-box">
+
+        <!-- Language toggle -->
+        <div class="lang-toggle">
+          <button class="lang-btn active" id="lang-en" onclick="setOverlayLang('en')">EN</button>
+          <span class="lang-sep">|</span>
+          <button class="lang-btn" id="lang-fr" onclick="setOverlayLang('fr')">FR</button>
+        </div>
+
+        <div class="auth-logo-section">
+          <img src="Bluestift_iLogo.png" alt="BlueStift Logo" class="auth-logo">
+          <h1 class="notranslate">BlueStift</h1>
+          <p id="auth-subtitle" data-i18n="subtitle_login">Schools Dashboard</p>
+        </div>
+
+        <div class="error-message" id="login-error-message">
+          <i class="fas fa-exclamation-circle"></i>
+          <span id="login-error-text">Invalid credentials</span>
+        </div>
+
+        <!-- LOGIN VIEW -->
+        <div id="login-view">
+          <form id="login-form" novalidate>
+            <div class="form-group">
+              <label for="login-email" data-i18n="label_email">Email Address</label>
+              <div class="input-wrapper">
+                <input type="email" id="login-email" class="form-input" placeholder="admin@school.edu" data-i18n-ph="ph_email" required autocomplete="email">
+                <i class="fas fa-envelope"></i>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="login-password" data-i18n="label_password">Password</label>
+              <div class="input-wrapper">
+                <input type="password" id="login-password" class="form-input" placeholder="Enter your password" data-i18n-ph="ph_login_password" required autocomplete="current-password">
+                <i class="fas fa-lock"></i>
+              </div>
+            </div>
+
+            <div class="form-options">
+              <div class="checkbox-group">
+                <input type="checkbox" id="login-remember">
+                <label for="login-remember" data-i18n="remember_me">Remember me</label>
+              </div>
+              <a href="#" class="forgot-link" id="login-forgot-link" data-i18n="forgot_link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-login" id="login-btn">
+              <i class="fas fa-sign-in-alt"></i>
+              <span data-i18n="btn_signin">Sign In</span>
+            </button>
+          </form>
+
+          <!-- Demo access — hidden by default, shown only with ?demo=true -->
+          <div id="demo-hint" style="display:none;">
+            <div class="demo-divider"><span>or</span></div>
+            <button type="button" id="btn-try-demo" class="btn-try-demo">
+              <i class="fas fa-play-circle"></i> Try Demo
+            </button>
+          </div>
+
+          <p class="auth-toggle"><span data-i18n="no_account">Don't have an account?</span> <a href="#" id="show-signup-link" data-i18n="create_one">Create one</a></p>
+        </div>
+
+        <!-- SIGNUP STEP 1: School info + credentials -->
+        <div id="signup-step1" style="display: none;">
+          <div class="signup-progress">
+            <div class="progress-step active">
+              <span class="step-num">1</span>
+              <span class="step-label" data-i18n="step_school_info">School Info</span>
+            </div>
+            <div class="progress-line"></div>
+            <div class="progress-step">
+              <span class="step-num">2</span>
+              <span class="step-label" data-i18n="step_classes">Classes</span>
+            </div>
+          </div>
+
+          <form id="signup-form-step1" novalidate>
+            <div class="form-group">
+              <label for="signup-school-name" data-i18n="label_school_name">School Name</label>
+              <div class="input-wrapper">
+                <input type="text" id="signup-school-name" class="form-input" placeholder="e.g. Sunrise International School" data-i18n-ph="ph_school_name" required>
+                <i class="fas fa-school"></i>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="signup-country" data-i18n="label_country">Country</label>
+                <div class="input-wrapper select-wrapper">
+                  <select id="signup-country" class="form-input" required>
+                    <option value="" data-i18n="select_country">Select country...</option>
+                  </select>
+                  <i class="fas fa-globe-africa"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-city" data-i18n="label_city">City</label>
+                <div class="input-wrapper">
+                  <input type="text" id="signup-city" class="form-input" placeholder="e.g. Nairobi" data-i18n-ph="ph_city" required>
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signup-admin-name" data-i18n="label_full_name">Your Full Name</label>
+              <div class="input-wrapper">
+                <input type="text" id="signup-admin-name" class="form-input" placeholder="e.g. Amara Diallo" data-i18n-ph="ph_admin_name" required>
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="signup-email" data-i18n="label_email">Email Address</label>
+              <div class="input-wrapper">
+                <input type="email" id="signup-email" class="form-input" placeholder="admin@school.edu" data-i18n-ph="ph_email" required autocomplete="email">
+                <i class="fas fa-envelope"></i>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="signup-password" data-i18n="label_password">Password</label>
+                <div class="input-wrapper">
+                  <input type="password" id="signup-password" class="form-input" placeholder="Min. 8 characters" data-i18n-ph="ph_password" required minlength="8" autocomplete="new-password">
+                  <i class="fas fa-lock"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="signup-confirm-password" data-i18n="label_confirm">Confirm</label>
+                <div class="input-wrapper">
+                  <input type="password" id="signup-confirm-password" class="form-input" placeholder="Repeat password" data-i18n-ph="ph_confirm" required minlength="8" autocomplete="new-password">
+                  <i class="fas fa-lock"></i>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="signup-next-btn">
+              <i class="fas fa-user-plus"></i>
+              <span data-i18n="btn_create">Create Account</span>
+            </button>
+          </form>
+
+          <p class="auth-toggle"><span data-i18n="have_account">Already have an account?</span> <a href="#" id="show-login-link" data-i18n="signin_link">Sign In</a></p>
+        </div>
+
+        <!-- SIGNUP STEP 2: Classes -->
+        <div id="signup-step2" style="display: none;">
+          <div class="signup-progress">
+            <div class="progress-step done">
+              <span class="step-num"><i class="fas fa-check"></i></span>
+              <span class="step-label" data-i18n="step_school_info">School Info</span>
+            </div>
+            <div class="progress-line active"></div>
+            <div class="progress-step active">
+              <span class="step-num">2</span>
+              <span class="step-label" data-i18n="step_classes">Classes</span>
+            </div>
+          </div>
+
+          <!-- Plan Selection -->
+          <div class="signup-plan-pick">
+            <p class="signup-plan-pick__title"><i class="fas fa-crown"></i> Choose your plan — <strong>30-day free pilot</strong></p>
+            <div class="signup-plan-pick__options">
+              <label class="signup-plan-pick__opt" id="plan-opt-standard">
+                <input type="radio" name="signup-plan" value="b2b_standard" checked>
+                <span class="opt-name">Standard</span>
+                <span class="opt-desc">Essential analytics</span>
+              </label>
+              <label class="signup-plan-pick__opt popular" id="plan-opt-pro">
+                <input type="radio" name="signup-plan" value="b2b_pro">
+                <span class="opt-badge">Popular</span>
+                <span class="opt-name">Pro</span>
+                <span class="opt-desc">Full analytics power</span>
+              </label>
+              <label class="signup-plan-pick__opt" id="plan-opt-custom">
+                <input type="radio" name="signup-plan" value="b2b_custom">
+                <span class="opt-name">Custom</span>
+                <span class="opt-desc">Large institutions</span>
+              </label>
+            </div>
+          </div>
+
+          <p class="signup-classes-hint" data-i18n="classes_hint">Add your classes — students will use these codes to join.</p>
+          <div class="classes-list-header">
+            <span style="flex:1">Class name</span>
+            <span style="width:80px;text-align:center"><i class="fas fa-user-graduate"></i></span>
+            <span style="width:32px"></span>
+          </div>
+          <div id="classes-list" class="classes-list"></div>
+
+          <button type="button" class="btn-add-class" id="btn-add-class">
+            <i class="fas fa-plus"></i> <span data-i18n="btn_add_class">Add a Class</span>
+          </button>
+
+          <button type="button" class="btn-login" id="signup-btn" style="margin-top: 16px;">
+            <i class="fas fa-check-circle"></i>
+            <span data-i18n="btn_complete">Complete Setup</span>
+          </button>
+
+          <p class="auth-toggle"><a href="#" id="signup-back-link" data-i18n="back_link">← Back</a></p>
+        </div>
+
+        <!-- SIGNUP SUCCESS -->
+        <div id="signup-success" style="display: none;">
+          <div class="signup-success-content">
+            <div class="success-icon-wrap"><i class="fas fa-check-circle"></i></div>
+            <h3 data-i18n="success_title">Account Created!</h3>
+            <p class="success-msg" id="signup-success-msg"></p>
+
+            <div class="admin-key-block" id="admin-key-block" style="display: none;">
+              <label data-i18n="admin_key_label">Your School Admin Key</label>
+              <div class="admin-key-value" id="admin-key-value"></div>
+              <p class="admin-key-hint" data-i18n="admin_key_hint">Save this — it uniquely identifies your school.</p>
+            </div>
+
+            <div class="promo-codes-block" id="promo-codes-block" style="display: none;">
+              <h4><i class="fas fa-ticket-alt"></i> <span data-i18n="promo_title">Class Registration Codes</span></h4>
+              <div class="promo-codes-list" id="promo-codes-list"></div>
+              <p class="promo-codes-hint" data-i18n="promo_hint">Share each code with students of the corresponding class.</p>
+            </div>
+
+            <button type="button" class="btn-login" id="goto-login-btn">
+              <i class="fas fa-sign-in-alt"></i>
+              <span data-i18n="btn_goto_signin">Go to Sign In</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- FORGOT PASSWORD VIEW -->
+        <div id="forgot-view" style="display: none;">
+          <p class="forgot-description" data-i18n="forgot_desc">Enter your email address and we'll send you a link to reset your password.</p>
+          <form id="forgot-form" novalidate>
+            <div class="form-group">
+              <label for="forgot-email" data-i18n="label_email">Email Address</label>
+              <div class="input-wrapper">
+                <input type="email" id="forgot-email" class="form-input" placeholder="admin@school.edu" data-i18n-ph="ph_email" required autocomplete="email">
+                <i class="fas fa-envelope"></i>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-login" id="forgot-btn">
+              <i class="fas fa-paper-plane"></i>
+              <span data-i18n="btn_reset">Send Reset Link</span>
+            </button>
+          </form>
+
+          <p class="auth-toggle"><a href="#" id="back-to-login-link" data-i18n="back_signin">← Back to Sign In</a></p>
+        </div>
+
+        <div class="auth-footer">
+          <p data-i18n="footer_help">Need help? <a href="mailto:support@thebluestift.com">Contact Support</a></p>
+          <p>&copy; 2025 BlueStift. All rights reserved.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Main Dashboard -->
   <div id="dashboard-container">
@@ -80,7 +356,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
       <div class="subscription-status">
         <i class="fas fa-crown"></i>
-        <span id="plan-type">Pro</span>
+        <span id="plan-type">--</span>
         <span class="expires">Expires: <span id="expiry-date">--</span></span>
       </div>
     </div>
@@ -107,7 +383,7 @@ document.addEventListener('DOMContentLoaded', function() {
           <a href="#raya-chat" class="menu-dropdown-item" data-section="raya">
             <i class="fas fa-comments"></i>
             <div class="menu-item-content">
-              <span class="menu-item-label">Chat with RAYA</span>
+              <span class="menu-item-label">Chat with <span class="notranslate">RAYA</span></span>
               <span class="menu-item-desc">AI assistant for your data</span>
             </div>
             <span class="badge" id="raya-messages-left">50</span>
@@ -328,16 +604,16 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="raya-redirect-icon">
               <i class="fas fa-robot"></i>
             </div>
-            <h2>Chat with RAYA</h2>
-            <p>RAYA, votre assistant IA analytique, est disponible sur sa plateforme dédiée.</p>
-            <p class="raya-redirect-desc">Posez des questions sur vos données, obtenez des recommandations personnalisées et analysez les performances de vos élèves.</p>
+            <h2>Chat with<span class="notranslate">RAYA</span></h2>
+            <p><span class="notranslate">RAYA</span>, your AI analytics assistant, is available on its dedicated platform.</p>
+            <p class="raya-redirect-desc">Ask questions about your data, get personalized recommendations, and analyze your students' performance.</p>
             <a href="https://raya.thebluestift.com" target="_blank" rel="noopener" class="btn-raya-redirect">
               <i class="fas fa-external-link-alt"></i>
-              Ouvrir RAYA
+              Open<span class="notranslate">RAYA</span>
             </a>
             <p class="raya-redirect-note">
               <i class="fas fa-info-circle"></i>
-              Messages restants ce mois: <strong id="raya-count">50</strong>
+              Messages left this month: <strong id="raya-count">50</strong>
             </p>
           </div>
         </section>
@@ -345,28 +621,24 @@ document.addEventListener('DOMContentLoaded', function() {
         <!-- Contribute Section -->
         <section id="section-contribute" class="content-section">
           <h2><i class="fas fa-upload"></i> Add a Contribution</h2>
-          <p>Share educational resources to make RAYA smarter for your students!</p>
+          <p>Share educational resources to make <span class="notranslate">RAYA</span> smarter for your students!</p>
 
           <!-- Contributions remaining info -->
-          <div class="contributions-info" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px; border-radius: 12px; margin: 20px 0; display: flex; align-items: center; gap: 15px;">
-            <i class="fas fa-gift" style="font-size: 2rem; color: #fff;"></i>
+          <div class="contrib-info-banner">
+            <i class="fas fa-gift"></i>
             <div>
-              <strong style="color: #fff;">Contributions:</strong>
-              <span id="contrib-remaining-display" style="color: #fbbf24; font-size: 1.5rem; font-weight: bold; margin-left: 10px;">Unlimited</span>
+              <strong>Contributions:</strong>
+              <span id="contrib-remaining-display" class="contrib-remaining">Unlimited</span>
             </div>
           </div>
 
           <!-- RAG Info Banner -->
-          <div class="rag-info-banner" style="background: #1e3a8a; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #60a5fa;">
-            <div style="display: flex; align-items: start; gap: 12px;">
-              <i class="fas fa-brain" style="color: #ffffff; font-size: 1.5rem; margin-top: 2px;"></i>
-              <div>
-                <strong style="color: #ffffff;">How it works:</strong>
-                <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #ffffff;">
-                  Your documents help train RAYA's knowledge base. The more quality content we have,
-                  the better RAYA can explain complex topics to your students.
-                </p>
-              </div>
+          <div class="rag-info-banner">
+            <i class="fas fa-brain"></i>
+            <div>
+              <strong>How it works:</strong>
+              <p>Your documents help train <span class="notranslate">RAYA</span>'s knowledge base. The more quality content we have,
+                the better <span class="notranslate">RAYA</span> can explain complex topics to your students.</p>
             </div>
           </div>
 
@@ -438,21 +710,18 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="form-group">
               <label for="school-contrib-file">File(s) *</label>
               <div class="file-upload-area" id="file-upload-area">
-                <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: #667eea;"></i>
+                <i class="fas fa-cloud-upload-alt"></i>
                 <p>Drag & drop files here or click to browse</p>
                 <input type="file" id="school-contrib-file" name="contrib-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png,.mp4,.mp3" multiple>
               </div>
               <div id="file-list" class="file-list"></div>
-              <small style="color: #888; font-size: 0.85rem;">
-                Accepted: PDF, Word, PowerPoint, Images, Videos, Audio (Max 50MB per file)
-              </small>
+              <span class="file-type-hint">Accepted: PDF, Word, PowerPoint, Images, Videos, Audio (Max 50MB per file)</span>
             </div>
 
             <!-- Privacy Notice -->
-            <div style="background: #1f2937; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #ffffff;">
-              <i class="fas fa-lock" style="color: #10b981;"></i>
-              <strong>Privacy:</strong> Your contributions are used solely to train RAYA for your school.
-              Documents are kept confidential and not shared publicly.
+            <div class="contrib-privacy-notice">
+              <i class="fas fa-lock"></i>
+              <span><strong>Privacy:</strong> Your contributions are used solely to train <span class="notranslate">RAYA</span> for your school. Documents are kept confidential and not shared publicly.</span>
             </div>
 
             <button type="submit" class="btn-submit" id="school-contrib-submit">
@@ -501,9 +770,9 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
 
     <!-- Floating RAYA Button -->
-    <a href="https://raya.thebluestift.com" target="_blank" rel="noopener" class="raya-floating-btn" title="Chat with RAYA">
+    <a href="https://raya.thebluestift.com" target="_blank" rel="noopener" class="raya-floating-btn notranslate" title="Chat with RAYA">
       <i class="fas fa-robot"></i>
-      <span class="raya-floating-label">RAYA</span>
+      <span class="raya-floating-label notranslate">RAYA</span>
     </a>
 
     <!-- Insights Drawer Overlay -->
@@ -626,9 +895,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 <button class="chart-period-btn" data-period="year">Year</button>
               </div>
             </div>
-            <div class="chart-placeholder" id="chart-pkm-evolution">
-              <i class="fas fa-chart-area"></i>
-              <p>PKM trend chart will appear here</p>
+            <div class="chart-canvas-wrap">
+              <canvas id="chart-pkm-evolution"></canvas>
             </div>
           </div>
 
@@ -636,9 +904,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="drawer-chart-header">
               <h4><i class="fas fa-tasks"></i> Topic Performance</h4>
             </div>
-            <div class="chart-placeholder" id="chart-topics">
-              <i class="fas fa-chart-bar"></i>
-              <p>Topic breakdown chart will appear here</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--bar">
+              <canvas id="chart-topics"></canvas>
             </div>
           </div>
 
@@ -646,9 +913,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="drawer-chart-header">
               <h4><i class="fas fa-clock"></i> Time Distribution</h4>
             </div>
-            <div class="chart-placeholder" id="chart-time">
-              <i class="fas fa-chart-pie"></i>
-              <p>Time spent per topic chart will appear here</p>
+            <div class="chart-canvas-wrap chart-canvas-wrap--doughnut">
+              <canvas id="chart-time"></canvas>
             </div>
           </div>
         </div>

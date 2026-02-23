@@ -4,6 +4,40 @@
    ================================================================== */
 
 /* ==========================================
+   PRICING DISCLAIMER BANNER
+   ========================================== */
+
+.pricing-disclaimer-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(251, 191, 36, 0.12);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  border-radius: var(--radius-lg);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary, #a0aec0);
+  line-height: 1.5;
+}
+
+.pricing-disclaimer-banner i {
+  color: #f6ad55;
+  margin-top: 2px;
+  flex-shrink: 0;
+}
+
+.pricing-disclaimer-banner a {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.pricing-disclaimer-banner a:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================
    CURRENT PLAN CARD
    ========================================== */
 
@@ -218,6 +252,63 @@
 }
 
 /* ==========================================
+   BILLING TOGGLE
+   ========================================== */
+
+.billing-toggle-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0 4px;
+}
+
+.billing-toggle {
+  display: inline-flex;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  gap: 4px;
+}
+
+.billing-btn {
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.billing-btn.active {
+  background: var(--gradient-primary);
+  color: #ffffff;
+}
+
+.billing-btn:not(.active):hover {
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.discount-badge {
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  background: rgba(16, 185, 129, 0.25);
+  color: #10b981;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+}
+
+.billing-btn.active .discount-badge {
+  background: rgba(255, 255, 255, 0.25);
+  color: #ffffff;
+}
+
+/* ==========================================
    PLANS SECTION
    ========================================== */
 
@@ -335,6 +426,73 @@
   margin: 8px 0 0;
 }
 
+.plan-icon-wrap {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 1.2rem;
+  margin: 0 auto 12px;
+}
+
+.plan-card.popular .plan-icon-wrap {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+}
+
+.zone-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 6px;
+}
+
+.zone-tag i {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.annual-savings {
+  font-size: var(--font-size-xs);
+  color: #10b981;
+  margin: 4px 0 0;
+}
+
+.plan-students-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  margin-bottom: 16px;
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.7);
+  flex-wrap: wrap;
+}
+
+.plan-students-info i {
+  color: rgba(102, 126, 234, 0.8);
+  flex-shrink: 0;
+}
+
+.extra-price {
+  color: rgba(255, 255, 255, 0.4);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.plan-price .price.contact {
+  font-size: var(--font-size-xl);
+  color: rgba(255, 255, 255, 0.75);
+}
+
 .plan-features {
   list-style: none;
   padding: 0;
@@ -390,9 +548,26 @@
 }
 
 .btn-plan.disabled {
-  background: rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
-  cursor: not-allowed;
+  background: #10b981;
+  color: #ffffff;
+  cursor: default;
+  opacity: 1;
+}
+
+.btn-plan--downgrade {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.btn-plan--downgrade:hover:not(.disabled) {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: none;
+}
+
+.btn-plan i {
+  margin-right: 4px;
 }
 
 /* ==========================================

@@ -489,9 +489,19 @@
   border-color: transparent;
 }
 
-.drawer-chart-canvas {
+/* Chart.js needs a PARENT with fixed height + position:relative to avoid infinite resize */
+.chart-canvas-wrap {
+  position: relative;
   height: 200px;
   width: 100%;
+}
+
+.chart-canvas-wrap--bar {
+  height: 220px;
+}
+
+.chart-canvas-wrap--doughnut {
+  height: 260px;
 }
 
 /* Placeholder for charts */

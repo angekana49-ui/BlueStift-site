@@ -61,14 +61,17 @@ async function updateEarlyBirdCounter() {
       bannerCounter.textContent = spotsLeft;
     }
     
-    // ✅ AFFICHER LA BANNIÈRE SI SPOTS DISPONIBLES
+    // ✅ TOGGLE: bannière early bird = footer tant que spots > 0
     const banner = document.getElementById('early-bird-banner');
-    if (banner && spotsLeft > 0 && spotsLeft <= 500) {
-      banner.style.display = 'block';
-      console.log('🔥 Early Bird banner displayed');
-    } else if (banner && spotsLeft === 0) {
-      banner.style.display = 'none';
-      console.log('❌ Early Bird spots exhausted, banner hidden');
+    const regularFooter = document.getElementById('regular-footer');
+    if (spotsLeft > 0 && spotsLeft <= 500) {
+      if (banner) banner.style.display = 'flex';
+      if (regularFooter) regularFooter.style.display = 'none';
+      console.log('🔥 Early Bird banner displayed as footer');
+    } else {
+      if (banner) banner.style.display = 'none';
+      if (regularFooter) regularFooter.style.display = '';
+      console.log('❌ Early Bird exhausted, showing regular footer');
     }
     
     console.log(`🔥 Early Bird spots left: ${spotsLeft}`);
@@ -83,9 +86,9 @@ async function updateEarlyBirdCounter() {
     
     // Afficher bannière par défaut en cas d'erreur
     const banner = document.getElementById('early-bird-banner');
-    if (banner) {
-      banner.style.display = 'block';
-    }
+    const regularFooter = document.getElementById('regular-footer');
+    if (banner) banner.style.display = 'flex';
+    if (regularFooter) regularFooter.style.display = 'none';
   }
 }
 
@@ -146,8 +149,8 @@ function initMenu() {
 
   if (menuBtn && menuContent) {
     menuBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      
+      e.stopPropagation();
+
       if (menuContent.style.display === 'flex') {
         menuContent.style.display = 'none';
         menuContent.classList.remove('active');
@@ -394,22 +397,7 @@ function initSmoothScrolling() {
 // ==========================================
 function initHeaderScroll() {
   const header = document.querySelector('header');
-  const subHeader = document.querySelector('.sub-header');
-  
-  // Set sub-header top position dynamically
-  function updateSubHeaderPosition() {
-    if (header && subHeader) {
-      const headerHeight = header.offsetHeight;
-      subHeader.style.top = `${headerHeight}px`;
-    }
-  }
-  
-  // Initial set
-  updateSubHeaderPosition();
-  
-  // Update on resize
-  window.addEventListener('resize', updateSubHeaderPosition);
-  
+
   // Scroll shadow effect
   window.addEventListener('scroll', () => {
     const currentScroll = window.pageYOffset;

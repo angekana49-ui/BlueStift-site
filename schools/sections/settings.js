@@ -21,10 +21,11 @@
 
   // Notification settings structure
   const notificationSettings = [
+    { id: 'sound_enabled', label: 'Sound Notifications', description: 'Play a sound on important actions (export, save, errors…)', icon: 'fa-volume-up', default: true, special: 'sound' },
+    { id: 'push_enabled', label: 'Browser Push Notifications', description: 'Receive alerts on this device even when the dashboard is closed', icon: 'fa-bell', default: false, special: 'push' },
     { id: 'email_weekly', label: 'Weekly Performance Report', description: 'Get a summary email every Monday', icon: 'fa-envelope', default: true },
-    { id: 'email_alerts', label: 'Student Alerts', description: 'Notify when a student drops below PKM threshold', icon: 'fa-exclamation-triangle', default: true },
-    { id: 'email_usage', label: 'Usage Alerts', description: 'Warn when RAYA/contribution limits are near', icon: 'fa-chart-pie', default: true },
-    { id: 'push_new', label: 'New Content Notifications', description: 'When new lessons are added to your subjects', icon: 'fa-bell', default: false },
+    { id: 'email_alerts', label: 'Performance Alerts', description: 'Notify when a class average PKM drops below threshold', icon: 'fa-exclamation-triangle', default: true },
+    { id: 'email_usage', label: 'Usage Alerts', description: 'Warn when <span class="notranslate">RAYA</span>/contribution limits are near', icon: 'fa-chart-pie', default: true },
     { id: 'email_billing', label: 'Billing Notifications', description: 'Payment receipts and renewal reminders', icon: 'fa-credit-card', default: true }
   ];
 
@@ -33,6 +34,7 @@
     const school = window.SchoolsDashboard?.currentSchool || {};
     const currentLang = localStorage.getItem('preferredLang') || 'en';
     const notifications = JSON.parse(localStorage.getItem('settings_notifications') || '{}');
+    const pushSupported = 'serviceWorker' in navigator && 'PushManager' in window;
 
     return `
       <div class="settings-header">
@@ -64,7 +66,7 @@
                   </div>
                   <div class="form-group">
                     <label for="settings-school-code">School Code</label>
-                    <input type="text" id="settings-school-code" value="${school.schoolCode || 'SCH-001'}" class="settings-input" disabled>
+                    <input type="text" id="settings-school-code" value="${school.adminKey || 'SCH-001'}" class="settings-input" disabled>
                     <small class="input-hint">Contact support to change</small>
                   </div>
                 </div>
@@ -154,18 +156,30 @@
             <div class="accordion-body">
               <div class="notifications-list">
                 ${notificationSettings.map(notif => {
-                  const isChecked = notifications[notif.id] !== undefined ? notifications[notif.id] : notif.default;
+                  let isChecked;
+                  if (notif.special === 'sound') {
+                    isChecked = window.SchoolsUtils?.SchoolsAudio?.isEnabled() ?? true;
+                  } else if (notif.special === 'push') {
+                    isChecked = window.SchoolsUtils?.SchoolsPush?.isEnabled() ?? false;
+                  } else {
+                    isChecked = notifications[notif.id] !== undefined ? notifications[notif.id] : notif.default;
+                  }
+                  const disabled = notif.special === 'push' && !pushSupported;
+                  const hint = disabled ? ' <span style="font-size:0.75rem;opacity:0.6">(not supported in this browser)</span>' : '';
                   return `
                     <div class="notification-item">
                       <div class="notification-info">
                         <i class="fas ${notif.icon}"></i>
                         <div>
-                          <h4>${notif.label}</h4>
+                          <h4>${notif.label}${hint}</h4>
                           <p>${notif.description}</p>
                         </div>
                       </div>
                       <label class="toggle-switch">
-                        <input type="checkbox" class="notification-toggle" data-id="${notif.id}" ${isChecked ? 'checked' : ''}>
+                        <input type="checkbox" class="notification-toggle" data-id="${notif.id}"
+                          data-special="${notif.special || ''}"
+                          ${isChecked ? 'checked' : ''}
+                          ${disabled ? 'disabled' : ''}>
                         <span class="toggle-slider"></span>
                       </label>
                     </div>
@@ -519,21 +533,36 @@
   // PROFILE FORM
   // ==========================================
   function initProfileForm() {
-    document.getElementById('btn-save-profile')?.addEventListener('click', () => {
+    document.getElementById('btn-save-profile')?.addEventListener('click', async () => {
       const schoolName = document.getElementById('settings-school-name')?.value;
       const adminEmail = document.getElementById('settings-admin-email')?.value;
       const phone = document.getElementById('settings-admin-phone')?.value;
       const location = document.getElementById('settings-school-location')?.value;
       const schoolType = document.getElementById('settings-school-type')?.value;
 
-      // Store in localStorage (demo)
-      const profile = { schoolName, adminEmail, phone, location, schoolType };
-      localStorage.setItem('settings_profile', JSON.stringify(profile));
+      const updates = { name: schoolName, email: adminEmail, phone, city: location, school_type: schoolType };
 
-      window.SchoolsUtils?.showSchoolNotification(
-        'School profile updated successfully!',
-        'success'
-      );
+      // Always save to localStorage as cache
+      localStorage.setItem('settings_profile', JSON.stringify(updates));
+
+      if (typeof SchoolsDB !== 'undefined' && SchoolsDB.isLive) {
+        const btn = document.getElementById('btn-save-profile');
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+        const result = await SchoolsDB.updateSchoolProfile(updates);
+
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+
+        if (!result.success) {
+          window.SchoolsUtils?.showSchoolNotification('Failed to save: ' + (result.error || 'Unknown error'), 'error');
+          return;
+        }
+      }
+
+      window.SchoolsUtils?.showSchoolNotification('School profile updated successfully!', 'success');
     });
   }
 
@@ -541,20 +570,49 @@
   // NOTIFICATIONS
   // ==========================================
   function initNotifications() {
-    document.getElementById('btn-save-notifications')?.addEventListener('click', () => {
-      const toggles = document.querySelectorAll('.notification-toggle');
-      const settings = {};
+    // Sound toggle — takes effect immediately
+    const soundToggle = document.querySelector('.notification-toggle[data-id="sound_enabled"]');
+    soundToggle?.addEventListener('change', () => {
+      window.SchoolsUtils?.SchoolsAudio?.setEnabled(soundToggle.checked);
+      if (soundToggle.checked) {
+        window.SchoolsUtils?.SchoolsAudio?.play('success');
+      }
+    });
 
+    // Push toggle — requests browser permission
+    const pushToggle = document.querySelector('.notification-toggle[data-id="push_enabled"]');
+    pushToggle?.addEventListener('change', async () => {
+      if (pushToggle.checked) {
+        pushToggle.disabled = true;
+        const result = await window.SchoolsUtils?.SchoolsPush?.enable();
+        pushToggle.disabled = false;
+        if (!result?.success) {
+          pushToggle.checked = false;
+          window.SchoolsUtils?.showSchoolNotification(
+            result?.error || 'Could not enable push notifications.',
+            'error'
+          );
+        } else {
+          window.SchoolsUtils?.showSchoolNotification(
+            'Push notifications enabled! You will be alerted when new messages arrive.',
+            'success'
+          );
+        }
+      } else {
+        await window.SchoolsUtils?.SchoolsPush?.disable();
+        window.SchoolsUtils?.showSchoolNotification('Push notifications disabled.', 'info');
+      }
+    });
+
+    // Save button for email preferences
+    document.getElementById('btn-save-notifications')?.addEventListener('click', () => {
+      const toggles = document.querySelectorAll('.notification-toggle:not([data-special])');
+      const settings = {};
       toggles.forEach(toggle => {
         settings[toggle.dataset.id] = toggle.checked;
       });
-
       localStorage.setItem('settings_notifications', JSON.stringify(settings));
-
-      window.SchoolsUtils?.showSchoolNotification(
-        'Notification preferences saved!',
-        'success'
-      );
+      window.SchoolsUtils?.showSchoolNotification('Notification preferences saved!', 'success');
     });
   }
 
@@ -567,24 +625,38 @@
   // SECURITY
   // ==========================================
   function initSecurity() {
-    document.getElementById('btn-change-password')?.addEventListener('click', () => {
-      window.SchoolsUtils?.showSchoolNotification(
-        'Password change feature will open in a secure modal. (Demo mode)',
-        'info'
-      );
+    document.getElementById('btn-change-password')?.addEventListener('click', async () => {
+      if (typeof SchoolsDB !== 'undefined' && SchoolsDB.isLive && SchoolsDB.currentAdmin?.email) {
+        const newPassword = prompt('Enter your new password (min 6 characters):');
+        if (!newPassword || newPassword.length < 6) {
+          window.SchoolsUtils?.showSchoolNotification('Password must be at least 6 characters.', 'error');
+          return;
+        }
+        // Supabase client is available via SchoolsDB internals — use auth directly
+        try {
+          const supabase = window.supabase.createClient(SUPABASE_CONFIG.url, SUPABASE_CONFIG.anonKey);
+          const { error } = await supabase.auth.updateUser({ password: newPassword });
+          if (error) throw error;
+          window.SchoolsUtils?.showSchoolNotification('Password updated successfully!', 'success');
+        } catch (err) {
+          window.SchoolsUtils?.showSchoolNotification('Failed to update password: ' + err.message, 'error');
+        }
+      } else {
+        window.SchoolsUtils?.showSchoolNotification('Password change is not available in demo mode.', 'warning');
+      }
     });
 
     document.getElementById('btn-enable-2fa')?.addEventListener('click', () => {
       window.SchoolsUtils?.showSchoolNotification(
-        'Two-factor authentication setup coming soon!',
-        'info'
+        'Two-factor authentication coming soon.',
+        'warning'
       );
     });
 
     document.getElementById('btn-manage-admins')?.addEventListener('click', () => {
       window.SchoolsUtils?.showSchoolNotification(
-        'Multi-admin management is available with Pro plan.',
-        'info'
+        'Multi-admin management requires a Pro plan.',
+        'warning'
       );
     });
 
@@ -633,7 +705,7 @@
         const allKeys = Object.keys(localStorage);
 
         allKeys.forEach(key => {
-          if (!keysToKeep.includes(key) && key.startsWith('settings_') || key.startsWith('export_')) {
+          if (!keysToKeep.includes(key) && (key.startsWith('settings_') || key.startsWith('export_'))) {
             localStorage.removeItem(key);
           }
         });
@@ -688,7 +760,7 @@
         );
 
         setTimeout(() => {
-          window.SchoolsSections?.render('settings', true);
+          window.location.reload();
         }, 1500);
       }
     });

@@ -416,8 +416,8 @@
   color: #ffffff;
 }
 
-/* Hide Google Translate widget but keep it functional */
-#google_translate_element {
+/* Hide Google Translate widget in schools dashboard (settings has its own lang selector) */
+#dashboard-container #google_translate_element {
   position: absolute;
   top: -9999px;
   left: -9999px;
@@ -433,7 +433,7 @@ body {
   top: 0 !important;
 }
 
-.skiptranslate {
+#dashboard-container .skiptranslate {
   display: none !important;
 }
 

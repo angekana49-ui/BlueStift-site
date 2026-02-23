@@ -9,7 +9,7 @@
   <!-- ===================================== -->
   
   <!-- Primary Meta Tags -->
-  <title>Bluestift - AI Tutor for Students - Free Learning Platform with RAYA</title>
+  <title>Bluestift - AI Tutor for Students - Learning Platform with RAYA</title>
   <meta name="title" content="Bluestift - AI Tutor for Students | Free Learning Platform with RAYA">
   <meta name="description" content="Bluestift: AI-powered learning platform with RAYA, your 24/7 personal tutor. Free interactive lessons, personalized study plans, and instant homework help. Learn smarter, not harder.">
   <meta name="keywords" content="AI tutor, RAYA AI, personalized learning, free online courses, homework help, study assistant, interactive lessons, education platform, learn smarter, AI learning assistant">
@@ -149,8 +149,9 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <!-- Font Awesome (social icons) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <!-- Font Awesome (lazy-loaded, non-blocking) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
 
   <!-- External CSS -->
   <link rel="stylesheet" href="css/main.css">
@@ -167,7 +168,7 @@ function googleTranslateElementInit() {
   }, 'google_translate_element');
 }
   </script>
-  <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <!-- Header -->
   <header>
@@ -180,29 +181,32 @@ function googleTranslateElementInit() {
     </nav>
   </header>
 
-  <!-- Sub-header - MENU -->
-  <div class="sub-header">
-    <a href="#" id="menu-btn">Menu</a>
-    
-    
-    <div class="menu-content" id="menu-content">
-      <a href="#" id="contribute-btn">
-        <i class="fas fa-upload"></i> Contribute
-      </a>
-      <a href="#" id="feedback-btn">
-        <i class="fas fa-comments"></i> Give Feedback
-      </a>
-      <a href="#" id="share-btn">
-        <i class="fas fa-share-nodes"></i> Share App
-      </a>
-      <a href="schools.html" id="schools-link" target="_blank">
-        <i class="fas fa-school"></i> For Institutions
-      </a>
-    </div>
-  </div>
-
   <!-- Main Content Wrapper with Gradient Background -->
   <div class="main-content-wrapper">
+
+    <!-- Animated orbs for wavy premium feel -->
+    <div class="bg-orbs" aria-hidden="true"></div>
+
+    <!-- Menu Button (floats on gradient, no black bg) -->
+    <div class="menu-btn-wrapper">
+      <button id="menu-btn" class="header-menu-btn">
+        <i class="fas fa-bars"></i> Menu
+      </button>
+      <div class="menu-content" id="menu-content">
+        <a href="#" id="contribute-btn">
+          <i class="fas fa-upload"></i> Contribute
+        </a>
+        <a href="#" id="feedback-btn">
+          <i class="fas fa-comments"></i> Give Feedback
+        </a>
+        <a href="#" id="share-btn">
+          <i class="fas fa-share-nodes"></i> Share App
+        </a>
+        <a href="schools.html" id="schools-link" target="_blank">
+          <i class="fas fa-school"></i> For Institutions
+        </a>
+      </div>
+    </div>
     <!-- Hero Section -->
     <section class="hero">
       <div class="hero-content">
@@ -722,35 +726,34 @@ function googleTranslateElementInit() {
   </div>
   <!-- End of main-content-wrapper -->
 
-  <!-- Early Bird Banner -->
-  <div class="early-bird-banner" id="early-bird-banner" style="display: none;">
+  <!-- Early Bird Banner (acts as footer when spots available) -->
+  <div class="early-bird-banner early-bird-footer" id="early-bird-banner" style="display: none;">
     <p>🔥 Only <span id="spots-left" class="spots-count">500</span> Early Bird spots left!</p>
     <p class="banner-small">First 500 users get 1 month Premium AI free + 15% off forever + Founder badge</p>
   </div>
 
-  <!-- Footer -->
-  <footer>
+  <!-- Footer (shown only when early bird is exhausted) -->
+  <footer id="regular-footer" style="display: none;">
     Bluestift; Info@bluestift.app <br>
     © 2025 Bluestift. All rights reserved.
   </footer>
 
-  <!-- External JS -->
-  <!-- SUPABASE DISABLED FOR NOW-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-client.js"></script>
-  -->
+  <!-- External JS (defer = non-blocking, execute after DOM parsed) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+  <script src="config.js" defer></script>
+  <script src="bluestift-db.js" defer></script>
 
   <!-- HIDDEN: Waiting for better lesson content
-  <script src="lessons/science-lessons.js"></script>
-  <script src="lessons/math-lessons.js"></script>
-  <script src="lessons/tech-lessons.js"></script>
-  <script src="lessons/mindBending-lessons.js"></script>
-  <script src="lessons/english-lessons.js"></script>
-  <script src="lesson-module.js"></script>
+  <script src="lessons/science-lessons.js" defer></script>
+  <script src="lessons/math-lessons.js" defer></script>
+  <script src="lessons/tech-lessons.js" defer></script>
+  <script src="lessons/mindBending-lessons.js" defer></script>
+  <script src="lessons/english-lessons.js" defer></script>
+  <script src="lesson-module.js" defer></script>
   -->
 
-  <script src="script.js"></script>
-  <script src="carousel-manager.js"></script>
+  <script src="script.js" defer></script>
+  <script src="carousel-manager.js" defer></script>
   
 </body>
 </html>

@@ -80,8 +80,8 @@
           ['PKM by class', 'Completion rates', 'Weekly trends'], ['pdf', 'excel'])}
 
         ${renderExportCard('class', 'fa-users', 'Class Report',
-          'Detailed analysis of a specific class with individual student metrics and comparisons.',
-          ['Student list', 'Individual PKM', 'Class ranking'], ['pdf', 'excel'])}
+          'Detailed analysis of a specific class with aggregate performance metrics and subject comparisons.',
+          ['Class PKM average', 'Subject breakdown', 'Completion rates'], ['pdf', 'excel'])}
 
         ${renderExportCard('subject', 'fa-brain', 'Subject Analysis',
           'Deep dive into subject performance: difficulties detected, mastered concepts, and recommendations.',
@@ -91,10 +91,6 @@
           'Track evolution over time with charts showing improvement trends and engagement patterns.',
           ['Monthly trends', 'Growth charts', 'Comparisons'], ['pdf', 'excel'])}
 
-        ${renderExportCard('students', 'fa-user-graduate', 'Student Data',
-          'Export raw student data for custom analysis. Includes all metrics and activity logs.',
-          ['All metrics', 'Activity logs', 'Streak data'], ['csv', 'excel'])}
-
         <!-- Full Data Export -->
         <div class="export-card export-card-full" data-export-type="full">
           <div class="export-card-icon">
@@ -102,7 +98,7 @@
           </div>
           <div class="export-card-content">
             <h3>Full Data Export</h3>
-            <p>Complete data dump including all classes, subjects, students, and historical data.</p>
+            <p>Complete data dump including all classes, subjects, and historical data.</p>
             <div class="export-includes">
               <span><i class="fas fa-check"></i> Everything included</span>
               <span><i class="fas fa-check"></i> Historical data</span>
@@ -144,7 +140,7 @@
             <div class="scheduled-info">
               <i class="fas fa-file-excel"></i>
               <div>
-                <strong>Monthly Student Data</strong>
+                <strong>Monthly Class Summary</strong>
                 <span>1st of each month at 9:00 AM</span>
               </div>
             </div>
@@ -236,15 +232,27 @@
     }
   }
 
-  function populateClassFilter() {
+  async function populateClassFilter() {
     const classFilter = document.getElementById('export-class-filter');
     if (!classFilter) return;
 
-    const classes = ['12th Grade A', '12th Grade B', '12th Grade C', '11th Grade A', '11th Grade B', '10th Grade A', '10th Grade B'];
-    classes.forEach(className => {
+    let classes;
+    if (typeof SchoolsDB !== 'undefined') {
+      classes = await SchoolsDB.getClasses();
+    } else {
+      // Fallback hardcoded for demo
+      classes = [
+        { id: 'demo-1', name: '12th Grade A' },
+        { id: 'demo-2', name: '12th Grade B' },
+        { id: 'demo-3', name: '11th Grade A' },
+        { id: 'demo-4', name: '10th Grade A' }
+      ];
+    }
+
+    classes.forEach(cls => {
       const option = document.createElement('option');
-      option.value = className.toLowerCase().replace(/\s+/g, '-');
-      option.textContent = className;
+      option.value = cls.id;
+      option.textContent = cls.name + (cls.studentCount ? ` (${cls.studentCount} students)` : '');
       classFilter.appendChild(option);
     });
   }
@@ -262,8 +270,8 @@
   function initScheduleButton() {
     document.getElementById('btn-add-schedule')?.addEventListener('click', () => {
       window.SchoolsUtils?.showSchoolNotification(
-        'Scheduled exports feature coming soon! Contact support to set up automated reports.',
-        'info'
+        'Scheduled exports coming soon. Contact support to set up automated reports.',
+        'warning'
       );
     });
   }
@@ -294,54 +302,246 @@
       'class': 'Class Report',
       'subject': 'Subject Analysis',
       'progress': 'Progress Report',
-      'students': 'Student Data',
       'full': 'Full Data Export'
     };
     return titles[type] || 'Report';
   }
 
-  function handleExport(type, format, btn) {
-    const filters = getExportFilters();
-    const reportTitle = getReportTitle(type);
-
-    const originalHTML = btn.innerHTML;
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-
-    setTimeout(() => {
-      const date = new Date();
-      const dateStr = date.toISOString().split('T')[0];
-      const schoolName = window.SchoolsDashboard?.currentSchool?.name?.replace(/\s+/g, '_') || 'School';
-      const filename = `${schoolName}_${type}_${dateStr}.${format === 'excel' ? 'xlsx' : format}`;
-
-      addToExportHistory({
-        type, format, title: reportTitle, filename, filters,
-        timestamp: date.toISOString()
-      });
-
-      btn.disabled = false;
-      btn.innerHTML = originalHTML;
-
-      window.SchoolsUtils?.showSchoolNotification(
-        `${reportTitle} exported successfully as ${format.toUpperCase()}!`,
-        'success'
-      );
-
-      simulateDownload(filename, format, type);
-    }, 1500);
-  }
-
-  function simulateDownload(filename, format, type) {
+  async function handleExport(type, format, btn) {
     if (format === 'pdf') {
       window.SchoolsUtils?.showSchoolNotification(
-        'PDF generation requires server-side processing. Contact support for PDF exports.',
-        'info'
+        'PDF exports coming soon. Use Excel/CSV for now.',
+        'warning'
       );
       return;
     }
 
-    const content = generateCSVContent(type);
-    const blob = new Blob([content], { type: 'text/csv' });
+    const filters = getExportFilters();
+    const reportTitle = getReportTitle(type);
+    const originalHTML = btn.innerHTML;
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Fetching data...';
+
+    try {
+      // Fetch real data from SchoolsDB
+      const data = await fetchExportData(type, filters);
+
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Building CSV...';
+
+      const csvContent = buildCSVFromData(type, data);
+
+      const date = new Date();
+      const dateStr = date.toISOString().split('T')[0];
+      const schoolName = (window.SchoolsDashboard?.currentSchool?.name || 'School').replace(/\s+/g, '_');
+      const filename = `${schoolName}_${type}_${dateStr}.csv`;
+
+      downloadCSV(filename, csvContent);
+
+      addToExportHistory({
+        type, format: 'csv', title: reportTitle, filename, filters,
+        timestamp: date.toISOString()
+      });
+
+      window.SchoolsUtils?.showSchoolNotification(
+        `${reportTitle} downloaded successfully!`,
+        'success'
+      );
+
+    } catch (err) {
+      console.error('Export error:', err);
+      window.SchoolsUtils?.showSchoolNotification(
+        'Export failed. Please try again.',
+        'error'
+      );
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalHTML;
+    }
+  }
+
+  // ------------------------------------
+  // DATA FETCHING (real SchoolsDB)
+  // ------------------------------------
+
+  async function fetchExportData(type, filters) {
+    const db = typeof SchoolsDB !== 'undefined' ? SchoolsDB : null;
+
+    if (type === 'performance' || type === 'progress') {
+      const global = db ? await db.getGlobalStats() : null;
+      const school = db ? await db.getSchoolInfo() : null;
+      return { global, school };
+    }
+
+    if (type === 'subject') {
+      const classId = filters.classFilter !== 'all' ? filters.classFilter : null;
+      const subjects = db ? await db.getSubjects(classId) : [];
+      const school = db ? await db.getSchoolInfo() : null;
+      return { subjects, school };
+    }
+
+    if (type === 'class') {
+      const classes = db ? await db.getClasses() : [];
+      const selectedId = filters.classFilter !== 'all' ? filters.classFilter : null;
+
+      if (selectedId) {
+        const stats = db ? await db.getClassStats(selectedId) : null;
+        const cls = classes.find(c => c.id === selectedId);
+        return { classes: [{ ...(cls || {}), stats }] };
+      }
+
+      // All classes: fetch stats for each
+      const classesWithStats = await Promise.all(
+        classes.map(async cls => {
+          const stats = db ? await db.getClassStats(cls.id) : null;
+          return { ...cls, stats };
+        })
+      );
+      return { classes: classesWithStats };
+    }
+
+    if (type === 'full') {
+      const [global, school, classes, subjects] = await Promise.all([
+        db ? db.getGlobalStats() : null,
+        db ? db.getSchoolInfo() : null,
+        db ? db.getClasses() : [],
+        db ? db.getSubjects() : []
+      ]);
+      return { global, school, classes, subjects };
+    }
+
+    return {};
+  }
+
+  // ------------------------------------
+  // CSV BUILDERS (real data)
+  // ------------------------------------
+
+  function buildCSVFromData(type, data) {
+    const exportDate = new Date().toLocaleDateString('en-GB');
+    const schoolName = data.school?.name || window.SchoolsDashboard?.currentSchool?.name || 'School';
+
+    if (type === 'performance') {
+      const g = data.global || {};
+      const subjects = g.subjects || [];
+      let csv = buildCSVRow(['BlueStift — Performance Report', schoolName, `Exported: ${exportDate}`]);
+      csv += '\n';
+      csv += buildCSVRow(['OVERVIEW']);
+      csv += buildCSVRow(['Metric', 'Value']);
+      csv += buildCSVRow(['Total Students', g.students ?? 'N/A']);
+      csv += buildCSVRow(['Average PKM', g.pkm != null ? g.pkm.toFixed(3) : 'N/A']);
+      csv += buildCSVRow(['Average Streak (days)', g.avgStreak ?? 'N/A']);
+      csv += buildCSVRow(['Lessons Completed', g.lessonsCompleted ?? 'N/A']);
+      csv += '\n';
+      csv += buildCSVRow(['SUBJECTS BREAKDOWN']);
+      csv += buildCSVRow(['Subject', 'PKM', 'Difficulty', 'Effort']);
+      subjects.forEach(s => {
+        csv += buildCSVRow([s.name, s.pkm?.toFixed(3) ?? 'N/A', s.difficulty ?? 'N/A', s.effort ?? 'N/A']);
+      });
+      return csv;
+    }
+
+    if (type === 'subject') {
+      const subjects = data.subjects || [];
+      let csv = buildCSVRow(['BlueStift — Subject Analysis', schoolName, `Exported: ${exportDate}`]);
+      csv += '\n';
+      csv += buildCSVRow(['Subject', 'PKM', 'Difficulty Level', 'Effort Level', 'Key Difficulties', 'Mastered Topics']);
+      subjects.forEach(s => {
+        const difficulties = (s.difficulties || []).join(' | ');
+        const mastered = (s.mastered || []).join(' | ');
+        csv += buildCSVRow([s.name, s.pkm?.toFixed(3) ?? 'N/A', s.difficulty ?? 'N/A', s.effort ?? 'N/A', difficulties, mastered]);
+      });
+      return csv;
+    }
+
+    if (type === 'class') {
+      const classes = data.classes || [];
+      let csv = buildCSVRow(['BlueStift — Class Report', schoolName, `Exported: ${exportDate}`]);
+      csv += '\n';
+      csv += buildCSVRow(['Class', 'Students', 'Avg PKM', 'Subject', 'Subject PKM', 'Difficulty', 'Effort']);
+      classes.forEach(cls => {
+        const subjects = cls.stats?.subjects || [];
+        if (subjects.length === 0) {
+          csv += buildCSVRow([cls.name, cls.studentCount ?? 'N/A', cls.stats?.pkm?.toFixed(3) ?? 'N/A', 'No data', '', '', '']);
+        } else {
+          subjects.forEach((s, i) => {
+            csv += buildCSVRow([
+              i === 0 ? cls.name : '',
+              i === 0 ? (cls.studentCount ?? 'N/A') : '',
+              i === 0 ? (cls.stats?.pkm?.toFixed(3) ?? 'N/A') : '',
+              s.name, s.pkm?.toFixed(3) ?? 'N/A', s.difficulty ?? 'N/A', s.effort ?? 'N/A'
+            ]);
+          });
+        }
+      });
+      return csv;
+    }
+
+    if (type === 'progress') {
+      // No time-series data yet — export current snapshot
+      const g = data.global || {};
+      let csv = buildCSVRow(['BlueStift — Progress Snapshot', schoolName, `Exported: ${exportDate}`]);
+      csv += '\n';
+      csv += buildCSVRow(['Note: Time-series data not yet available. Showing current snapshot.']);
+      csv += '\n';
+      csv += buildCSVRow(['Date', 'Total Students', 'Average PKM', 'Avg Streak', 'Lessons Completed']);
+      csv += buildCSVRow([
+        exportDate,
+        g.students ?? 'N/A',
+        g.pkm?.toFixed(3) ?? 'N/A',
+        g.avgStreak ?? 'N/A',
+        g.lessonsCompleted ?? 'N/A'
+      ]);
+      return csv;
+    }
+
+    if (type === 'full') {
+      const g = data.global || {};
+      const subjects = data.subjects || [];
+      const classes = data.classes || [];
+
+      let csv = buildCSVRow(['BlueStift — Full Data Export', schoolName, `Exported: ${exportDate}`]);
+      csv += '\n';
+
+      csv += buildCSVRow(['=== GLOBAL OVERVIEW ===']);
+      csv += buildCSVRow(['Metric', 'Value']);
+      csv += buildCSVRow(['Total Students', g.students ?? 'N/A']);
+      csv += buildCSVRow(['Average PKM', g.pkm?.toFixed(3) ?? 'N/A']);
+      csv += buildCSVRow(['Average Streak', g.avgStreak ?? 'N/A']);
+      csv += buildCSVRow(['Lessons Completed', g.lessonsCompleted ?? 'N/A']);
+      csv += '\n';
+
+      csv += buildCSVRow(['=== SUBJECTS ===']);
+      csv += buildCSVRow(['Subject', 'PKM', 'Difficulty', 'Effort']);
+      subjects.forEach(s => {
+        csv += buildCSVRow([s.name, s.pkm?.toFixed(3) ?? 'N/A', s.difficulty ?? 'N/A', s.effort ?? 'N/A']);
+      });
+      csv += '\n';
+
+      csv += buildCSVRow(['=== CLASSES ===']);
+      csv += buildCSVRow(['Class', 'Students']);
+      classes.forEach(cls => {
+        csv += buildCSVRow([cls.name, cls.studentCount ?? 'N/A']);
+      });
+
+      return csv;
+    }
+
+    return 'No data available';
+  }
+
+  // ------------------------------------
+  // CSV UTILITIES
+  // ------------------------------------
+
+  function buildCSVRow(cells) {
+    return cells.map(cell => `"${String(cell ?? '').replace(/"/g, '""')}"`).join(',') + '\n';
+  }
+
+  function downloadCSV(filename, content) {
+    // Add UTF-8 BOM for Excel compatibility
+    const bom = '\uFEFF';
+    const blob = new Blob([bom + content], { type: 'text/csv;charset=utf-8;' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -350,64 +550,6 @@
     a.click();
     document.body.removeChild(a);
     window.URL.revokeObjectURL(url);
-  }
-
-  function generateCSVContent(type) {
-    const mockData = window.SchoolsDashboard?.currentSchool ? null : null; // Placeholder
-
-    const headers = {
-      'performance': ['Metric', 'Value', 'Change'],
-      'class': ['Student ID', 'Name', 'PKM', 'Completion', 'Time Spent', 'Streak'],
-      'subject': ['Subject', 'PKM', 'Difficulty', 'Effort', 'Recommendations'],
-      'progress': ['Date', 'PKM', 'Completion Rate', 'Active Students'],
-      'students': ['ID', 'Class', 'PKM', 'Lessons', 'Time', 'Streak', 'Last Active'],
-      'full': ['Type', 'Class', 'Subject', 'Metric', 'Value']
-    };
-
-    const data = {
-      'performance': [
-        ['Active Students', '156', '+5%'],
-        ['Average PKM', '0.72', '+0.02'],
-        ['Completion Rate', '78%', '+3%'],
-        ['Avg Time/Week', '4h 30min', '+30min']
-      ],
-      'class': [
-        ['STU001', 'John Doe', '0.78', '85%', '4h 30min', '12'],
-        ['STU002', 'Jane Smith', '0.82', '92%', '5h 15min', '18'],
-        ['STU003', 'Bob Wilson', '0.65', '70%', '3h 00min', '5']
-      ],
-      'subject': [
-        ['Mathematics', '0.72', 'Algebra', 'High', 'Focus on equations'],
-        ['Physics', '0.68', 'Mechanics', 'Medium', 'More practice problems'],
-        ['Chemistry', '0.75', 'Organic', 'High', 'Lab exercises recommended']
-      ],
-      'progress': [
-        ['2025-01-01', '0.68', '75%', '142'],
-        ['2025-01-08', '0.70', '78%', '145'],
-        ['2025-01-15', '0.72', '80%', '148']
-      ],
-      'students': [
-        ['STU001', '12th A', '0.78', '45', '4h 30min', '12', '2025-01-20'],
-        ['STU002', '12th A', '0.82', '52', '5h 15min', '18', '2025-01-20'],
-        ['STU003', '12th B', '0.65', '38', '3h 00min', '5', '2025-01-19']
-      ],
-      'full': [
-        ['Global', 'All', 'All', 'Students', '156'],
-        ['Global', 'All', 'All', 'PKM', '0.72'],
-        ['Global', 'All', 'Math', 'PKM', '0.72'],
-        ['Global', 'All', 'Physics', 'PKM', '0.68']
-      ]
-    };
-
-    const headerRow = headers[type] || ['Data'];
-    const dataRows = data[type] || [];
-
-    let csv = headerRow.join(',') + '\n';
-    dataRows.forEach(row => {
-      csv += row.map(cell => `"${cell}"`).join(',') + '\n';
-    });
-
-    return csv;
   }
 
   function addToExportHistory(exportData) {
@@ -469,12 +611,25 @@
       `;
     }).join('');
 
-    // Add click handlers for download buttons
+    // Add click handlers for re-download buttons
     container.querySelectorAll('.btn-download').forEach(btn => {
-      btn.addEventListener('click', () => {
+      btn.addEventListener('click', async () => {
         const index = parseInt(btn.getAttribute('data-index'));
         const exp = exportHistory[index];
-        if (exp) simulateDownload(exp.filename, exp.format, exp.type);
+        if (!exp) return;
+        const originalHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        try {
+          const data = await fetchExportData(exp.type, exp.filters || {});
+          const content = buildCSVFromData(exp.type, data);
+          downloadCSV(exp.filename, content);
+        } catch (e) {
+          window.SchoolsUtils?.showSchoolNotification('Re-download failed. Try a new export.', 'error');
+        } finally {
+          btn.disabled = false;
+          btn.innerHTML = originalHTML;
+        }
       });
     });
   }

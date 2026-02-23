@@ -40,7 +40,7 @@
   50% { background-position: 100% 50%; }
 }
 
-/* GLASS OVERLAY FOR DEPTH - Applied to wrapper */
+/* DEPTH OVERLAY - linear pour éviter les variations de luminosité verticales */
 .main-content-wrapper::after {
   content: '';
   position: absolute;
@@ -49,12 +49,14 @@
   right: 0;
   bottom: 0;
   min-height: 100%;
-  background: radial-gradient(
-    circle at 50% 50%,
-    transparent 0%,
-    rgba(0, 0, 0, 0.15) 100%
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.04) 0%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.12) 100%
   );
   z-index: -1;
+  pointer-events: none;
 }
 
 /* HERO CONTAINER */
@@ -67,8 +69,8 @@
   justify-content: center;
   text-align: center;
   padding: 80px 20px 60px;
-  background: transparent; /* Remove background, use wrapper's */
-  z-index: 1; /* Au-dessus du background du wrapper */
+  background: transparent;
+  z-index: 1;
 }
 
 /* HERO CONTENT - GLASSMORPHISM CARD */
@@ -239,10 +241,11 @@ body.dark-theme .main-content-wrapper::before {
 }
 
 body.dark-theme .main-content-wrapper::after {
-  background: radial-gradient(
-    circle at 50% 50%,
-    transparent 0%,
-    rgba(0, 0, 0, 0.4) 100%
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.1) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    rgba(0, 0, 0, 0.3) 100%
   );
 }
 
@@ -329,6 +332,87 @@ body.dark-theme .socials a:hover {
   }
 }
 
+/* ==========================================
+   ANIMATED ORBS - WAVY PREMIUM FEEL
+   Blobs flottants style Stripe / Linear
+   ========================================== */
+
+.bg-orbs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Orbe 1 – Bleu/violet, coin haut-droit */
+.bg-orbs::before {
+  content: '';
+  position: absolute;
+  width: min(70vw, 700px);
+  height: min(70vw, 700px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(118, 75, 162, 0.45) 0%, transparent 70%);
+  top: -15%;
+  right: -15%;
+  filter: blur(55px);
+  animation: orb-drift-1 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+/* Orbe 2 – Cyan/bleu, coin bas-gauche */
+.bg-orbs::after {
+  content: '';
+  position: absolute;
+  width: min(55vw, 550px);
+  height: min(55vw, 550px);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(79, 172, 254, 0.35) 0%, transparent 70%);
+  bottom: 15%;
+  left: -12%;
+  filter: blur(65px);
+  animation: orb-drift-2 28s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes orb-drift-1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(-3vw, 5vh) scale(1.08); }
+  66%       { transform: translate(2vw, -4vh) scale(0.94); }
+}
+
+@keyframes orb-drift-2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%       { transform: translate(4vw, -5vh) scale(1.06); }
+  66%       { transform: translate(-3vw, 4vh) scale(0.92); }
+}
+
+/* Dark mode: orbes plus lumineux pour ressortir */
+body.dark-theme .bg-orbs::before {
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.55) 0%, transparent 70%);
+}
+
+body.dark-theme .bg-orbs::after {
+  background: radial-gradient(circle, rgba(96, 165, 250, 0.45) 0%, transparent 70%);
+}
+
+/* Mobile: orbes plus petits pour économiser le GPU */
+@media (max-width: 768px) {
+  .bg-orbs::before {
+    width: min(80vw, 400px);
+    height: min(80vw, 400px);
+    filter: blur(40px);
+    animation-duration: 30s;
+  }
+
+  .bg-orbs::after {
+    width: min(70vw, 350px);
+    height: min(70vw, 350px);
+    filter: blur(50px);
+    animation-duration: 35s;
+  }
+}
+
 /* ACCESSIBILITY */
 @media (prefers-reduced-motion: reduce) {
   .main-content-wrapper::before {
@@ -336,6 +420,11 @@ body.dark-theme .socials a:hover {
   }
 
   .hero-content {
+    animation: none;
+  }
+
+  .bg-orbs::before,
+  .bg-orbs::after {
     animation: none;
   }
 }

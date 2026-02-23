@@ -107,31 +107,176 @@ function applyStoredLanguage() {
 }
 
 // ==========================================
+// SOUND NOTIFICATIONS
+// ==========================================
+
+const SchoolsAudio = {
+  _ctx: null,
+  _enabled: localStorage.getItem('sound_enabled') !== 'false',
+
+  _getCtx() {
+    if (!this._ctx) {
+      this._ctx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    return this._ctx;
+  },
+
+  play(type = 'info') {
+    if (!this._enabled) return;
+    try {
+      const ctx = this._getCtx();
+      const patterns = {
+        success: [{ f: 523, d: 0.08 }, { f: 784, d: 0.14 }],  // C5 → G5 ascending
+        error:   [{ f: 330, d: 0.12 }, { f: 220, d: 0.18 }],  // E4 → A3 descending
+        warning: [{ f: 440, d: 0.07 }, { f: 440, d: 0.07 }],  // A4 staccato double
+        info:    [{ f: 523, d: 0.10 }],                         // C5 single
+      };
+      const seq = patterns[type] || patterns.info;
+      let t = ctx.currentTime + 0.05;
+      seq.forEach(({ f, d }) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'sine';
+        osc.frequency.value = f;
+        gain.gain.setValueAtTime(0.15, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + d);
+        osc.start(t);
+        osc.stop(t + d);
+        t += d + 0.05;
+      });
+    } catch (e) { /* AudioContext blocked or unavailable */ }
+  },
+
+  setEnabled(val) {
+    this._enabled = val;
+    localStorage.setItem('sound_enabled', val ? 'true' : 'false');
+  },
+
+  isEnabled() { return this._enabled; }
+};
+
+// ==========================================
+// PUSH NOTIFICATIONS
+// ==========================================
+
+const SchoolsPush = {
+  isSupported() {
+    return 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+  },
+
+  async init() {
+    if (!this.isSupported()) return;
+    try {
+      await navigator.serviceWorker.register('/sw.js');
+    } catch (e) {
+      console.warn('SW registration failed:', e);
+    }
+  },
+
+  async enable() {
+    if (!this.isSupported()) {
+      return { success: false, error: 'Push notifications are not supported in this browser.' };
+    }
+
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      return { success: false, error: 'Permission denied. Please allow notifications in your browser settings.' };
+    }
+
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const vapidKey = window.VAPID_PUBLIC_KEY;
+      if (!vapidKey) {
+        return { success: false, error: 'Push not configured on this server (missing VAPID key).' };
+      }
+
+      const subscription = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: this._toUint8Array(vapidKey)
+      });
+
+      // Save subscription to DB
+      if (typeof SchoolsDB !== 'undefined' && SchoolsDB.isLive) {
+        await SchoolsDB.savePushSubscription(subscription.toJSON());
+      }
+
+      localStorage.setItem('push_enabled', 'true');
+      return { success: true };
+    } catch (e) {
+      return { success: false, error: e.message };
+    }
+  },
+
+  async disable() {
+    try {
+      const reg = await navigator.serviceWorker.ready;
+      const sub = await reg.pushManager.getSubscription();
+      if (sub) await sub.unsubscribe();
+    } catch (e) { /* ignore */ }
+    localStorage.removeItem('push_enabled');
+  },
+
+  isEnabled() {
+    return localStorage.getItem('push_enabled') === 'true'
+      && typeof Notification !== 'undefined'
+      && Notification.permission === 'granted';
+  },
+
+  _toUint8Array(base64String) {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = atob(base64);
+    return Uint8Array.from([...rawData].map(c => c.charCodeAt(0)));
+  }
+};
+
+// ==========================================
 // NOTIFICATIONS
 // ==========================================
 
-function showSchoolNotification(message, type = 'info') {
-  // Remove existing notification
-  const existing = document.querySelector('.school-notification');
-  if (existing) existing.remove();
+function showSchoolNotification(message, type = 'info', duration = 5000) {
+  const iconMap = {
+    success: 'check-circle',
+    error: 'exclamation-circle',
+    warning: 'exclamation-triangle',
+    info: 'info-circle'
+  };
+
+  // Limit stacking to 4 notifications max (remove oldest)
+  const existing = document.querySelectorAll('.school-notification');
+  if (existing.length >= 4) {
+    _dismissNotification(existing[0]);
+  }
 
   const notification = document.createElement('div');
   notification.className = `school-notification ${type}`;
   notification.innerHTML = `
-    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+    <i class="fas fa-${iconMap[type] || 'info-circle'}"></i>
     <span>${message}</span>
-    <button class="notification-close"><i class="fas fa-times"></i></button>
+    <button class="notification-close" aria-label="Close"><i class="fas fa-times"></i></button>
   `;
 
   document.body.appendChild(notification);
 
-  // Auto-remove after 5 seconds
-  setTimeout(() => notification.remove(), 5000);
+  // Play sound feedback
+  SchoolsAudio.play(type);
+
+  // Auto-dismiss
+  const timer = setTimeout(() => _dismissNotification(notification), duration);
 
   // Close button
   notification.querySelector('.notification-close').addEventListener('click', () => {
-    notification.remove();
+    clearTimeout(timer);
+    _dismissNotification(notification);
   });
+}
+
+function _dismissNotification(notification) {
+  if (!notification || !notification.parentNode) return;
+  notification.classList.add('dismissing');
+  setTimeout(() => notification.remove(), 300);
 }
 
 // ==========================================
@@ -165,7 +310,12 @@ window.SchoolsUtils = {
   applyStoredLanguage,
   showSchoolNotification,
   updateCurrentDate,
-  formatDate
+  formatDate,
+  SchoolsAudio,
+  SchoolsPush
 };
+
+// Register service worker and restore push subscription if previously enabled
+SchoolsPush.init();
 
 console.log('🔧 Schools-utils.js loaded');

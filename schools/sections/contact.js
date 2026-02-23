@@ -24,8 +24,8 @@
       answer: "Navigate to the 'Export Data' section from the menu. You can choose different report types (Performance, Class, Subject, etc.) and export in PDF, Excel, or CSV formats."
     },
     {
-      question: "How do I contact RAYA for insights?",
-      answer: "Click on 'Chat with RAYA' in the menu. You can ask questions like 'Why is the math PKM low in 12th Grade?' or 'Compare my classes in English'. RAYA analyzes your data and provides actionable insights."
+      question: "How do I contact <span class='notranslate'>RAYA</span> for insights?",
+      answer: "Click on 'Chat with <span class='notranslate'>RAYA</span>' in the menu. You can ask questions like 'Why is the math PKM low in 12th Grade?' or 'Compare my classes in English'. <span class='notranslate'>RAYA</span> analyzes your data and provides actionable insights."
     },
     {
       question: "How do I renew or upgrade my subscription?",
@@ -41,7 +41,7 @@
     },
     {
       question: "What's the difference between Free and Pro plans?",
-      answer: "Pro includes: unlimited RAYA messages, scheduled exports, priority support, advanced analytics, multi-admin access, and API integration. Free plan has limited RAYA messages and basic features."
+      answer: "Pro includes: unlimited <span class='notranslate'>RAYA</span> messages, scheduled exports, priority support, advanced analytics, multi-admin access, and API integration. Free plan has limited <span class='notranslate'>RAYA</span> messages and basic features."
     }
   ];
   */
@@ -64,13 +64,13 @@
     },
     {
       icon: 'fa-robot',
-      title: 'Using RAYA AI',
+      title: 'Using <span class="notranslate">RAYA</span> AI',
       desc: 'Get intelligent insights from your data',
       steps: [
-        'Go to "Chat with RAYA" from the menu',
+        'Go to "Chat with <span class="notranslate">RAYA</span>" from the menu',
         'Ask questions in natural language',
         'Example: "Why is physics PKM low in 12th Grade?"',
-        'RAYA analyzes patterns and gives recommendations'
+        '<span class="notranslate">RAYA</span> analyzes patterns and gives recommendations'
       ]
     },
     {
@@ -87,12 +87,12 @@
     {
       icon: 'fa-upload',
       title: 'Adding Contributions',
-      desc: 'Help improve RAYA with your content',
+      desc: 'Help improve <span class="notranslate">RAYA</span> with your content',
       steps: [
         'Go to "Add Contribution" from the menu',
         'Upload educational documents (PDF, Word, images)',
         'Select subject and difficulty level',
-        'Your content trains RAYA for better responses'
+        'Your content trains <span class="notranslate">RAYA</span> for better responses'
       ]
     }
   ];
@@ -116,27 +116,14 @@
         <!-- Quick Contact Cards -->
         <div class="contact-cards-grid">
           <div class="contact-card">
-            <div class="contact-card-icon whatsapp">
-              <i class="fab fa-whatsapp"></i>
-            </div>
-            <div class="contact-card-content">
-              <h4>WhatsApp</h4>
-              <p>Quick responses during business hours</p>
-              <a href="https://wa.me/237690000000" target="_blank" class="btn-contact">
-                <i class="fab fa-whatsapp"></i> Chat Now
-              </a>
-            </div>
-          </div>
-
-          <div class="contact-card">
             <div class="contact-card-icon email">
               <i class="fas fa-envelope"></i>
             </div>
             <div class="contact-card-content">
               <h4>Email</h4>
-              <p>For detailed inquiries</p>
-              <a href="mailto:support@bluestift.app" class="btn-contact">
-                <i class="fas fa-envelope"></i> support@bluestift.app
+              <p>For detailed inquiries — we reply within 24h</p>
+              <a href="mailto:russel@thebluestift.com" class="btn-contact">
+                <i class="fas fa-envelope"></i> russel@thebluestift.com
               </a>
             </div>
           </div>
@@ -147,9 +134,9 @@
             </div>
             <div class="contact-card-content">
               <h4>Phone</h4>
-              <p>Mon-Fri, 8AM - 6PM (WAT)</p>
-              <a href="tel:+237690000000" class="btn-contact">
-                <i class="fas fa-phone-alt"></i> +237 690 000 000
+              <p>Mon – Fri, 8:00 AM – 6:00 PM (WAT)</p>
+              <a href="tel:+237677059262" class="btn-contact">
+                <i class="fas fa-phone-alt"></i> +237 677 059 262
               </a>
             </div>
           </div>
@@ -239,7 +226,7 @@
             <span>Personalized Knowledge Mastery - Score from 0 to 1 measuring content mastery</span>
           </div>
           <div class="glossary-item">
-            <strong>RAYA</strong>
+            <strong class="notranslate">RAYA</strong>
             <span>AI assistant that analyzes your data and provides insights</span>
           </div>
           <div class="glossary-item">
@@ -258,8 +245,8 @@
         <i class="fas fa-clock"></i>
         <div>
           <strong>Support Hours:</strong>
-          <span>Monday - Friday, 8:00 AM - 6:00 PM (West Africa Time)</span>
-          <span class="support-note">Emergency support available 24/7 for Pro subscribers</span>
+          <span>Monday – Friday, 8:00 AM – 6:00 PM (WAT · UTC+1)</span>
+          <span class="support-note">Pro subscribers get priority responses within 4 hours</span>
         </div>
       </div>
 
@@ -415,16 +402,28 @@
       submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
 
       try {
-        await new Promise(resolve => setTimeout(resolve, 1500));
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-        console.log('Support request:', data);
+
+        let result;
+        if (typeof SchoolsDB !== 'undefined') {
+          result = await SchoolsDB.submitContactMessage({
+            name: data.name,
+            email: data.email,
+            subject: data.subject,
+            message: `[${data.category || 'general'}] [${data.priority || 'normal'}] ${data.message}`
+          });
+        } else {
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          result = { success: true };
+        }
+
+        if (!result.success) throw new Error(result.error || 'Failed to send');
 
         form.reset();
         prefillFormFromSchool();
         document.getElementById('support-file-preview').innerHTML = '';
 
-        // Close form after submission
         document.getElementById('support-form-container')?.classList.remove('open');
         document.getElementById('toggle-support-form')?.classList.remove('active');
 
@@ -434,7 +433,7 @@
         );
       } catch (error) {
         window.SchoolsUtils?.showSchoolNotification(
-          'Failed to send message. Please try again or contact us via WhatsApp.',
+          'Failed to send message. Please try again or email us at russel@thebluestift.com.',
           'error'
         );
       } finally {

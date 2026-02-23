@@ -151,6 +151,34 @@
 }
 
 /* ==========================================
+   SUPPORT HEADER
+   ========================================== */
+
+.support-header {
+  margin-bottom: 24px;
+}
+
+.support-header h2 {
+  font-size: var(--font-size-xl);
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.support-header h2 i {
+  color: var(--color-primary-start);
+}
+
+.support-header p {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* ==========================================
    CONTACT SECTION
    ========================================== */
 
@@ -460,15 +488,15 @@
   margin-top: 16px;
 }
 
-.faq-item {
+#section-contact .faq-item {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.faq-item:last-child {
+#section-contact .faq-item:last-child {
   border-bottom: none;
 }
 
-.faq-question {
+#section-contact .faq-question {
   width: 100%;
   display: flex;
   align-items: center;
@@ -484,32 +512,32 @@
   transition: color 0.2s ease;
 }
 
-.faq-question:hover {
+#section-contact .faq-question:hover {
   color: var(--color-primary-start);
 }
 
-.faq-icon {
+#section-contact .faq-icon {
   font-size: 0.875rem;
   color: rgba(255, 255, 255, 0.5);
   transition: transform 0.3s ease;
 }
 
-.faq-item.open .faq-icon {
+#section-contact .faq-item.open .faq-icon {
   transform: rotate(180deg);
 }
 
-.faq-answer {
+#section-contact .faq-answer {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease, padding 0.3s ease;
 }
 
-.faq-item.open .faq-answer {
+#section-contact .faq-item.open .faq-answer {
   max-height: 500px;
   padding-bottom: 16px;
 }
 
-.faq-answer p {
+#section-contact .faq-answer p {
   color: rgba(255, 255, 255, 0.7);
   font-size: var(--font-size-sm);
   line-height: 1.6;
@@ -620,7 +648,19 @@
 .support-note {
   margin-top: 4px;
   font-size: var(--font-size-xs) !important;
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* File upload icon in support form */
+.support-form .file-upload-area {
+  text-align: center;
+}
+
+.support-form .file-upload-area i {
+  display: block;
+  font-size: 2rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
 }
 
 /* Responsive */
@@ -631,11 +671,16 @@
 
   .contact-card {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
 
   .contact-card-icon {
     margin: 0 auto;
+  }
+
+  .contact-card-content {
+    width: 100%;
   }
 
   .support-form .form-row {
@@ -648,6 +693,36 @@
 
   .support-hours-info {
     flex-direction: column;
+    align-items: center;
     text-align: center;
+  }
+
+  .support-hours-info > i {
+    margin-top: 0;
+    font-size: 1.5rem;
+  }
+
+  .btn-contact {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-header h2 {
+    font-size: 1.1rem;
+  }
+
+  .contact-section,
+  .glossary-section {
+    padding: 16px;
+  }
+
+  .support-form .file-upload-area {
+    padding: 20px 12px;
+  }
+
+  .support-hours-info {
+    padding: 14px 16px;
   }
 }

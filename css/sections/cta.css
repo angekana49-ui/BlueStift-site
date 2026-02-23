@@ -79,27 +79,28 @@
   margin-bottom: var(--space-6);
 }
 
-/* EARLY BIRD BANNER */
+/* EARLY BIRD BANNER - acts as footer when spots available */
 .early-bird-banner {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  /* Utilise le gradient du dark mode pour light ET dark mode */
+  /* Static footer positioning */
+  position: static;
+  width: 100%;
   background: linear-gradient(135deg, #7c8ff7 0%, #8b5cf6 50%, #a855f7 100%);
   color: white;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-4) var(--space-4);
   text-align: center;
-  z-index: var(--z-fixed);
-  box-shadow: var(--shadow-xl);
-  animation: slideUp 0.5s ease;
+  box-shadow: 0 -4px 16px rgba(102, 126, 234, 0.3);
 
-  /* CENTRAGE ET RESPONSIVE */
+  /* Layout */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  gap: 4px;
+}
+
+/* Footer variant: no top margin gap */
+.early-bird-footer {
+  margin-top: 0;
 }
 
 .early-bird-banner p {

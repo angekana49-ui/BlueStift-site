@@ -149,77 +149,36 @@ header.scrolled {
 }
 
 /* ==========================================
-   SUB-HEADER - MENU + FAQ
+   MENU BUTTON WRAPPER
    ========================================== */
 
-.sub-header {
-  /* STICKY POSITIONING - COLLÉ SOUS LE HEADER */
-  position: sticky;
-  top: 72px; /* Default, will be set dynamically by JS */
-  z-index: 999;
-  
-  /* GLASSMORPHISM STYLING */
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  
-  /* LAYOUT */
-  padding: 12px 25px;
-  margin-top: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  
-  /* BORDERS & SHADOWS */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  
-  /* TRANSITION */
-  transition: all 0.3s ease;
+.menu-btn-wrapper {
+  position: relative;
+  padding: 12px 24px 0;
+  z-index: 10;
+  display: inline-block; /* Prend seulement la largeur du bouton */
 }
 
-.sub-header a {
-  font-weight: 700;
-  color: #2563eb;
-  font-size: 0.95rem;
-  text-decoration: none; /* NO UNDERLINE */
-  transition: all 0.3s ease;
-  
-  display: flex;
+/* MENU BUTTON - Style gradient comme schools */
+.header-menu-btn {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
 }
 
-.sub-header a:hover {
-  color: #1e40af;
-}
-
-/* MENU BUTTON WITH HAMBURGER ICON */
-#menu-btn {
-  position: relative;
-  padding-left: 32px; /* Space for hamburger icon */
-}
-
-#menu-btn::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 22px;
-  height: 2px;
-  background: #2563eb;
-  box-shadow: 
-    0 -6px 0 #2563eb,
-    0 6px 0 #2563eb;
-  transition: all 0.3s ease;
-}
-
-#menu-btn:hover::before {
-  background: #1e40af;
-  box-shadow: 
-    0 -6px 0 #1e40af,
-    0 6px 0 #1e40af;
+.header-menu-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 /* ==========================================
@@ -232,7 +191,9 @@ header.scrolled {
   top: 100%;
   left: 0;
   margin-top: 5px;
-  max-width: 250px;
+  min-width: 260px;
+  max-width: 360px;
+  width: max-content;
 
   /* LIGHT MODE - Fond blanc opaque pour meilleure lisibilité */
   background: rgba(255, 255, 255, 0.98);
@@ -240,8 +201,8 @@ header.scrolled {
   -webkit-backdrop-filter: blur(16px) saturate(180%);
 
   border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  padding: 15px 20px;
+  border-radius: 10px;
+  padding: 16px 24px;
 
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
   z-index: 998;
@@ -252,26 +213,28 @@ header.scrolled {
 .menu-content.active {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .menu-content a {
-  display: block;
-  padding: 8px 0;
-  color: #1a1a1a; /* Texte noir pour light mode */
+  padding: 10px 8px;
+  color: #1a1a1a;
   font-weight: 500;
+  font-size: 0.95rem;
   text-decoration: none;
 
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 
+  border-radius: 6px;
   transition: all 0.2s ease;
 }
 
 .menu-content a:hover {
   color: #2563eb;
-  padding-left: 5px;
+  background: rgba(37, 99, 235, 0.06);
+  padding-left: 12px;
 }
 
 .menu-content a i {
@@ -505,7 +468,8 @@ body.dark-theme .menu-content a {
 }
 
 body.dark-theme .menu-content a:hover {
-  color: #60a5fa; /* Bleu clair pour dark mode */
+  color: #60a5fa;
+  background: rgba(96, 165, 250, 0.08);
 }
 
 body.dark-theme .faq-dropdown {
@@ -558,15 +522,10 @@ body.dark-theme .faq-item {
     gap: 8px; /* -4px */
   }
   
-  .sub-header {
-    padding: 10px 15px; /* Aligned with header, keeping sticky */
-    margin-top: 0; /* Keep at 0 for sticky */
+  .menu-btn-wrapper {
+    padding: 8px 15px;
   }
 
-  .sub-header a {
-    font-size: 0.9rem; /* -0.05rem */
-  }
-  
   .faq-dropdown {
     width: calc(100% - 30px); /* Width with margins */
     margin: 0 auto; /* Center horizontally */
@@ -599,16 +558,8 @@ body.dark-theme .faq-item {
     gap: 6px; /* Minimal */
   }
 
-  .sub-header {
-    padding: 8px 12px;
-    margin-top: 0; /* Keep sticky */
-    flex-direction: column; /* Stack vertical */
-    align-items: flex-start;
-    gap: 10px;
-  }
-  
-  .sub-header a {
-    font-size: 0.85rem; /* Encore plus petit */
+  .menu-btn-wrapper {
+    padding: 6px 12px;
   }
 
   .faq-dropdown {
@@ -622,11 +573,12 @@ body.dark-theme .faq-item {
   }
   
   .menu-content {
-    position: fixed;
-    top: 80px;
-    right: 12px;
-    left: auto;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: auto;
     max-width: calc(100vw - 24px);
+    min-width: 200px;
   }
 }
 
@@ -649,50 +601,21 @@ body.dark-theme .faq-item {
     height: 40px;
   }
   
-  .sub-header {
-    padding: 8px 10px;
-    margin-top: 0; /* Keep sticky */
+  .menu-btn-wrapper {
+    padding: 6px 10px;
   }
-  
-  .sub-header a {
-    font-size: 0.8rem;
-  }
-  
+
   .faq-dropdown {
     padding: 16px;
   }
 }
 
 /* ==========================================
-   DARK MODE - SUB-HEADER
+   DARK MODE - MENU BUTTON
    ========================================== */
 
-body.dark-theme .sub-header {
-  background: rgba(26, 26, 26, 0.95);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-body.dark-theme .sub-header a {
-  color: #60a5fa; /* Lighter blue for dark mode */
-}
-
-body.dark-theme .sub-header a:hover {
-  color: #93c5fd;
-}
-
-body.dark-theme #menu-btn::before {
-  background: #60a5fa;
-  box-shadow: 
-    0 -6px 0 #60a5fa,
-    0 6px 0 #60a5fa;
-}
-
-body.dark-theme #menu-btn:hover::before {
-  background: #93c5fd;
-  box-shadow: 
-    0 -6px 0 #93c5fd,
-    0 6px 0 #93c5fd;
+body.dark-theme .header-menu-btn {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* ==========================================
@@ -707,7 +630,7 @@ body.dark-theme #menu-btn:hover::before {
     background: #fff;
   }
   
-  .sub-header,
+  .menu-btn-wrapper,
   .menu-content,
   .faq-dropdown {
     display: none !important;
