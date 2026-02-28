@@ -1,7 +1,6 @@
 // ==========================================
 // BLUESTIFT-DB.JS - Public Data Layer
 // Handles: waitlist, feedbacks, contributions
-// Uses same Supabase project as schools-db.js
 // ==========================================
 
 window.BluestiftDB = (() => {
@@ -19,7 +18,8 @@ window.BluestiftDB = (() => {
   // ------------------------------------
   // WAITLIST
   // Table: waitlist
-  // Columns: full_name, email, phone, position, is_early_bird, joined_at
+  // position   → set automatically by trigger set_waitlist_position()
+  // is_early_bird → GENERATED column (position <= 500), never set manually
   // ------------------------------------
 
   async function joinWaitlist({ name, email, phone, interest }) {
@@ -29,7 +29,7 @@ window.BluestiftDB = (() => {
     // Check if already registered
     const { data: existing } = await db
       .from('waitlist')
-      .select('id, position, is_early_bird')
+      .select('position, is_early_bird')
       .eq('email', cleanEmail)
       .maybeSingle();
 
@@ -41,29 +41,26 @@ window.BluestiftDB = (() => {
       };
     }
 
-    // Get current count to assign position
-    const { count, error: countError } = await db
+    // Insert — trigger assigns position, generated column sets is_early_bird
+    const { data, error } = await db
       .from('waitlist')
-      .select('*', { count: 'exact', head: true });
-
-    if (countError) throw countError;
-
-    const position = (count || 0) + 1;
-    const isEarlyBird = position <= 500;
-
-    const { error } = await db.from('waitlist').insert({
-      full_name: name.trim(),
-      email: cleanEmail,
-      phone: phone?.trim() || null,
-      profile_type: interest?.trim() || null,
-      position,
-      is_early_bird: isEarlyBird,
-      joined_at: new Date().toISOString(),
-    });
+      .insert({
+        full_name:    name.trim(),
+        email:        cleanEmail,
+        phone:        phone?.trim() || null,
+        profile_type: interest?.trim() || null,
+        signup_source: 'web',
+      })
+      .select('position, is_early_bird')
+      .single();
 
     if (error) throw error;
 
-    return { alreadyRegistered: false, position, isEarlyBird };
+    return {
+      alreadyRegistered: false,
+      position:    data.position,
+      isEarlyBird: data.is_early_bird,
+    };
   }
 
   async function getWaitlistStats() {
@@ -83,27 +80,26 @@ window.BluestiftDB = (() => {
   // ------------------------------------
   // FEEDBACKS
   // Table: feedbacks
-  // Columns: name, email, rating, type, message, submitted_at
   // ------------------------------------
 
   async function submitFeedback({ name, email, rating, type, message }) {
     const db = _getClient();
     const { error } = await db.from('feedbacks').insert({
-      name: name?.trim() || null,
-      email: email?.trim() || null,
-      rating: parseInt(rating, 10),
+      name:         name?.trim() || null,
+      email:        email?.trim() || null,
+      rating:       parseInt(rating, 10),
       type,
-      message: message.trim(),
+      message:      message.trim(),
       submitted_at: new Date().toISOString(),
     });
     if (error) throw error;
   }
 
   // ------------------------------------
-  // CONTRIBUTIONS (RAYA training)
-  // Table: contributions + contribution_files
-  // Storage bucket: contributions
-  // Columns: contributor_name, email, title, category, description
+  // CONTRIBUTIONS (RAYA training data)
+  // Table: contributions (storage_path, file_count)
+  // Storage bucket: Contributions/{contribution_id}/
+  // contribution_files table has been removed — Storage is the source of truth
   // ------------------------------------
 
   async function submitContribution(data, files) {
@@ -114,17 +110,18 @@ window.BluestiftDB = (() => {
       .from('contributions')
       .insert({
         contributor_name: data.name.trim(),
-        email: data.email.trim().toLowerCase(),
-        title: data.title.trim(),
-        category: data.category,
-        description: data.description?.trim() || null,
+        email:            data.email.trim().toLowerCase(),
+        title:            data.title.trim(),
+        category:         data.category,
+        description:      data.description?.trim() || null,
       })
-      .select()
+      .select('id')
       .single();
 
     if (error) throw error;
 
     // Upload each file to storage
+    let uploadedCount = 0;
     for (const file of files) {
       const filePath = `${contrib.id}/${file.name}`;
 
@@ -137,20 +134,18 @@ window.BluestiftDB = (() => {
         continue;
       }
 
-      // Get public URL
-      const { data: urlData } = db.storage
-        .from('Contributions')
-        .getPublicUrl(filePath);
+      uploadedCount++;
+    }
 
-      // Insert file record
-      await db.from('contribution_files').insert({
-        contribution_id: contrib.id,
-        file_name: file.name,
-        file_path: filePath,
-        file_url: urlData.publicUrl,
-        mime_type: file.type,
-        file_size: file.size,
-      });
+    // Update storage reference and file count on the contribution row
+    if (uploadedCount > 0) {
+      await db
+        .from('contributions')
+        .update({
+          storage_path: `${contrib.id}/`,
+          file_count:   uploadedCount,
+        })
+        .eq('id', contrib.id);
     }
   }
 
@@ -161,7 +156,7 @@ window.BluestiftDB = (() => {
   return {
     joinWaitlist,
     getWaitlistStats,
-    getStats,          // alias used by debug panel
+    getStats,
     submitFeedback,
     submitContribution,
   };
