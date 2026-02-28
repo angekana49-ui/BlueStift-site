@@ -86,6 +86,90 @@ CREATE POLICY "school_admin_select_own_usage"
 
 
 -- ==========================================
+-- 5. WAITLIST — RLS INSERT policy for anon
+-- Public signup form: anyone can join
+-- (SELECT policy assumed already exists)
+-- Date: 2026-02-28
+-- ==========================================
+
+ALTER TABLE waitlist ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "anon_insert_waitlist" ON waitlist;
+CREATE POLICY "anon_insert_waitlist"
+  ON waitlist FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- Allow anon to SELECT (check dup email + count for position)
+DROP POLICY IF EXISTS "anon_select_waitlist" ON waitlist;
+CREATE POLICY "anon_select_waitlist"
+  ON waitlist FOR SELECT
+  TO anon
+  USING (true);
+
+
+-- ==========================================
+-- 6. CONTRIBUTIONS — RLS INSERT policy for anon
+-- Public form: anyone can contribute resources
+-- Date: 2026-02-28
+-- ==========================================
+
+ALTER TABLE contributions ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "anon_insert_contributions" ON contributions;
+CREATE POLICY "anon_insert_contributions"
+  ON contributions FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+-- Allow anon to select their own contribution (for .select().single() after insert)
+DROP POLICY IF EXISTS "anon_select_own_contributions" ON contributions;
+CREATE POLICY "anon_select_own_contributions"
+  ON contributions FOR SELECT
+  TO anon
+  USING (true);
+
+
+-- ==========================================
+-- 7. CONTRIBUTION_FILES — RLS INSERT policy for anon
+-- Linked to contributions above
+-- Date: 2026-02-28
+-- ==========================================
+
+ALTER TABLE contribution_files ENABLE ROW LEVEL SECURITY;
+
+DROP POLICY IF EXISTS "anon_insert_contribution_files" ON contribution_files;
+CREATE POLICY "anon_insert_contribution_files"
+  ON contribution_files FOR INSERT
+  TO anon
+  WITH CHECK (true);
+
+
+-- ==========================================
+-- 8. STORAGE — Create 'contributions' bucket + policies
+-- Bucket was missing entirely (Bucket not found error)
+-- Date: 2026-02-28
+-- ==========================================
+
+-- Bucket 'contributions' already exists (created manually)
+-- Just add the storage object policies:
+
+-- Allow anon to upload files to the bucket
+DROP POLICY IF EXISTS "anon_upload_contributions" ON storage.objects;
+CREATE POLICY "anon_upload_contributions"
+  ON storage.objects FOR INSERT
+  TO anon
+  WITH CHECK (bucket_id = 'contributions');
+
+-- Allow anon to read their uploaded files (needed for getPublicUrl)
+DROP POLICY IF EXISTS "anon_read_contributions" ON storage.objects;
+CREATE POLICY "anon_read_contributions"
+  ON storage.objects FOR SELECT
+  TO anon
+  USING (bucket_id = 'contributions');
+
+
+-- ==========================================
 -- VERIFY
 -- ==========================================
 
@@ -104,3 +188,9 @@ CREATE POLICY "school_admin_select_own_usage"
 -- 4. Check usage_metrics exists:
 -- SELECT table_name FROM information_schema.tables
 -- WHERE table_name = 'usage_metrics';
+
+-- 5-7. Check all RLS policies:
+-- SELECT tablename, policyname, cmd, roles
+-- FROM pg_policies
+-- WHERE tablename IN ('waitlist', 'contributions', 'contribution_files')
+-- ORDER BY tablename, cmd;

@@ -129,7 +129,7 @@ window.BluestiftDB = (() => {
       const filePath = `${contrib.id}/${file.name}`;
 
       const { error: uploadError } = await db.storage
-        .from('contributions')
+        .from('Contributions')
         .upload(filePath, file);
 
       if (uploadError) {
@@ -139,7 +139,7 @@ window.BluestiftDB = (() => {
 
       // Get public URL
       const { data: urlData } = db.storage
-        .from('contributions')
+        .from('Contributions')
         .getPublicUrl(filePath);
 
       // Insert file record
@@ -167,4 +167,4 @@ window.BluestiftDB = (() => {
   };
 })();
 
-console.log('🌐 BluestiftDB loaded');
+console.log('BluestiftDB loaded');
