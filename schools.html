@@ -288,6 +288,14 @@ document.addEventListener('DOMContentLoaded', function() {
               <p class="promo-codes-hint" data-i18n="promo_hint">Share each code with students of the corresponding class.</p>
             </div>
 
+            <div id="resend-block" style="display: none;">
+              <button type="button" class="btn-resend" id="resend-email-btn">
+                <i class="fas fa-paper-plane"></i>
+                <span data-i18n="btn_resend">Resend confirmation email</span>
+              </button>
+              <p class="resend-status" id="resend-status"></p>
+            </div>
+
             <button type="button" class="btn-login" id="goto-login-btn">
               <i class="fas fa-sign-in-alt"></i>
               <span data-i18n="btn_goto_signin">Go to Sign In</span>

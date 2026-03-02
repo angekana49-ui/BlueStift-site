@@ -14,6 +14,7 @@ const SchoolsDB = (() => {
   let _currentSchool = null;
   let _currentAdmin = null;
   let _currentClassYearId = null;
+  let _pendingSetupEmail = null; // Set when landing from email confirmation link
 
   // Demo credentials (kept for investor pitches)
   const DEMO_CREDENTIALS = {
@@ -44,6 +45,14 @@ const SchoolsDB = (() => {
         ]);
         const session = sessionResult?.data?.session;
         if (session) {
+          // Email confirmation redirect: skip school load, let UI show step 2
+          const _pk = `bs_pending_${session.user.email}`;
+          if (localStorage.getItem(_pk)) {
+            mode = 'live';
+            _pendingSetupEmail = session.user.email;
+            console.log('📧 Email confirmed — pending school setup');
+            return;
+          }
           mode = 'live';
           await _loadLiveUserData(session.user);
           const _pc = _checkPilotExpiry();
@@ -147,46 +156,25 @@ const SchoolsDB = (() => {
     // First login after email confirmation — link users record to already-created school
     const pendingKey = `bs_pending_${email}`;
     const pendingRaw = localStorage.getItem(pendingKey);
-    if (!user && pendingRaw) {
+    // Detect pending setup — fires even if handle_email_confirmed already created
+    // a 'student' row (the RPC will upgrade it to 'school_admin' via ON CONFLICT DO UPDATE)
+    if (pendingRaw && (!user || user.role !== 'school_admin')) {
       try {
         const pending = JSON.parse(pendingRaw);
         if (pending.rpcComplete && pending.schoolId) {
-          // RPC already ran in step 2 and handled users record via SECURITY DEFINER
+          // Step 2 already ran — just load the session and go to dashboard
           localStorage.removeItem(pendingKey);
           mode = 'live';
           localStorage.setItem('schools_mode', 'live');
           await _loadLiveUserData(data.user);
-          console.log('🔐 First login — school already set up, linked users record');
           { const _pc = _checkPilotExpiry(); if (_pc) return _rejectExpiredPilot(_pc.pilotUntil); }
           return { success: true, mode: 'live' };
         } else {
-          // Edge case: user never completed step 2 — call RPC now with whatever classes we have
-          const { data: rpcData, error: rpcError } = await supabase.rpc('register_school_complete', {
-            p_school_name: pending.schoolName,
-            p_country: pending.country,
-            p_country_code: pending.countryCode || null,
-            p_city: pending.city,
-            p_admin_name: pending.adminName,
-            p_admin_email: email,
-            p_auth_user_id: data.user.id,
-            p_classes: pending.classes || []
-          });
-          if (!rpcError && rpcData?.success) {
-            await supabase.from('users').insert({
-              auth_user_id: data.user.id,
-              email: email,
-              full_name: pending.adminName,
-              role: 'school_admin',
-              school_id: rpcData.school_id,
-              account_type: 'standard'
-            });
-            localStorage.removeItem(pendingKey);
-            mode = 'live';
-            localStorage.setItem('schools_mode', 'live');
-            await _loadLiveUserData(data.user);
-            { const _pc = _checkPilotExpiry(); if (_pc) return _rejectExpiredPilot(_pc.pilotUntil); }
-            return { success: true, mode: 'live' };
-          }
+          // Step 2 never done — tell the UI to show step 2 for class setup.
+          // Do NOT auto-run the RPC with empty classes here.
+          mode = 'live';
+          localStorage.setItem('schools_mode', 'live');
+          return { success: true, mode: 'live', pendingSetup: true };
         }
       } catch (e) {
         console.error('First-login setup error:', e);
@@ -245,7 +233,7 @@ const SchoolsDB = (() => {
 
     return {
       name: _currentSchool.name,
-      country: _currentSchool.country,
+      country: _currentSchool.country_name,
       city: _currentSchool.city,
       location: _currentSchool.city,
       type: _currentSchool.school_type,
@@ -615,38 +603,20 @@ const SchoolsDB = (() => {
       return _getDemoPlans();
     }
 
-    // Use the school_plan_pricing view which resolves zone-based prices
-    const schoolId = _currentSchool?.id;
-    if (!schoolId) {
-      // Fallback: raw plans without zone pricing
-      const { data, error } = await supabase
-        .from('subscription_plans')
-        .select('*')
-        .eq('is_active', true)
-        .eq('category', 'school_b2b')
-        .order('price');
-      if (error) return null;
-      return data.map(p => ({ ...p, currency: 'USD' }));
-    }
-
+    // Query subscription_plans directly (zone pricing removed — fixed USD pricing)
     const { data, error } = await supabase
-      .from('school_plan_pricing')
+      .from('subscription_plans')
       .select('*')
-      .eq('school_id', schoolId)
+      .eq('is_active', true)
+      .eq('category', 'school_b2b')
       .order('price');
 
     if (error) {
-      console.warn('⚠️ Zone pricing failed, falling back to base plans:', error.message);
-      const { data: fallback } = await supabase
-        .from('subscription_plans')
-        .select('*')
-        .eq('is_active', true)
-        .eq('category', 'school_b2b')
-        .order('price');
-      return fallback?.map(p => ({ ...p, currency: 'USD' })) || null;
+      console.error('❌ getPlans error:', error.message);
+      return null;
     }
 
-    return data;
+    return data.map(p => ({ ...p, currency: 'USD' }));
   }
 
   function _getDemoPlans() {
@@ -852,7 +822,11 @@ const SchoolsDB = (() => {
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: adminName, school_name: schoolName } }
+      options: {
+        data: { full_name: adminName, school_name: schoolName },
+        // Redirect to schools.html so user lands on the login page after confirmation
+        emailRedirectTo: window.location.origin + '/schools.html'
+      }
     });
 
     if (authError) return { success: false, error: authError.message };
@@ -1153,8 +1127,21 @@ const SchoolsDB = (() => {
   }
 
   // ------------------------------------
+  // RESEND CONFIRMATION EMAIL
+  // ------------------------------------
+
+  async function resendConfirmation(email) {
+    if (!supabase) return { success: false, error: 'Not available in demo mode.' };
+    const { error } = await supabase.auth.resend({ type: 'signup', email });
+    if (error) return { success: false, error: error.message };
+    return { success: true };
+  }
+
+  // ------------------------------------
   // PUBLIC API
   // ------------------------------------
+
+  function hasPendingSetup() { return _pendingSetupEmail; }
 
   return {
     init,
@@ -1163,6 +1150,8 @@ const SchoolsDB = (() => {
     logout,
     signup,
     completeSetup,
+    hasPendingSetup,
+    resendConfirmation,
     getCountries,
     resetPassword,
     isAuthenticated,

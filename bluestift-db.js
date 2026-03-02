@@ -22,7 +22,7 @@ window.BluestiftDB = (() => {
   // is_early_bird → GENERATED column (position <= 500), never set manually
   // ------------------------------------
 
-  async function joinWaitlist({ name, email, phone, interest }) {
+  async function joinWaitlist({ name, email, interest }) {
     const db = _getClient();
     const cleanEmail = email.toLowerCase().trim();
 
@@ -47,7 +47,6 @@ window.BluestiftDB = (() => {
       .insert({
         full_name:    name.trim(),
         email:        cleanEmail,
-        phone:        phone?.trim() || null,
         profile_type: interest?.trim() || null,
         signup_source: 'web',
       })

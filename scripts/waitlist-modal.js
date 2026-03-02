@@ -41,7 +41,6 @@ function initWaitlistModal() {
         const formData = {
           name: document.getElementById('name').value,
           email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value || null,
           interest: document.getElementById('interest').value || null
         };
 
@@ -59,7 +58,7 @@ function initWaitlistModal() {
           );
         } else {
           const message = result.isEarlyBird
-            ? `Congratulations! You're Early Bird #${result.position}! 100 WBSP guaranteed!`
+            ? `Congratulations! You're Early Bird #${result.position}!`
             : `Welcome! You're on the waitlist at position #${result.position}`;
 
           showNotification(message, 'success');

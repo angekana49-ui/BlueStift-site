@@ -55,6 +55,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   }
 
+  // Email confirmation redirect: pending school setup → show step 2 directly
+  const _pendingEmail = SchoolsDB.hasPendingSetup?.();
+  if (_pendingEmail) {
+    const f = document.getElementById('signup-email');
+    if (f) f.value = _pendingEmail;
+    showAuthView('signup-step2');
+    return;
+  }
+
   // Check if already authenticated (auto-login from previous session)
   let isAuth = false;
   if (typeof SchoolsDB !== 'undefined') {
@@ -315,7 +324,12 @@ async function handleSignupStep1Next(e) {
   nextBtn.innerHTML = '<i class="fas fa-user-plus"></i> <span data-i18n="btn_create">Create Account</span>';
 
   if (result.success) {
-    showAuthView('signup-step2');
+    if (result.needsConfirmation) {
+      // Email confirmation required — do NOT show step 2 yet
+      _showSignupSuccess({ needsConfirmation: true }, email, false);
+    } else {
+      showAuthView('signup-step2');
+    }
   } else {
     showLoginError(result.error || 'Signup failed. Please try again.');
     authBox.classList.add('shake');
@@ -436,6 +450,37 @@ function _showSignupSuccess(result, email, fromFirstLogin) {
     promoBlock.style.display = '';
   }
 
+  // Resend confirmation block — only shown while waiting for email confirmation
+  const resendBlock = document.getElementById('resend-block');
+  const resendBtn   = document.getElementById('resend-email-btn');
+  const resendStatus = document.getElementById('resend-status');
+  if (resendBlock) {
+    resendBlock.style.display = result.needsConfirmation ? '' : 'none';
+  }
+  if (resendBtn && result.needsConfirmation) {
+    let _resendCooldown = false;
+    resendBtn.onclick = async () => {
+      if (_resendCooldown) {
+        if (resendStatus) resendStatus.textContent = window._overlayLang === 'fr'
+          ? 'Veuillez patienter avant de renvoyer.'
+          : 'Please wait before resending.';
+        return;
+      }
+      resendBtn.disabled = true;
+      _resendCooldown = true;
+      const result = await SchoolsDB.resendConfirmation(email);
+      if (resendStatus) resendStatus.textContent = result.success
+        ? (window._overlayLang === 'fr' ? 'Email envoyé ! Vérifiez votre boîte.' : 'Email sent! Check your inbox.')
+        : (window._overlayLang === 'fr' ? 'Échec de l\'envoi. Réessayez.' : 'Could not resend. Please try again.');
+      // Re-enable after 60 s
+      setTimeout(() => {
+        _resendCooldown = false;
+        resendBtn.disabled = false;
+        if (resendStatus) resendStatus.textContent = '';
+      }, 60000);
+    };
+  }
+
   // Button label change for first-login case
   const gotoBtn = document.getElementById('goto-login-btn');
   if (gotoBtn && fromFirstLogin) {
@@ -551,6 +596,20 @@ async function handleLoginSubmit(e) {
       return;
     }
 
+    // Email confirmed but step 2 (classes) never done — show step 2 now
+    if (result.pendingSetup) {
+      setTimeout(() => {
+        loginBtn.disabled = false;
+        loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> <span>Sign In</span>';
+        loginBtn.style.background = '';
+        // Pre-fill signup-email so handleSignupFinalSubmit can read it
+        const signupEmailField = document.getElementById('signup-email');
+        if (signupEmailField) signupEmailField.value = email;
+        showAuthView('signup-step2');
+      }, 600);
+      return;
+    }
+
     // Normal login — boot dashboard
     setTimeout(async () => {
       hideLoginOverlay();
@@ -646,6 +705,7 @@ const OVERLAY_I18N = {
     promo_title:      'Class Registration Codes',
     promo_hint:       'Share each code with students of the corresponding class.',
     forgot_desc:      "Enter your email address and we'll send you a link to reset your password.",
+    btn_resend:       'Resend confirmation email',
     footer_help:      'Need help?',
     creating:         'Creating...',
   },
@@ -693,6 +753,7 @@ const OVERLAY_I18N = {
     promo_title:      'Codes d\'Inscription aux Classes',
     promo_hint:       'Partagez chaque code avec les élèves de la classe correspondante.',
     forgot_desc:      'Entrez votre adresse e-mail et nous vous enverrons un lien pour réinitialiser votre mot de passe.',
+    btn_resend:       'Renvoyer l\'email de confirmation',
     footer_help:      'Besoin d\'aide ?',
     creating:         'Création...',
   }

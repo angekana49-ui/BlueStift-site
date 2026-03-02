@@ -135,8 +135,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://translate.googleapis.com">
   <link rel="dns-prefetch" href="//translate.google.com">
-  <link rel="dns-prefetch" href="//xyxsuoeldkfznodblgvp.supabase.co">
+  <link rel="dns-prefetch" href="//jkcztwqxvmsrfqiwvyxp.supabase.co">
   
   <!-- ===================================== -->
   <!-- FAVICONS -->
@@ -154,8 +156,41 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
   <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
 
-  <!-- External CSS -->
-  <link rel="stylesheet" href="css/main.css">
+  <!-- CSS: individual files loaded in parallel over HTTP/2 (no @import waterfall) -->
+  <!-- Base -->
+  <link rel="stylesheet" href="css/base/reset.css">
+  <link rel="stylesheet" href="css/base/variables.css">
+  <link rel="stylesheet" href="css/base/typography.css">
+  <!-- Layout -->
+  <link rel="stylesheet" href="css/layout/grid.css">
+  <link rel="stylesheet" href="css/layout/spacing.css">
+  <link rel="stylesheet" href="css/layout/responsive.css">
+  <!-- Components -->
+  <link rel="stylesheet" href="css/components/buttons.css">
+  <link rel="stylesheet" href="css/components/cards.css">
+  <link rel="stylesheet" href="css/components/modals.css">
+  <link rel="stylesheet" href="css/components/forms.css">
+  <link rel="stylesheet" href="css/components/navigation.css">
+  <link rel="stylesheet" href="css/components/footer.css">
+  <!-- Effects -->
+  <link rel="stylesheet" href="css/effects/glassmorphism.css">
+  <link rel="stylesheet" href="css/effects/gradients.css">
+  <link rel="stylesheet" href="css/effects/animations.css">
+  <link rel="stylesheet" href="css/effects/hover-effects.css">
+  <!-- Sections -->
+  <link rel="stylesheet" href="css/sections/hero.css">
+  <link rel="stylesheet" href="css/sections/features.css">
+  <link rel="stylesheet" href="css/sections/testimonials.css">
+  <link rel="stylesheet" href="css/sections/cta.css">
+  <link rel="stylesheet" href="css/sections/info-cards.css">
+  <link rel="stylesheet" href="css/sections/quotes.css">
+  <link rel="stylesheet" href="css/schools/index.css">
+  <!-- Themes -->
+  <link rel="stylesheet" href="css/themes/light-theme.css">
+  <link rel="stylesheet" href="css/themes/dark-theme.css">
+  <!-- Utilities (last — highest specificity) -->
+  <link rel="stylesheet" href="css/utilities/helpers.css">
+  <link rel="stylesheet" href="css/utilities/overrides.css">
 </head>
 <body class="dark-theme">
   <!-- Google Translate -->
@@ -169,7 +204,7 @@ function googleTranslateElementInit() {
   }, 'google_translate_element');
 }
   </script>
-  <script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+  <script async src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
   <!-- Header -->
   <header>
@@ -265,23 +300,18 @@ function googleTranslateElementInit() {
         </div>
         
         <div class="form-group">
-          <label for="phone">Phone</label>
-          <input type="tel" id="phone" name="phone" placeholder="+1 XXX XXX XXXX">
+          <label for="interest">I am a... *</label>
+          <select id="interest" name="interest" required>
+            <option value="">Select your profile</option>
+            <option value="student">High School Student</option>
+            <option value="university_student">University Student</option>
+            <option value="parent">Parent (for my child)</option>
+            <option value="teacher">Teacher / Educator</option>
+            <option value="self_learner">Self-Learner / Lifelong Learner</option>
+            <option value="professional">Working Professional</option>
+            <option value="other">Other</option>
+          </select>
         </div>
-
-        <div class="form-group">
-        <label for="interest">I am a... *</label>
-        <select id="interest" name="interest" required>
-          <option value="">Select your profile</option>
-          <option value="student-highschool"><i class="fas fa-graduation-cap"></i> High School Student</option>
-          <option value="student-university"><i class="fas fa-user-graduate"></i> University Student</option>
-          <option value="parent"><i class="fas fa-user-friends"></i> Parent (for my child)</option>
-          <option value="teacher"><i class="fas fa-chalkboard-teacher"></i> Teacher / Educator</option>
-          <option value="self-learner"><i class="fas fa-brain"></i> Self-Learner / Lifelong Learner</option>
-          <option value="professional"><i class="fas fa-briefcase"></i> Working Professional</option>
-          <option value="other"> Other</option>
-        </select>
-      </div>
         
         <button type="submit" class="btn-submit" id="waitlist-submit">Sign Up</button>
       </form>
@@ -296,25 +326,21 @@ function googleTranslateElementInit() {
       <p>Share educational resources to make our AI tutor smarter for everyone!</p>
       
       <!-- RAG Info Banner -->
-      <div class="rag-info-banner" style="background: #1e3a8a; padding: 15px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #60a5fa;">
-        <div style="display: flex; align-items: start; gap: 12px;">
-          <i class="fas fa-brain" style="color: #ffffff; font-size: 1.5rem; margin-top: 2px;"></i>
+      <div class="modal-info-banner">
+        <div class="modal-info-banner-inner">
+          <i class="fas fa-brain"></i>
           <div>
-            <strong style="color: #ffffff;">How it works:</strong>
-            <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #ffffff;">
-              Your documents help train RAYA's knowledge base. The more quality content we have,
-              the better RAYA can explain complex topics to students worldwide.
-            </p>
+            <strong>How it works:</strong>
+            <p>Your documents help train RAYA's knowledge base. The more quality content we have,
+              the better RAYA can explain complex topics to students worldwide.</p>
           </div>
         </div>
       </div>
-      
+
       <!-- Early Contributor Badge -->
-      <div style="background: #92400e; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center; border: 2px dashed #fbbf24;">
-        <strong style="color: #ffffff;"><i class="fas fa-trophy"></i> Early Contributors Reward:</strong>
-        <p style="margin: 5px 0 0 0; font-size: 0.9rem; color: #ffffff;">
-          Contribute now and get the exclusive <strong>"AI Trainer"</strong> badge at launch!
-        </p>
+      <div class="modal-badge">
+        <strong><i class="fas fa-trophy"></i> Early Contributors Reward:</strong>
+        <p>Contribute now and get the exclusive <strong>"AI Trainer"</strong> badge at launch!</p>
       </div>
       
       <form id="contribute-form">
@@ -355,13 +381,11 @@ function googleTranslateElementInit() {
         <div class="form-group">
           <label for="contrib-file">File(s) *</label>
           <input type="file" id="contrib-file" name="contrib-file" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.jpeg,.png" multiple>
-          <small style="color: #666; font-size: 0.85rem;">
-            Accepted: PDF, Word, PowerPoint, Images (Max 50MB per file)
-          </small>
+          <small class="input-hint">Accepted: PDF, Word, PowerPoint, Images (Max 50MB per file)</small>
         </div>
         
         <!-- Privacy Notice -->
-        <div style="background: #1f2937; padding: 12px; border-radius: 8px; margin: 15px 0; font-size: 0.85rem; color: #ffffff;">
+        <div class="modal-privacy">
           <i class="fas fa-lock" style="color: #10b981;"></i>
           <strong>Privacy:</strong> Your contributions are used solely to train RAYA.
           We don't share your documents publicly without permission.

@@ -8,8 +8,6 @@
 // INITIALISATION
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Bluestift loading...');
-
   initFAQ();
   initMenu();
   initCTAButtons();
@@ -25,8 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // initSubjectNavigation called when modal opens
 
   updateEarlyBirdCounter();
-
-  console.log('Bluestift ready!');
 });
 
 // Compteur Early Bird (temporaire - localStorage)
@@ -67,14 +63,11 @@ async function updateEarlyBirdCounter() {
     if (spotsLeft > 0 && spotsLeft <= 500) {
       if (banner) banner.style.display = 'flex';
       if (regularFooter) regularFooter.style.display = 'none';
-      console.log('Early Bird banner displayed as footer');
     } else {
       if (banner) banner.style.display = 'none';
       if (regularFooter) regularFooter.style.display = '';
-      console.log('Early Bird exhausted, showing regular footer');
     }
 
-    console.log(`Early Bird spots left: ${spotsLeft}`);
 
   } catch (error) {
     console.error('Early Bird counter error:', error);
@@ -111,7 +104,6 @@ function initLanguageStorage() {
     attributeFilter: ['lang']
   });
 
-  console.log('Language storage initialized', savedLang ? `(saved: ${savedLang})` : '');
 }
 
 // ==========================================
@@ -625,11 +617,3 @@ function initSubjectNavigation() {
 }
 
 
-// ==========================================
-// LOADED
-// ==========================================
-
-console.log('Bluestift v4.1 (Supabase Fixed) loaded successfully!');
-console.log('Debug commands: window.BluestiftPublicDebug');
-console.log('  window.BluestiftPublicDebug.getStats()');
-console.log('Theme: localStorage | Language: Google Translate | Data: Supabase');
