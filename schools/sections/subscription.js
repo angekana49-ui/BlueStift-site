@@ -283,10 +283,10 @@
         </div>
         <div class="payment-methods">
           <div class="payment-card active">
-            <div class="payment-icon"><i class="fas fa-mobile-alt"></i></div>
+            <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
             <div class="payment-info">
-              <h4>Mobile Money</h4>
-              <p>MTN MoMo ending in **89</p>
+              <h4>Credit Card</h4>
+              <p>Visa ending in **1234</p>
             </div>
             <span class="default-badge">Default</span>
           </div>
@@ -380,9 +380,9 @@
     const proAmt = pro ? `${pro.price} ${pro.currency || ''}` : '200 USD';
     const stdAmt = std ? `${std.price} ${std.currency || ''}` : '130 USD';
     return [
-      { date: '2025-01-01', description: 'Pro Plan — Monthly',      amount: proAmt, status: 'paid', invoice: 'INV-2025-001' },
-      { date: '2024-12-01', description: 'Pro Plan — Monthly',      amount: proAmt, status: 'paid', invoice: 'INV-2024-012' },
-      { date: '2024-11-01', description: 'Standard Plan — Monthly', amount: stdAmt, status: 'paid', invoice: 'INV-2024-011' }
+      { date: '2026-01-01', description: 'Pro Plan — Monthly',      amount: proAmt, status: 'paid', invoice: 'INV-2026-001' },
+      { date: '2025-12-01', description: 'Pro Plan — Monthly',      amount: proAmt, status: 'paid', invoice: 'INV-2025-012' },
+      { date: '2025-11-01', description: 'Standard Plan — Monthly', amount: stdAmt, status: 'paid', invoice: 'INV-2025-011' }
     ];
   }
 

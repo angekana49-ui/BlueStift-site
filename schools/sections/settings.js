@@ -78,14 +78,14 @@
                   </div>
                   <div class="form-group">
                     <label for="settings-admin-phone">Phone Number</label>
-                    <input type="tel" id="settings-admin-phone" value="${school.phone || '+237 6XX XXX XXX'}" class="settings-input" placeholder="+237 6XX XXX XXX">
+                    <input type="tel" id="settings-admin-phone" value="${school.phone || '+1 XXX XXX XXX'}" class="settings-input" placeholder="+1 XXX XXX XXX">
                   </div>
                 </div>
 
                 <div class="form-row">
                   <div class="form-group">
                     <label for="settings-school-location">Location / City</label>
-                    <input type="text" id="settings-school-location" value="${school.location || ''}" class="settings-input" placeholder="e.g., Douala, Cameroon">
+                    <input type="text" id="settings-school-location" value="${school.location || ''}" class="settings-input" placeholder="e.g., Dublin, Ireland">
                   </div>
                   <div class="form-group">
                     <label for="settings-school-type">School Type</label>
@@ -627,9 +627,9 @@
   function initSecurity() {
     document.getElementById('btn-change-password')?.addEventListener('click', async () => {
       if (typeof SchoolsDB !== 'undefined' && SchoolsDB.isLive && SchoolsDB.currentAdmin?.email) {
-        const newPassword = prompt('Enter your new password (min 6 characters):');
-        if (!newPassword || newPassword.length < 6) {
-          window.SchoolsUtils?.showSchoolNotification('Password must be at least 6 characters.', 'error');
+        const newPassword = prompt('Enter your new password (min 8 characters):');
+        if (!newPassword || newPassword.length < 8) {
+          window.SchoolsUtils?.showSchoolNotification('Password must be at least 8 characters.', 'error');
           return;
         }
         // Supabase client is available via SchoolsDB internals — use auth directly

@@ -24,6 +24,15 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
+  // Strict input validation to prevent abuse
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!EMAIL_RE.test(email)) {
+    return res.status(400).json({ error: 'Invalid email address' });
+  }
+  if (String(name).length > 100 || String(subject).length > 200 || String(message).length > 5000) {
+    return res.status(400).json({ error: 'Input too long' });
+  }
+
   // Build HTML email
   const html = `
     <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; background: #f9fafb; padding: 32px; border-radius: 12px;">
@@ -91,7 +100,10 @@ export default async function handler(req, res) {
     // Fire-and-forget push notification to admin device(s)
     fetch(`${req.headers['x-forwarded-proto'] || 'https'}://${req.headers.host}/api/send-push`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-internal-secret': process.env.INTERNAL_SECRET || '',
+      },
       body: JSON.stringify({
         title: `📬 New message from ${name}`,
         body: message.length > 120 ? message.substring(0, 120) + '…' : message,

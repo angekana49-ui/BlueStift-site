@@ -27,6 +27,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
+  // Require internal secret to prevent unauthenticated abuse
+  const INTERNAL_SECRET = process.env.INTERNAL_SECRET;
+  if (!INTERNAL_SECRET || req.headers['x-internal-secret'] !== INTERNAL_SECRET) {
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   // Skip silently if push is not configured
   if (!VAPID_PUBLIC_KEY || !VAPID_PRIVATE_KEY) {
     return res.status(200).json({ skipped: 'Push not configured (missing VAPID keys)' });
