@@ -5,7 +5,41 @@
 // when a support message is submitted.
 // ==========================================
 
+// Simple in-memory rate limiting (Note: resets on Vercel cold starts)
+const rateLimitMap = new Map();
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const MAX_REQUESTS = 5;
+
+// Clean up old entries every 15 minutes to prevent memory leaks
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, data] of rateLimitMap.entries()) {
+    if (now - data.timestamp > RATE_LIMIT_WINDOW) {
+      rateLimitMap.delete(ip);
+    }
+  }
+}, RATE_LIMIT_WINDOW);
+
 export default async function handler(req, res) {
+  // Rate Limiting Check
+  const ip = req.headers['x-forwarded-for'] || req.socket?.remoteAddress || 'unknown-ip';
+  const now = Date.now();
+  const userData = rateLimitMap.get(ip);
+
+  if (userData) {
+    if (now - userData.timestamp > RATE_LIMIT_WINDOW) {
+      // Reset window
+      rateLimitMap.set(ip, { count: 1, timestamp: now });
+    } else {
+      userData.count++;
+      if (userData.count > MAX_REQUESTS) {
+        return res.status(429).json({ error: 'Too many requests. Please try again later.' });
+      }
+    }
+  } else {
+    rateLimitMap.set(ip, { count: 1, timestamp: now });
+  }
+
   // Only POST allowed
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });

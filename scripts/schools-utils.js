@@ -254,9 +254,10 @@ function showSchoolNotification(message, type = 'info', duration = 5000) {
   notification.className = `school-notification ${type}`;
   notification.innerHTML = `
     <i class="fas fa-${iconMap[type] || 'info-circle'}"></i>
-    <span>${message}</span>
+    <span class="notification-text"></span>
     <button class="notification-close" aria-label="Close"><i class="fas fa-times"></i></button>
   `;
+  notification.querySelector('.notification-text').textContent = message;
 
   document.body.appendChild(notification);
 

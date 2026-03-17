@@ -5,6 +5,11 @@
 // ==========================================
 
 // ==========================================
+// UTILITY
+// ==========================================
+const escapeHtml = (str) => String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+// ==========================================
 // GLOBAL STATE
 // ==========================================
 
@@ -346,7 +351,7 @@ function addClassRow(name, size) {
   row.className = 'class-item';
   row.innerHTML = `
     <div class="input-wrapper" style="flex:1">
-      <input type="text" class="form-input class-name-input" placeholder="e.g. Grade 10" value="${name || ''}" style="padding-left:12px">
+      <input type="text" class="form-input class-name-input" placeholder="e.g. Grade 10" value="${escapeHtml(name) || ''}" style="padding-left:12px">
     </div>
     <div class="input-wrapper" style="width:80px">
       <input type="number" class="form-input class-size-input" placeholder="30" value="${size || 30}" min="1" max="200" style="padding-left:8px;text-align:center">
@@ -443,8 +448,8 @@ function _showSignupSuccess(result, email, fromFirstLogin) {
       const item = document.createElement('div');
       item.className = 'promo-code-item';
       item.innerHTML = `
-        <span class="promo-class-name">${pc.class_name || 'Class'}</span>
-        <span class="promo-code-value">${pc.code}</span>`;
+        <span class="promo-class-name">${escapeHtml(pc.class_name || 'Class')}</span>
+        <span class="promo-code-value">${escapeHtml(pc.code)}</span>`;
       promoList.appendChild(item);
     });
     promoBlock.style.display = '';
@@ -635,7 +640,7 @@ function showPilotExpiredMessage(pilotUntil) {
   const dateStr = new Date(pilotUntil).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   const el   = document.getElementById('login-error-message');
   const text = document.getElementById('login-error-text');
-  if (text) text.innerHTML = `Your pilot access expired on <strong>${dateStr}</strong>. <a href="mailto:russel@thebluestift.com?subject=Subscription%20Renewal" style="color:inherit;text-decoration:underline;">Contact us to subscribe →</a>`;
+  if (text) text.innerHTML = `Your pilot access expired on <strong>${escapeHtml(dateStr)}</strong>. <a href="mailto:russel@thebluestift.com?subject=Subscription%20Renewal" style="color:inherit;text-decoration:underline;">Contact us to subscribe →</a>`;
   if (el) {
     el.style.display = 'block';
     el.style.background    = 'rgba(245,158,11,0.15)';
@@ -837,7 +842,7 @@ function showDashboardError(message) {
   if (section) {
     const banner = document.createElement('div');
     banner.style.cssText = 'background:#fef2f2;border:1px solid #fecaca;color:#dc2626;padding:16px 20px;border-radius:12px;margin:20px;font-size:0.95rem;';
-    banner.innerHTML = '<i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i>' + message;
+    banner.innerHTML = '<i class="fas fa-exclamation-triangle" style="margin-right:8px;"></i>' + escapeHtml(message);
     section.prepend(banner);
   }
 }
@@ -953,12 +958,12 @@ function populateSubjectsTable(subjects, isGlobal = false) {
     row.innerHTML = `
       <td>
         <span class="subject-name">
-          <i class="fas fa-${subject.icon}"></i>
-          ${subject.name}
+          <i class="fas fa-${escapeHtml(subject.icon)}"></i>
+          ${escapeHtml(subject.name)}
         </span>
       </td>
       <td><span class="pkm-badge ${pkmClass}">${subject.pkm.toFixed(2)}</span></td>
-      <td>${subject.difficulty}</td>
+      <td>${escapeHtml(subject.difficulty)}</td>
       <td>
         <span class="effort-badge ${effortClass}">
           ${effortClass === 'high' ? 'High' : effortClass === 'medium' ? 'Medium' : 'Low'}
@@ -1033,19 +1038,19 @@ function openInsightsDrawer(subject, isGlobal = false) {
   // Populate difficulties
   const difficultiesList = document.getElementById('drawer-difficulties');
   difficultiesList.innerHTML = details.difficulties.map(d =>
-    `<li><i class="fas fa-times-circle"></i><span>${d}</span></li>`
+    `<li><i class="fas fa-times-circle"></i><span>${escapeHtml(d)}</span></li>`
   ).join('');
 
   // Populate mastered
   const masteredList = document.getElementById('drawer-mastered');
   masteredList.innerHTML = details.mastered.map(m =>
-    `<li><i class="fas fa-check-circle"></i><span>${m}</span></li>`
+    `<li><i class="fas fa-check-circle"></i><span>${escapeHtml(m)}</span></li>`
   ).join('');
 
   // Populate recommendations
   const recommendationsList = document.getElementById('drawer-recommendations');
   recommendationsList.innerHTML = details.recommendations.map(r =>
-    `<li><i class="fas fa-lightbulb"></i><span>${r}</span></li>`
+    `<li><i class="fas fa-lightbulb"></i><span>${escapeHtml(r)}</span></li>`
   ).join('');
 
   // Reset to overview tab
@@ -1692,7 +1697,7 @@ function updateFileList(files) {
     fileItem.className = 'file-item';
     fileItem.innerHTML = `
       <i class="fas fa-file"></i>
-      <span class="file-name">${file.name}</span>
+      <span class="file-name">${escapeHtml(file.name)}</span>
       <span class="file-size">(${(file.size / 1024 / 1024).toFixed(2)} MB)</span>
     `;
     fileList.appendChild(fileItem);
